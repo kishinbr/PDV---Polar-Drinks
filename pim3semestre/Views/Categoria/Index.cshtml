@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CategoriaModel>
+
+<div class="container">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1>Categorias</h1>
+        <a  class="btn btn-success mx-2" asp-controller="Categoria" asp-action="Cadastrar">Cadastrar nova Categoria</a>
+    </div>
+
+<table class="table table-dark table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Descrição</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if(Model != null)
+        {
+            @foreach (var categoria in Model)
+            {
+                <tr>
+                    <th scope="row">@categoria.CategoriaNome</th>
+                    <td>@categoria.CategoriaDescricao</td>
+                    <td>
+                        <a class="btn btn-warning" asp-controller="Categoria" asp-action="Editar" asp-route-id="@categoria.CategoriaID ">Editar</a>
+                        <a class="btn btn-danger" asp-controller="Categoria" asp-action="Excluir" asp-route-id="@categoria.CategoriaID">Excluir</a>
+                    </td>
+                </tr>
+            }
+        }
+    
+    </tbody>
+</table>
+
+</div>
