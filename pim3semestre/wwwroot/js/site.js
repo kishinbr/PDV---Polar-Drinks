@@ -2,9 +2,10 @@
 
     $('#Categoria').DataTable({
         pageLength: 5,
-
         lengthMenu: [5, 10, 20, 50],
-
+        scrollY: "50vh", 
+        scrollCollapse: true,
+        paging: true,
         language: {
             "decimal": "",
             "emptyTable": "Nenhuma categoria cadastrada",
