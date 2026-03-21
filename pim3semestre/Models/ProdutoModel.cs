@@ -23,6 +23,6 @@ namespace pim3semestre.Models
         [ForeignKey("CategoriaID")]
         public int CategoriaID { get; set; }
 
-        public CategoriaModel Categoria { get; set; } = null!;
+        public CategoriaModel? Categoria { get; set; }
     }
 }

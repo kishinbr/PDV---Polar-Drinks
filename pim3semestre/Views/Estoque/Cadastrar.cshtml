@@ -9,42 +9,68 @@
     </div>
 
     <form method="post" asp-controller="Estoque" asp-action="Cadastrar">
-        <div class="mb-3">
-            <label for="NomeProduto" class="form-label text-light">Nome:</label>
-            <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoNome" id="NomeProduto" placeholder="Nome do Produto">
-                <span asp-validation-for="ProdutoNome" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="DescricaoProduto" class="form-label text-light">Descrição do Produto:</label>
-                <textarea class="form-control bg-light text-dark" asp-for="ProdutoDescricao" id="DescricaoProduto" rows="3" placeholder="Descrição do Produto"></textarea>
-                <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="CodigoProduto" class="form-label text-light">Código de Barra:</label>
-                <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoCodBarra" id="CodigoProduto" placeholder="Código de barras do Produto">
-                <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="PrecoProduto" class="form-label text-light">Preço:</label>
-                <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoPrecoVenda" id="PrecoProduto" placeholder="Preço de venda do Produto">
-                <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="QtdProduto" class="form-label text-light">Quantida em estoque:</label>
-                        <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoQtdEstoque" id="QtdProduto" placeholder="Quantidade em estoque do Produto">
-                <span asp-validation-for="ProdutoQtdEstoque" class="text-danger"></span>
-             </div>
-            <div class="mb-3">
-                <label for="ProdutoAtivo" class="form-label text-light">Disponível</label>
-                <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoAtivo" id="ProdutoAtivo" placeholder="">
-                <span asp-validation-for="ProdutoAtivo" class="text-danger"></span>
-            </div>
 
-
-            <div class="d-flex gap-5 mt-5">
-                <button type="submit" class="btn btn-success w-50">Cadastrar</button>
-                <a class="btn btn-primary w-50" asp-controller="Estoque" asp-action="Index">Voltar</a>
-            </div>
-    
-        </form>
+    <!-- NOME -->
+    <div class="mb-4">
+        <label class="form-label text-light">Nome</label>
+        <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoNome" placeholder="Nome do Produto">
+        <span asp-validation-for="ProdutoNome" class="text-danger"></span>
     </div>
+
+    <!-- DESCRIÇÃO -->
+    <div class="mb-4">
+        <label class="form-label text-light">Descrição</label>
+        <textarea class="form-control bg-white text-dark" asp-for="ProdutoDescricao" rows="3" placeholder="Descrição do Produto"></textarea>
+        <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
+    </div>
+
+        <!-- LINHA: CODIGO + PREÇO + QTD -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label class="form-label text-light">Código de Barras</label>
+            <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoCodBarra" placeholder="Ex: 789123456">
+            <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label text-light">Preço</label>
+            <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoVenda" placeholder="0,00">
+            <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label text-light">Quantidade</label>
+            <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoQtdEstoque" placeholder="0">
+            <span asp-validation-for="ProdutoQtdEstoque" class="text-danger"></span>
+        </div>
+    </div>
+
+                <!-- LINHA: CATEGORIA + ATIVO -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label class="form-label text-light">Categoria</label>
+            <select class="form-select bg-white text-dark" asp-for="CategoriaID" asp-items="ViewBag.Categorias">
+                <option value="">Selecione uma categoria</option>
+            </select>
+            <span asp-validation-for="CategoriaID" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 d-flex align-items-end">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="ProdutoAtivo">
+                    <label class="form-check-label text-light">
+                        Produto disponível
+                    </label>
+                </div>
+            </div>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-success w-50">Cadastrar</button>
+        <a class="btn btn-primary w-50" asp-controller="Estoque" asp-action="Index">Voltar</a>
+    </div>
+
+</form>
+</div>
+
