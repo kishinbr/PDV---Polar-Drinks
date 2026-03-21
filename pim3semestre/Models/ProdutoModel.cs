@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace pim3semestre.Models
 {
@@ -19,8 +20,9 @@ namespace pim3semestre.Models
 
         public bool ProdutoAtivo { get; set; }
 
+        [ForeignKey("CategoriaID")]
         public int CategoriaID { get; set; }
 
-        public CategoriaModel? Categoria { get; set; }
+        public CategoriaModel Categoria { get; set; } = null!;
     }
 }

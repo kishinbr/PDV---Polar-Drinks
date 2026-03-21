@@ -1,0 +1,50 @@
+﻿@model ProdutoModel
+@{
+    ViewData["title"] = "Cadastrar Produto";
+}
+
+<div class="container bg-dark p-5 rounded-5">
+    <div class="mb-5 text-center">
+        <h1 class="text-light">Cadastrar Produto</h1>
+    </div>
+
+    <form method="post" asp-controller="Estoque" asp-action="Cadastrar">
+        <div class="mb-3">
+            <label for="NomeProduto" class="form-label text-light">Nome:</label>
+            <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoNome" id="NomeProduto" placeholder="Nome do Produto">
+                <span asp-validation-for="ProdutoNome" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="DescricaoProduto" class="form-label text-light">Descrição do Produto:</label>
+                <textarea class="form-control bg-light text-dark" asp-for="ProdutoDescricao" id="DescricaoProduto" rows="3" placeholder="Descrição do Produto"></textarea>
+                <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="CodigoProduto" class="form-label text-light">Código de Barra:</label>
+                <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoCodBarra" id="CodigoProduto" placeholder="Código de barras do Produto">
+                <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="PrecoProduto" class="form-label text-light">Preço:</label>
+                <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoPrecoVenda" id="PrecoProduto" placeholder="Preço de venda do Produto">
+                <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label for="QtdProduto" class="form-label text-light">Quantida em estoque:</label>
+                        <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoQtdEstoque" id="QtdProduto" placeholder="Quantidade em estoque do Produto">
+                <span asp-validation-for="ProdutoQtdEstoque" class="text-danger"></span>
+             </div>
+            <div class="mb-3">
+                <label for="ProdutoAtivo" class="form-label text-light">Disponível</label>
+                <input type="text" class="form-control text-dark bg-white" asp-for="ProdutoAtivo" id="ProdutoAtivo" placeholder="">
+                <span asp-validation-for="ProdutoAtivo" class="text-danger"></span>
+            </div>
+
+
+            <div class="d-flex gap-5 mt-5">
+                <button type="submit" class="btn btn-success w-50">Cadastrar</button>
+                <a class="btn btn-primary w-50" asp-controller="Estoque" asp-action="Index">Voltar</a>
+            </div>
+    
+        </form>
+    </div>

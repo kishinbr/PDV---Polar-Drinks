@@ -12,6 +12,8 @@ namespace pim3semestre.Models
         public string? CategoriaNome { get; set; }
 
         [Required(ErrorMessage = "A descrição da categoria é obrigatória.")]
+
+
         public string? CategoriaDescricao { get; set; }
 
         public List<ProdutoModel> Produtos { get; set; } = new List<ProdutoModel>();

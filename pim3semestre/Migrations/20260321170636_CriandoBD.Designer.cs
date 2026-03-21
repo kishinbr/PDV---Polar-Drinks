@@ -12,8 +12,8 @@ using pim3semestre.Data;
 namespace pim3semestre.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260319031353_AjustandoDecimais")]
-    partial class AjustandoDecimais
+    [Migration("20260321170636_CriandoBD")]
+    partial class CriandoBD
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,9 +34,11 @@ namespace pim3semestre.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoriaID"));
 
                     b.Property<string>("CategoriaDescricao")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CategoriaNome")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CategoriaID");

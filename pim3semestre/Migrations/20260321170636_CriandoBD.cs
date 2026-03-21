@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace pim3semestre.Migrations
 {
     /// <inheritdoc />
-    public partial class teste : Migration
+    public partial class CriandoBD : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,8 @@ namespace pim3semestre.Migrations
                 {
                     CategoriaID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoriaNome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CategoriaDescricao = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CategoriaNome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoriaDescricao = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,7 +92,7 @@ namespace pim3semestre.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProdutoNome = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProdutoDescricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProdutoPrecoVenda = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ProdutoPrecoVenda = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     ProdutoCodBarra = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProdutoQtdEstoque = table.Column<int>(type: "int", nullable: false),
                     ProdutoAtivo = table.Column<bool>(type: "bit", nullable: false),
@@ -106,7 +106,7 @@ namespace pim3semestre.Migrations
                         column: x => x.CategoriaID,
                         principalTable: "Categorias",
                         principalColumn: "CategoriaID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,7 +116,7 @@ namespace pim3semestre.Migrations
                     CompraID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompraData = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompraValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CompraValorTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     FornecedorID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -127,7 +127,7 @@ namespace pim3semestre.Migrations
                         column: x => x.FornecedorID,
                         principalTable: "Fornecedores",
                         principalColumn: "FornecedorID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,7 +136,7 @@ namespace pim3semestre.Migrations
                 {
                     VendaID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VendaValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    VendaValorTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     VendaTipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VendaData = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ClienteID = table.Column<int>(type: "int", nullable: true),
@@ -156,7 +156,7 @@ namespace pim3semestre.Migrations
                         column: x => x.FuncionarioID,
                         principalTable: "Funcionarios",
                         principalColumn: "FuncionarioID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,7 +166,7 @@ namespace pim3semestre.Migrations
                     ItemCompraID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemCompraQtd = table.Column<int>(type: "int", nullable: false),
-                    ItemCompraPreco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ItemCompraPreco = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     ProdutoID = table.Column<int>(type: "int", nullable: false),
                     CompraID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -184,7 +184,7 @@ namespace pim3semestre.Migrations
                         column: x => x.ProdutoID,
                         principalTable: "Produtos",
                         principalColumn: "ProdutoID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,7 +194,7 @@ namespace pim3semestre.Migrations
                     ItemVendaID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemVendaQtd = table.Column<int>(type: "int", nullable: false),
-                    ItemVendaPreco = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ItemVendaPreco = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     ProdutoID = table.Column<int>(type: "int", nullable: false),
                     VendaID = table.Column<int>(type: "int", nullable: false)
                 },
@@ -206,13 +206,13 @@ namespace pim3semestre.Migrations
                         column: x => x.ProdutoID,
                         principalTable: "Produtos",
                         principalColumn: "ProdutoID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ItensVenda_Vendas_VendaID",
                         column: x => x.VendaID,
                         principalTable: "Vendas",
                         principalColumn: "VendaID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -248,7 +248,7 @@ namespace pim3semestre.Migrations
                         column: x => x.ProdutoID,
                         principalTable: "Produtos",
                         principalColumn: "ProdutoID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
