@@ -1,0 +1,91 @@
+﻿@model FornecedorModel
+@{
+    ViewData["Title"] = "Cadastrar Fornecedor";
+}
+
+<div class="container bg-dark p-5 rounded-5">
+    <div class="mb-5 text-center">
+        <h1 class="text-light">Cadastrar Fornecedor</h1>
+    </div>
+
+    <form method="post" asp-controller="Fornecedor" asp-action="Cadastrar">
+
+        <!-- NOME -->
+        <div class="mb-4">
+            <label class="form-label text-light">Nome</label>
+            <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNome" placeholder="Nome do Fornecedor">
+            <span asp-validation-for="FornecedorNome" class="text-danger"></span>
+        </div>
+
+        <!-- CNPJ -->
+        <div class="mb-4">
+            <label class="form-label text-light">CNPJ</label>
+            <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorCNPJ" placeholder="00.000.000/0001-00">
+            <span asp-validation-for="FornecedorCNPJ" class="text-danger"></span>
+        </div>
+
+        <!-- TELEFONE E EMAIL -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label text-light">Telefone</label>
+                <input type="tel" class="form-control bg-white text-dark" asp-for="FornecedorTelefone" placeholder="(00) 00000-0000" maxlength="11"  pattern="\d{10,11}" >
+                <span asp-validation-for="FornecedorTelefone" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label text-light">E-mail</label>
+                <input type="email" class="form-control bg-white text-dark" asp-for="FornecedorEmail" placeholder="email@exemplo.com">
+                <span asp-validation-for="FornecedorEmail" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- CEP E ESTADO -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label class="form-label text-light">CEP</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorCEP" placeholder="00000-000" pattern="\d{5}-\d{3}" >
+                <span asp-validation-for="FornecedorCEP" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-light">Estado</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorEstado" placeholder="UF" maxlength="2" pattern="[A-Za-z]{2}">
+                <span asp-validation-for="FornecedorEstado" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-light">Cidade</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorCidade" placeholder="Cidade">
+                <span asp-validation-for="FornecedorCidade" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-light">Bairro</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorBairro" placeholder="Bairro">
+                <span asp-validation-for="FornecedorBairro" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- LOGRADOURO E NÚMERO -->
+        <div class="row mb-4">
+            <div class="col-md-9">
+                <label class="form-label text-light">Logradouro</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorLogradouro" placeholder="Rua, Av, etc.">
+                <span asp-validation-for="FornecedorLogradouro" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-light">Número</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNum" placeholder="Nº" pattern="\d+">
+                <span asp-validation-for="FornecedorNum" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn btn-success w-50">Cadastrar</button>
+            <a class="btn btn-primary w-50" asp-controller="Fornecedor" asp-action="Index">Voltar</a>
+        </div>
+
+    </form>
+</div>

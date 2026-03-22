@@ -86,3 +86,49 @@ $(document).ready(function () {
     }, 3000);
 
 });
+
+$(document).ready(function () {
+
+    $('#Fornecedores').DataTable({
+        pageLength: 10,
+        lengthMenu: [10, 20, 30],
+        scrollY: "50vh",
+        scrollCollapse: true,
+        paging: true,
+
+        columnDefs: [
+            { orderable: false, targets: [9] }, // desabilita ordenação na coluna Ações
+            { className: "text-center", targets: [9] } // centraliza os botões de Ações
+        ],
+
+        language: {
+            "decimal": "",
+            "emptyTable": "Nenhum fornecedor cadastrado",
+            "info": "Mostrando de _START_ a _END_ de um total de _TOTAL_ fornecedores",
+            "infoEmpty": "Mostrando de 0 a 0 de 0 fornecedores",
+            "infoFiltered": "(filtrado de _MAX_ fornecedores no total)",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ fornecedores",
+            "loadingRecords": "Carregando...",
+            "search": "Procurar:",
+            "zeroRecords": "Fornecedor não encontrado",
+            "paginate": {
+                "first": "Primeiro",
+                "last": "Último",
+                "next": "Próximo",
+                "previous": "Anterior"
+            },
+            "aria": {
+                "orderable": "Ordenar por esta coluna",
+                "orderableReverse": "Ordem reversa desta coluna"
+            }
+        }
+    });
+
+    setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+            $(this).alert('close');
+        });
+    }, 3000);
+
+});

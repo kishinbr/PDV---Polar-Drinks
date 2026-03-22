@@ -1,0 +1,72 @@
+﻿@model IEnumerable<FornecedorModel>
+@{
+    ViewData["Title"] = "Polar Drinks Fornecedores";
+}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1>Fornecedores</h1>
+        <a class="btn btn-success mx-2" asp-controller="Fornecedor" asp-action="Cadastrar">
+            <i class="bi bi-file-earmark-plus-fill mx-2"></i>Cadastrar novo Fornecedor
+        </a>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success text-light" role="alert">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    <table id="Fornecedores" class="table table-light table-hover mb-auto">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Nome</th>
+                <th style="width: 10%;">CNPJ</th>
+                <th style="width: 10%;">Telefone</th>
+                <th style="width: 15%;">Email</th>
+                <th style="width: 10%;">CEP</th>
+                <th style="width: 10%;">Cidade</th>
+                <th style="width: 10%;">Estado</th>
+                <th style="width: 10%;">Bairro</th>
+                <th style="width: 5%;">Nº</th>
+                <th style="width: 5%;" class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var fornecedor in Model)
+                {
+                    <tr>
+                        <td>@fornecedor.FornecedorNome</td>
+                        <td>@fornecedor.FornecedorCNPJ</td>
+                        <td>@fornecedor.FornecedorTelefone</td>
+                        <td>@fornecedor.FornecedorEmail</td>
+                        <td>@fornecedor.FornecedorCEP</td>
+                        <td>@fornecedor.FornecedorCidade</td>
+                        <td>@fornecedor.FornecedorEstado</td>
+                        <td>@fornecedor.FornecedorBairro</td>
+                        <td>@fornecedor.FornecedorNum</td>
+                        <td class="text-center">
+                            <a class="btn btn-warning btn-sm mx-1"
+                                   asp-controller="Fornecedor"
+                                   asp-action="Editar"
+                                   asp-route-id="@fornecedor.FornecedorID">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+
+                            <a class="btn btn-danger btn-sm mx-1"
+                                   asp-controller="Fornecedor"
+                                   asp-action="Excluir"
+                                   asp-route-id="@fornecedor.FornecedorID">
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
