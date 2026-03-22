@@ -98,6 +98,7 @@ $(document).ready(function () {
 
         columnDefs: [
             { orderable: false, targets: [9] }, // desabilita ordenação na coluna Ações
+            { className: "text-start", targets: [1, 2, 3,4] },
             { className: "text-center", targets: [9] } // centraliza os botões de Ações
         ],
 
@@ -130,5 +131,58 @@ $(document).ready(function () {
             $(this).alert('close');
         });
     }, 3000);
+
+});
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ================= CEP =================
+    const cepInput = document.getElementById("FornecedorCEP");
+
+    if (cepInput) {
+        cepInput.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, "").substring(0, 8);
+
+            if (value.length > 5) {
+                value = value.replace(/^(\d{5})(\d{0,3})$/, "$1-$2");
+            }
+
+            e.target.value = value;
+        });
+    }
+
+    // ================= TELEFONE =================
+    const telefoneInput = document.getElementById("FornecedorTelefone");
+
+    if (telefoneInput) {
+        telefoneInput.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, "").substring(0, 11);
+
+            if (value.length > 6) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{0,4})$/, "($1) $2-$3");
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+            } else {
+                value = value.replace(/^(\d*)$/, "($1");
+            }
+
+            e.target.value = value;
+        });
+    }
+
+    // ================= CNPJ =================
+    const cnpjInput = document.getElementById("FornecedorCNPJ");
+
+    if (cnpjInput) {
+        cnpjInput.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, "").substring(0, 14);
+
+            value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+            value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+            value = value.replace(/(\d{4})(\d)/, "$1-$2");
+
+            e.target.value = value;
+        });
+    }
 
 });

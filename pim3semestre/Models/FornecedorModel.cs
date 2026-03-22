@@ -29,18 +29,23 @@ namespace pim3semestre.Models
         [StringLength(10, ErrorMessage = "CEP deve ter no máximo 10 caracteres")]
         public string? FornecedorCEP { get; set; }
 
-        [StringLength(50)]
+        [Required(ErrorMessage = "O estado é obrigatório")]
+        [StringLength(2)]
         public string? FornecedorEstado { get; set; }
 
+        [Required(ErrorMessage = "A cidade é obrigatória")]
         [StringLength(100)]
         public string? FornecedorCidade { get; set; }
 
+        [Required(ErrorMessage = "O bairro é obrigatório")]
         [StringLength(100)]
         public string? FornecedorBairro { get; set; }
 
+        [Required(ErrorMessage = "O logradouro é obrigatório")]
         [StringLength(150)]
         public string? FornecedorLogradouro { get; set; }
 
+        [Required(ErrorMessage = "O número é obrigatório")]
         [StringLength(10)]
         public string? FornecedorNum { get; set; }
 

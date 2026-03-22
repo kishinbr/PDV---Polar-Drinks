@@ -23,10 +23,7 @@ namespace pim3semestre.Controllers
             return View(fornecedores);
         }
 
-        public IActionResult Cadastrar()
-        {
-            return View();
-        }
+        
 
 
         [HttpGet]
@@ -94,6 +91,12 @@ namespace pim3semestre.Controllers
             return RedirectToAction("Index");
         }
 
+
+
+        public IActionResult Cadastrar()
+        {
+            return View();
+        }
 
         [HttpPost]
         public IActionResult Cadastrar(FornecedorModel fornecedor)

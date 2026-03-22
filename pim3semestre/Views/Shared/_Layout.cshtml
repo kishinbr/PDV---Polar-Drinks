@@ -14,7 +14,7 @@
 </head>
 <body >
     <header >
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3 ">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3 fixed-top ">
             <div class="container-fluid">
                 <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Polar Drinks</a>
 
@@ -43,8 +43,8 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container-fluid" style="margin-top: 100px;">
+        <main role="main" class="pb-3 m-auto" style="width: 90%;">
             @RenderBody()
         </main>
     </div>
