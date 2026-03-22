@@ -1,8 +1,8 @@
 ﻿$(document).ready(function () {
 
     $('#Categoria').DataTable({
-        pageLength: 5,
-        lengthMenu: [5, 10, 20, 50],
+        pageLength: 10,
+        lengthMenu: [10, 20, 30],
         scrollY: "50vh", 
         scrollCollapse: true,
         paging: true,
@@ -43,8 +43,8 @@
 $(document).ready(function () {
 
     $('#Produtos').DataTable({
-        pageLength: 5,
-        lengthMenu: [5, 10, 20, 50],
+        pageLength: 10,
+        lengthMenu: [10, 20, 30],
         scrollY: "50vh",
         scrollCollapse: true,
         paging: true,
@@ -79,7 +79,6 @@ $(document).ready(function () {
         }
     });
 
-    // ALERTA SUMIR AUTOMATICAMENTE
     setTimeout(function () {
         $(".alert").fadeOut("slow", function () {
             $(this).alert('close');

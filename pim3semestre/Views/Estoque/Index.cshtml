@@ -50,7 +50,7 @@
                         </td>
 
                         <td class="text-end">
-                            @produto.ProdutoPrecoVenda.ToString("C")
+                            @produto.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("C")
                         </td>
 
                         <td class="text-end">

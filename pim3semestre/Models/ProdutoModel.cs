@@ -8,20 +8,32 @@ namespace pim3semestre.Models
         [Key]
         public int ProdutoID { get; set; }
 
+        [Required(ErrorMessage = "O nome do produto é obrigatório")]
+        [StringLength(100)]
         public string? ProdutoNome { get; set; }
 
+        [StringLength(300)]
         public string? ProdutoDescricao { get; set; }
 
-        public decimal ProdutoPrecoVenda { get; set; }
+ 
+        [Required(ErrorMessage = "O preço é obrigatório")]
+        [Range(0.00, 999999.99, ErrorMessage = "O preço inválido")]
+        public decimal? ProdutoPrecoVenda { get; set; }
 
+        [Required(ErrorMessage = "O código de barras é obrigatório")]
+        [StringLength(20)]
         public string? ProdutoCodBarra { get; set; }
 
-        public int ProdutoQtdEstoque { get; set; }
+
+        [Required(ErrorMessage = "A quantidade é obrigatória")]
+        [Range(0, int.MaxValue, ErrorMessage = "Quantidade inválida")]
+        public int? ProdutoQtdEstoque { get; set; }
 
         public bool ProdutoAtivo { get; set; }
 
-        [ForeignKey("CategoriaID")]
-        public int CategoriaID { get; set; }
+        // 🔥 ALTERADO AQUI
+        [Required(ErrorMessage = "Selecione uma categoria")]
+        public int? CategoriaID { get; set; }
 
         public CategoriaModel? Categoria { get; set; }
     }
