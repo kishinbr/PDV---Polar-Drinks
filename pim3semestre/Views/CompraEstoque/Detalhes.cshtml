@@ -1,0 +1,80 @@
+﻿@model pim3semestre.ViewModels.CompraDetalhesViewModel
+
+<div class="container bg-dark p-5 rounded-5">
+
+    <div class="text-center mb-4">
+        <h2 class="text-light">Detalhes da Compra</h2>
+    </div>
+
+    <!-- INFO -->
+    <div class="row mb-4 text-light">
+        <div class="col-md-4">
+            <strong>ID:</strong> @Model.Compra.CompraID
+        </div>
+        <div class="col-md-4">
+            <strong>Data:</strong> @Model.Compra.CompraData.ToString("dd/MM/yyyy")
+        </div>
+        <div class="col-md-4">
+            <strong>Status:</strong> @Model.Compra.CompraStatus
+        </div>
+    </div>
+
+    <div class="row mb-4 text-light">
+        <div class="col-md-6">
+            <strong>Fornecedor:</strong> @Model.Compra.Fornecedor?.FornecedorNome
+        </div>
+        <div class="col-md-6">
+            <strong>Data Entrega:</strong> @Model.Compra.CompraDataEntrega?.ToString("dd/MM/yyyy")
+        </div>
+    </div>
+
+    <!-- ITENS -->
+    <table class="table table-light">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th class="text-end">Quantidade</th>
+                <th class="text-end">Preço</th>
+                <th class="text-end">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Itens)
+            {
+                <tr>
+                    <td>@item.Produto?.ProdutoNome</td>
+
+                    <td class="text-end">@item.ItemCompraQtd</td>
+
+                    <td class="text-end">
+                        @item.ItemCompraPreco.ToString("C")
+                    </td>
+
+                    <td class="text-end">
+                        @( (item.ItemCompraQtd * item.ItemCompraPreco).ToString("C") )
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- TOTAL -->
+    <div class="text-end text-light mt-3">
+        <h4>Total: @Model.Compra.CompraValorTotal.ToString("C")</h4>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="d-flex gap-3 mt-4">
+        <a asp-action="Index" class="btn btn-primary w-50">Voltar</a>
+
+        @if (Model.Compra.CompraStatus == "Aguardando")
+        {
+            <a asp-action="ConfirmarEntrega"
+                   asp-route-id="@Model.Compra.CompraID"
+                   class="btn btn-success w-50">
+                Confirmar Entrega
+            </a>
+        }
+    </div>
+
+</div>

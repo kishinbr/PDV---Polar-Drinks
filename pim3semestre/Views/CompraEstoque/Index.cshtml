@@ -1,0 +1,92 @@
+﻿@model pim3semestre.ViewModels.CompraIndexViewModel
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success text-light">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Reabastecimento</h2>
+
+        <a asp-action="Cadastrar" class="btn btn-success">
+            + Novo Reabastecimento
+        </a>
+    </div>
+
+    <h4>Pedidos Pendentes</h4>
+
+    <table class="table table-warning table-hover mb-5">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Fornecedor</th>
+                <th>Status</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Pendentes)
+            {
+                <tr>
+                    <td>@item.CompraID</td>
+                    <td>@item.CompraData.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Fornecedor?.FornecedorNome</td>
+                    <td>@item.CompraStatus</td>
+                    <td class="text-center">
+                        <a class="btn btn-primary btn-sm"
+                               asp-action="Detalhes"
+                               asp-route-id="@item.CompraID">
+                            Ver
+                        </a>
+
+                        <a class="btn btn-success btn-sm"
+                               asp-action="ConfirmarEntrega"
+                               asp-route-id="@item.CompraID">
+                            Entregue
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- 🟢 CONCLUÍDOS -->
+    <h4>Pedidos Concluídos</h4>
+
+    <table class="table table-success table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data Compra</th>
+                <th>Data Entrega</th>
+                <th>Fornecedor</th>
+                <th>Status</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Concluidas)
+            {
+                <tr>
+                    <td>@item.CompraID</td>
+                    <td>@item.CompraData.ToString("dd/MM/yyyy")</td>
+                    <td>@item.CompraDataEntrega?.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Fornecedor?.FornecedorNome</td>
+                    <td>@item.CompraStatus</td>
+                    <td class="text-center">
+                        <a class="btn btn-primary btn-sm"
+                               asp-action="Detalhes"
+                               asp-route-id="@item.CompraID">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
