@@ -51,6 +51,81 @@ namespace pim3semestre.Controllers
 
             return View();
         }
+
+        // ================= EDITAR =================
+
+        // GET
+        [HttpGet]
+        public IActionResult Editar(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == id);
+
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Categorias = new SelectList(_db.Categorias, "CategoriaID", "CategoriaNome");
+
+            return View(produto);
+        }
+
+        // POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(ProdutoModel produto)
+        {
+      
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categorias = new SelectList(_db.Categorias, "CategoriaID", "CategoriaNome");
+                return View(produto);
+            }
+
+            var produtoDb = _db.Produtos.FirstOrDefault(p => p.ProdutoID == produto.ProdutoID);
+
+            if (produtoDb == null)
+            {
+                return NotFound();
+            }
+
+
+            int quantidadeAntiga = produtoDb.ProdutoQtdEstoque ?? 0;
+            int quantidadeNova = produto.ProdutoQtdEstoque ?? 0;
+
+            int diferenca = quantidadeNova - quantidadeAntiga;
+
+            if (diferenca != 0)
+            {
+                var movimentacao = new MovimentacaoEstoqueModel
+                {
+                    ProdutoID = produtoDb.ProdutoID,
+                    MovimentacaoQtd = Math.Abs(diferenca),
+                    MovimentacaoData = DateTime.Now,
+                    MovimentacaoTipo = "Edicao" 
+                };
+
+                _db.MovimentacoesEstoque.Add(movimentacao);
+            }
+            
+            produtoDb.ProdutoNome = produto.ProdutoNome;
+            produtoDb.ProdutoDescricao = produto.ProdutoDescricao;
+            produtoDb.ProdutoCodBarra = produto.ProdutoCodBarra;
+            produtoDb.ProdutoPrecoVenda = produto.ProdutoPrecoVenda;
+            produtoDb.ProdutoQtdEstoque = produto.ProdutoQtdEstoque;
+            produtoDb.CategoriaID = produto.CategoriaID;
+            produtoDb.ProdutoAtivo = produto.ProdutoAtivo;
+
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+            return RedirectToAction("Index");
+        }
     }
     
 }

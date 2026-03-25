@@ -214,13 +214,12 @@ $(document).ready(function () {
         }
     });
 
-    // 🔍 FILTRO POR DATA
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
 
         let dataInicio = $('#dataInicio').val();
         let dataFim = $('#dataFim').val();
 
-        let dataCompra = data[1]; // coluna Data Compra
+        let dataCompra = data[1]; 
 
         if (!dataInicio && !dataFim) return true;
 
@@ -230,7 +229,7 @@ $(document).ready(function () {
         return true;
     });
 
-    // Atualiza tabela ao mudar datas
+
     $('#dataInicio, #dataFim').on('change', function () {
         table.draw();
     });

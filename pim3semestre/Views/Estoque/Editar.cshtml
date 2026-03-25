@@ -1,0 +1,77 @@
+﻿@model ProdutoModel
+@{
+    ViewData["title"] = "Editar Produto";
+}
+
+<div class="container bg-dark p-5 rounded-5">
+    <div class="mb-5 text-center">
+        <h1 class="text-light">Editar Produto</h1>
+    </div>
+
+    <form method="post" asp-action="Editar">
+
+        <input type="hidden" asp-for="ProdutoID" />
+
+        <!-- NOME -->
+        <div class="mb-4">
+            <label class="form-label text-light">Nome</label>
+            <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoNome">
+            <span asp-validation-for="ProdutoNome" class="text-danger"></span>
+        </div>
+
+        <!-- DESCRIÇÃO -->
+        <div class="mb-4">
+            <label class="form-label text-light">Descrição</label>
+            <textarea class="form-control bg-white text-dark" asp-for="ProdutoDescricao" rows="3"></textarea>
+            <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
+        </div>
+
+        <!-- LINHA -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label text-light">Código de Barras</label>
+                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoCodBarra">
+                <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-light">Preço</label>
+                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoVenda">
+                <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-light">Quantidade</label>
+                <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoQtdEstoque">
+                <span asp-validation-for="ProdutoQtdEstoque" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- LINHA -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label text-light">Categoria</label>
+                <select class="form-select bg-white text-dark" asp-for="CategoriaID" asp-items="ViewBag.Categorias">
+                    <option value="">Selecione uma categoria</option>
+                </select>
+                <span asp-validation-for="CategoriaID" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-end">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" asp-for="ProdutoAtivo">
+                    <label class="form-check-label text-light">
+                        Produto disponível
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn btn-warning w-50">Salvar Alterações</button>
+            <a class="btn btn-primary w-50" asp-action="Index">Voltar</a>
+        </div>
+
+    </form>
+</div>
