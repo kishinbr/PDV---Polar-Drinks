@@ -17,7 +17,7 @@ namespace pim3semestre.ViewModels
     public class ItemCompraCreateVM
     {
         [Required(ErrorMessage = "Selecione um produto")]
-        public int? ProdutoID { get; set; } // <<< Nullable para evitar erro "The value '' is invalid"
+        public int? ProdutoID { get; set; } 
 
         [Required(ErrorMessage = "Informe a quantidade")]
         [Range(1, int.MaxValue, ErrorMessage = "Quantidade inválida")]
