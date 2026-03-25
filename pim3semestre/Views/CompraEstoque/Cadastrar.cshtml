@@ -1,5 +1,4 @@
 ﻿@model pim3semestre.ViewModels.CompraCreateViewModel
-
 @{
     ViewData["Title"] = "Novo Reabastecimento";
 }
@@ -11,17 +10,14 @@
     </div>
 
     <form method="post">
-
-        <!-- FORNECEDOR -->
         <div class="mb-4">
             <label class="form-label text-light">Fornecedor</label>
-            <select class="form-select" asp-for="FornecedorID" asp-items="Model.Fornecedores">
+            <select class="form-select bg-light text-dark" asp-for="FornecedorID" asp-items="Model.Fornecedores">
                 <option value="">Selecione um fornecedor</option>
             </select>
             <span asp-validation-for="FornecedorID" class="text-danger"></span>
         </div>
 
-        <!-- TABELA DE PRODUTOS -->
         <table class="table table-light" id="tabelaItens">
             <thead>
                 <tr>
@@ -39,12 +35,15 @@
                             <select class="form-select" asp-for="Itens[@i].ProdutoID" asp-items="Model.Produtos">
                                 <option value="">Selecione</option>
                             </select>
+                            <span asp-validation-for="Itens[@i].ProdutoID" class="text-danger"></span>
                         </td>
                         <td>
                             <input class="form-control" asp-for="Itens[@i].Quantidade" />
+                            <span asp-validation-for="Itens[@i].Quantidade" class="text-danger"></span>
                         </td>
                         <td>
                             <input class="form-control" asp-for="Itens[@i].Preco" />
+                            <span asp-validation-for="Itens[@i].Preco" class="text-danger"></span>
                         </td>
                         <td class="text-center">
                             <button type="button" class="btn btn-danger btn-remover">X</button>
@@ -54,49 +53,119 @@
             </tbody>
         </table>
 
-        <!-- BOTÃO ADICIONAR -->
-        <button type="button" id="addItem" class="btn btn-primary mb-3">
-            + Adicionar Produto
-        </button>
+        <div class="d-flex justify-content-between mb-3">
+            <button type="button" id="addItem" class="btn btn-primary">
+                + Adicionar Produto
+            </button>
 
-        <!-- BOTÃO SALVAR -->
+            <span class="fw-bold text-light" id="totalPreco">Total: R$ 0.00</span>
+        </div>
+
         <div class="d-flex gap-3">
             <button type="submit" class="btn btn-success w-50">Salvar</button>
             <a asp-action="Index" class="btn btn-primary w-50">Voltar</a>
         </div>
-
     </form>
 </div>
-
 @section Scripts {
-    <script>
-        let index = @Model.Itens.Count;
+<script>
+    let index = @Model.Itens.Count;
 
-        // Adicionar nova linha
-        $("#addItem").click(function () {
-            let options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
+    // Função para atualizar o total
+    function atualizarTotal() {
+        let total = 0;
 
-            let row = `
+        $("#tabelaItens tbody tr").each(function () {
+            let qtd = parseFloat($(this).find('input[name$=".Quantidade"]').val());
+            let preco = parseFloat($(this).find('input[name$=".Preco"]').val().replace(',', '.'));
+
+            if (!isNaN(qtd) && !isNaN(preco)) {
+                total += qtd * preco;
+            }
+        });
+
+        $("#totalPreco").text("Total: R$ " + total.toFixed(2));
+    }
+
+    // Adicionar nova linha
+    $("#addItem").click(function () {
+        let options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
+
+        let newRow = $(`
             <tr>
                 <td>
-                    <select name="Itens[${index}].ProdutoID" class="form-select">
+                    <select name="Itens[${index}].ProdutoID" class="form-select" 
+                            data-val="true" 
+                            data-val-required="Selecione um produto">
                         <option value="">Selecione</option>
                         ${options}
                     </select>
+                    <span class="text-danger field-validation-valid" 
+                          data-valmsg-for="Itens[${index}].ProdutoID" 
+                          data-valmsg-replace="true"></span>
                 </td>
-                <td><input name="Itens[${index}].Quantidade" class="form-control" /></td>
-                <td><input name="Itens[${index}].Preco" class="form-control" /></td>
+                <td>
+                    <input type="number" name="Itens[${index}].Quantidade" class="form-control"
+                           value="0"
+                           data-val="true"
+                           data-val-required="Informe a quantidade"
+                           data-val-range="Quantidade inválida"
+                           data-val-range-min="1"
+                           data-val-range-max="2147483647" />
+                    <span class="text-danger field-validation-valid"
+                          data-valmsg-for="Itens[${index}].Quantidade"
+                          data-valmsg-replace="true"></span>
+                </td>
+                <td>
+                    <input type="text" name="Itens[${index}].Preco" class="form-control"
+                           value="0.00"
+                           data-val="true"
+                           data-val-required="Informe o preço"
+                           data-val-number="Preço deve ser um número"
+                           data-val-range="Preço inválido"
+                           data-val-range-min="0.01"
+                           data-val-range-max="999999.99" />
+                    <span class="text-danger field-validation-valid"
+                          data-valmsg-for="Itens[${index}].Preco"
+                          data-valmsg-replace="true"></span>
+                </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-remover">X</button>
                 </td>
-            </tr>`;
-            $("#tabelaItens tbody").append(row);
-            index++;
-        });
+            </tr>
+        `);
 
-        // Remover linha
-        $(document).on("click", ".btn-remover", function () {
-            $(this).closest("tr").remove();
-        });
-    </script>
+        // Adiciona a linha na tabela
+        $("#tabelaItens tbody").append(newRow);
+
+        // Reparse apenas a nova linha para validação Unobtrusive
+        $.validator.unobtrusive.parse(newRow);
+
+        // Remove erro imediato da quantidade inicial 0
+        newRow.find('input[name$="Quantidade"]').removeClass('input-validation-error');
+        newRow.find('span[data-valmsg-for$="Quantidade"]').text('');
+
+        // Atualiza o total
+        atualizarTotal();
+
+        index++;
+    });
+
+    // Remover linha
+    $(document).on("click", ".btn-remover", function () {
+        $(this).closest("tr").remove();
+        atualizarTotal();
+    });
+
+    // Atualizar total automaticamente quando usuário altera quantidade ou preço
+    $(document).on("input", 'input[name$=".Quantidade"], input[name$=".Preco"]', function () {
+        atualizarTotal();
+    });
+
+    // Atualiza total ao carregar a página (caso haja itens iniciais)
+    $(document).ready(function () {
+        atualizarTotal();
+    });
+</script>
 }
+

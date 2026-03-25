@@ -11,14 +11,13 @@ namespace pim3semestre.ViewModels
         public List<ItemCompraCreateVM> Itens { get; set; } = new List<ItemCompraCreateVM>();
 
         public IEnumerable<SelectListItem>? Fornecedores { get; set; }
-
         public IEnumerable<SelectListItem>? Produtos { get; set; }
     }
 
     public class ItemCompraCreateVM
     {
-        [Required]
-        public int ProdutoID { get; set; }
+        [Required(ErrorMessage = "Selecione um produto")]
+        public int? ProdutoID { get; set; } // <<< Nullable para evitar erro "The value '' is invalid"
 
         [Required(ErrorMessage = "Informe a quantidade")]
         [Range(1, int.MaxValue, ErrorMessage = "Quantidade inválida")]
