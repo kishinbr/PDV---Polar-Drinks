@@ -17,7 +17,8 @@
     </div>
 
     <h4>Pedidos Pendentes</h4>
-
+    @if (Model.Pendentes != null && Model.Pendentes.Any())
+{
     <table class="table table-warning table-hover mb-5">
         <thead>
             <tr>
@@ -37,27 +38,50 @@
                     <td>@item.Fornecedor?.FornecedorNome</td>
                     <td>@item.CompraStatus</td>
                     <td class="text-center">
-                        <a class="btn btn-primary btn-sm"
-                               asp-action="Detalhes"
-                               asp-route-id="@item.CompraID">
-                            Ver
-                        </a>
+                            
+                            <a asp-action="Detalhes"
+                                   asp-route-id="@item.CompraID"
+                                   asp-route-confirmar="false"
+                                   class="btn btn-primary btn-sm">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                            </a>
 
-                        <a class="btn btn-success btn-sm"
-                               asp-action="ConfirmarEntrega"
-                               asp-route-id="@item.CompraID">
-                            Entregue
-                        </a>
+                           
+                            <a asp-action="Detalhes"
+                                   asp-route-id="@item.CompraID"
+                                   asp-route-confirmar="true"
+                                   class="btn btn-success btn-sm">
+                                <i class="bi bi-truck"></i>
+                            </a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    }
+    else
+    {
+        <div class="text-center text-muted my-4">
+            <i class="bi bi-inbox fs-3"></i>
+            <p class="mt-2">Nenhum pedido pendente</p>
+        </div>
+    }
 
-    <!-- 🟢 CONCLUÍDOS -->
+    
     <h4>Pedidos Concluídos</h4>
 
-    <table class="table table-success table-hover">
+    @* <div class="row mb-3">
+        <div class="col-md-3">
+            <label>Data Inicial</label>
+            <input type="date" id="dataInicio" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label>Data Final</label>
+            <input type="date" id="dataFim" class="form-control">
+        </div>
+    </div> *@
+
+    <table id="tabelaConcluidos" class="table table-success table-hover">
         <thead>
             <tr>
                 <th>ID</th>
@@ -65,7 +89,7 @@
                 <th>Data Entrega</th>
                 <th>Fornecedor</th>
                 <th>Status</th>
-                <th class="text-center">Ações</th>
+                <th class="text-center">Detalhes</th>
             </tr>
         </thead>
         <tbody>
@@ -73,15 +97,15 @@
             {
                 <tr>
                     <td>@item.CompraID</td>
-                    <td>@item.CompraData.ToString("dd/MM/yyyy")</td>
-                    <td>@item.CompraDataEntrega?.ToString("dd/MM/yyyy")</td>
+                    <td>@item.CompraData.ToString("yyyy-MM-dd")</td>
+                    <td>@item.CompraDataEntrega?.ToString("yyyy-MM-dd")</td>
                     <td>@item.Fornecedor?.FornecedorNome</td>
                     <td>@item.CompraStatus</td>
                     <td class="text-center">
                         <a class="btn btn-primary btn-sm"
                                asp-action="Detalhes"
                                asp-route-id="@item.CompraID">
-                            Ver
+                            <i class="bi bi-file-earmark-text-fill"></i>
                         </a>
                     </td>
                 </tr>

@@ -186,3 +186,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+$(document).ready(function () {
+
+    var table = $('#tabelaConcluidos').DataTable({
+        pageLength: 10,
+        lengthMenu: [10, 20, 30],
+        scrollY: "50vh",
+        scrollCollapse: true,
+        paging: true,
+        order: [[0, "desc"]],
+
+        columnDefs: [
+            { orderable: false, targets: [5] },
+            { className: "text-center", targets: [1,2,5] }
+        ],
+
+        language: {
+            "emptyTable": "Nenhum pedido concluído",
+            "info": "Mostrando de _START_ a _END_ de _TOTAL_ pedidos",
+            "lengthMenu": "Mostrar _MENU_ pedidos",
+            "search": "Pesquisar:",
+            "zeroRecords": "Nenhum resultado encontrado",
+            "paginate": {
+                "next": "Próximo",
+                "previous": "Anterior"
+            }
+        }
+    });
+
+    // 🔍 FILTRO POR DATA
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+
+        let dataInicio = $('#dataInicio').val();
+        let dataFim = $('#dataFim').val();
+
+        let dataCompra = data[1]; // coluna Data Compra
+
+        if (!dataInicio && !dataFim) return true;
+
+        if (dataInicio && dataCompra < dataInicio) return false;
+        if (dataFim && dataCompra > dataFim) return false;
+
+        return true;
+    });
+
+    // Atualiza tabela ao mudar datas
+    $('#dataInicio, #dataFim').on('change', function () {
+        table.draw();
+    });
+
+});

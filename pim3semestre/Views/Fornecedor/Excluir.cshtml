@@ -1,0 +1,38 @@
+﻿@model FornecedorModel
+@{
+    ViewData["Title"] = "Excluir Fornecedor";
+}
+
+<div class="container bg-dark p-5 rounded-5">
+
+    <div class="text-center mb-4">
+        <h2 class="text-light">Confirmar Exclusão</h2>
+    </div>
+
+    <!-- INFO DO FORNECEDOR -->
+    <div class="bg-light p-4 rounded mb-4">
+        <p><strong>Nome:</strong> @Model.FornecedorNome</p>
+        <p><strong>CNPJ:</strong> @Model.FornecedorCNPJ</p>
+        <p><strong>Telefone:</strong> @Model.FornecedorTelefone</p>
+        <p><strong>Cidade:</strong> @Model.FornecedorCidade - @Model.FornecedorEstado</p>
+    </div>
+
+    <p class="text-danger text-center">
+        ⚠️ Esta ação não pode ser desfeita!
+    </p>
+
+    <form method="post" asp-action="Excluir">
+        <input type="hidden" name="id" value="@Model.FornecedorID" />
+
+        <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn btn-danger w-50">
+                Confirmar Exclusão
+            </button>
+
+            <a asp-action="Index" class="btn btn-primary w-50">
+                Cancelar
+            </a>
+        </div>
+    </form>
+
+</div>

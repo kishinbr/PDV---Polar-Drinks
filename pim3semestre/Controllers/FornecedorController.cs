@@ -23,18 +23,18 @@ namespace pim3semestre.Controllers
             return View(fornecedores);
         }
 
-        
+
 
 
         [HttpGet]
         public IActionResult Editar(int? id)
         {
-            if (id == null)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
 
-            FornecedorModel? fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
+            var fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
 
             if (fornecedor == null)
             {
@@ -44,20 +44,40 @@ namespace pim3semestre.Controllers
             return View(fornecedor);
         }
 
+        // 🟢 POST
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Editar(FornecedorModel fornecedor)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.Fornecedores.Update(fornecedor);
-                _db.SaveChanges();
-
-                TempData["MensagemSucesso"] = "Fornecedor Editada com sucesso!";
-
-                return RedirectToAction("Index");
+                TempData["MensagemErro"] = "Erro ao editar fornecedor.";
+                return View(fornecedor);
             }
-            TempData["MensagemErro"] = "Ocorreu algum erro ao Editar";
-            return View(fornecedor);
+
+            var fornecedorDb = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == fornecedor.FornecedorID);
+
+            if (fornecedorDb == null)
+            {
+                return NotFound();
+            }
+
+            // Atualizando campos
+            fornecedorDb.FornecedorNome = fornecedor.FornecedorNome;
+            fornecedorDb.FornecedorCNPJ = fornecedor.FornecedorCNPJ;
+            fornecedorDb.FornecedorTelefone = fornecedor.FornecedorTelefone;
+            fornecedorDb.FornecedorEmail = fornecedor.FornecedorEmail;
+            fornecedorDb.FornecedorCEP = fornecedor.FornecedorCEP;
+            fornecedorDb.FornecedorCidade = fornecedor.FornecedorCidade;
+            fornecedorDb.FornecedorEstado = fornecedor.FornecedorEstado;
+            fornecedorDb.FornecedorBairro = fornecedor.FornecedorBairro;
+            fornecedorDb.FornecedorLogradouro = fornecedor.FornecedorLogradouro;
+            fornecedorDb.FornecedorNum = fornecedor.FornecedorNum;
+
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Fornecedor editado com sucesso!";
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -77,8 +97,11 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        public IActionResult Excluir(FornecedorModel fornecedor)
+        [ValidateAntiForgeryToken]
+        public IActionResult Excluir(int id)
         {
+            var fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
+
             if (fornecedor == null)
             {
                 return NotFound();
@@ -87,7 +110,7 @@ namespace pim3semestre.Controllers
             _db.Fornecedores.Remove(fornecedor);
             _db.SaveChanges();
 
-            TempData["MensagemSucesso"] = "Fornecedor Excluido com sucesso!";
+            TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
             return RedirectToAction("Index");
         }
 

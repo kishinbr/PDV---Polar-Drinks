@@ -3,12 +3,14 @@
     ViewData["Title"] = "Polar Drinks Fornecedores";
 }
 
-<div >
+<div>
 
     <div class="d-flex justify-content-between align-items-center mb-5">
         <h1>Fornecedores</h1>
-        <a class="btn btn-success mx-2" asp-controller="Fornecedor" asp-action="Cadastrar">
-            <i class="bi bi-file-earmark-plus-fill mx-2"></i>Cadastrar novo Fornecedor
+
+        <a class="btn btn-success mx-2" asp-action="Cadastrar">
+            <i class="bi bi-file-earmark-plus-fill mx-2"></i>
+            Cadastrar novo Fornecedor
         </a>
     </div>
 
@@ -34,8 +36,9 @@
                 <th style="width: 5%;" class="text-center">Ações</th>
             </tr>
         </thead>
+
         <tbody>
-            @if (Model != null)
+            @if (Model != null && Model.Any())
             {
                 @foreach (var fornecedor in Model)
                 {
@@ -49,24 +52,36 @@
                         <td>@fornecedor.FornecedorEstado</td>
                         <td>@fornecedor.FornecedorBairro</td>
                         <td>@fornecedor.FornecedorNum</td>
+
                         <td class="text-center">
+                            <!-- EDITAR -->
                             <a class="btn btn-warning btn-sm mx-1"
-                                   asp-controller="Fornecedor"
-                                   asp-action="Editar"
-                                   asp-route-id="@fornecedor.FornecedorID">
+                               asp-action="Editar"
+                               asp-route-id="@fornecedor.FornecedorID"
+                               title="Editar fornecedor">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
 
+                            @* <!-- EXCLUIR -->
                             <a class="btn btn-danger btn-sm mx-1"
-                                   asp-controller="Fornecedor"
-                                   asp-action="Excluir"
-                                   asp-route-id="@fornecedor.FornecedorID">
+                               asp-action="Excluir"
+                               asp-route-id="@fornecedor.FornecedorID"
+                               title="Excluir fornecedor">
                                 <i class="bi bi-trash3-fill"></i>
-                            </a>
+                            </a> *@
                         </td>
                     </tr>
                 }
             }
+            else
+            {
+                <tr>
+                    <td colspan="10" class="text-center text-muted">
+                        Nenhum fornecedor cadastrado
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
+
 </div>

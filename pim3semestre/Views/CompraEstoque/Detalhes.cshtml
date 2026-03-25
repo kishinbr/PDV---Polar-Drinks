@@ -67,7 +67,7 @@
     <div class="d-flex gap-3 mt-4">
         <a asp-action="Index" class="btn btn-primary w-50">Voltar</a>
 
-        @if (Model.Compra.CompraStatus == "Aguardando")
+        @if (Model.PodeConfirmar)
         {
             <a asp-action="ConfirmarEntrega"
                    asp-route-id="@Model.Compra.CompraID"

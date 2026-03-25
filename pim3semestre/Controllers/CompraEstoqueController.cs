@@ -131,8 +131,7 @@ namespace pim3semestre.Controllers
             return RedirectToAction("Index");
         }
 
-        // ====================== Mantidas as funções de visualização ======================
-        public IActionResult Detalhes(int id)
+        public IActionResult Detalhes(int id, bool confirmar = false)
         {
             var compra = _context.ComprasEstoque
                 .Include(c => c.Fornecedor)
@@ -146,7 +145,8 @@ namespace pim3semestre.Controllers
             var vm = new CompraDetalhesViewModel
             {
                 Compra = compra,
-                Itens = compra.Itens.ToList()
+                Itens = compra.Itens.ToList(),
+                PodeConfirmar = confirmar 
             };
 
             return View(vm);
