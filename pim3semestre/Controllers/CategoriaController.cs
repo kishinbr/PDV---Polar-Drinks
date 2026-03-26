@@ -55,51 +55,62 @@ namespace pim3semestre.Controllers
         // a mesma view é retornada com os dados preenchidos para que o usuário possa corrigir os erros
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Editar(CategoriaModel categoria)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.Categorias.Update(categoria);
-                _db.SaveChanges();
-
-                TempData["MensagemSucesso"] = "Categoria Editada com sucesso!";
-
-                return RedirectToAction("Index");
+                return View(categoria);
             }
-            TempData["MensagemErro"] = "Ocorreu algum erro ao Editar";
-            return View(categoria);
-        }
 
-        [HttpGet]
-        public IActionResult Excluir(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            CategoriaModel? categoria = _db.Categorias.FirstOrDefault(x => x.CategoriaID == id);
+            var categoriaDb = _db.Categorias.FirstOrDefault(c => c.CategoriaID == categoria.CategoriaID);
 
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-            return View(categoria);
-        }
-
-        [HttpPost]
-        public IActionResult Excluir(CategoriaModel categoria)
-        {
-            if(categoria == null)
+            if (categoriaDb == null)
             {
                 return NotFound();
             }
 
-            _db.Categorias.Remove(categoria);
+            // Atualiza os campos
+            categoriaDb.CategoriaNome = categoria.CategoriaNome;
+            categoriaDb.CategoriaDescricao = categoria.CategoriaDescricao;
+            categoriaDb.CategoriaAtiva = categoria.CategoriaAtiva; 
+
             _db.SaveChanges();
 
-            TempData["MensagemSucesso"] = "Categoria Excluida com sucesso!";
+            TempData["MensagemSucesso"] = "Categoria atualizada com sucesso!";
             return RedirectToAction("Index");
         }
+
+        //[HttpGet]
+        //public IActionResult Excluir(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    CategoriaModel? categoria = _db.Categorias.FirstOrDefault(x => x.CategoriaID == id);
+
+        //    if (categoria == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(categoria);
+        //}
+
+        //[HttpPost]
+        //public IActionResult Excluir(CategoriaModel categoria)
+        //{
+        //    if(categoria == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _db.Categorias.Remove(categoria);
+        //    _db.SaveChanges();
+
+        //    TempData["MensagemSucesso"] = "Categoria Excluida com sucesso!";
+        //    return RedirectToAction("Index");
+        //}
 
 
         [HttpPost]
