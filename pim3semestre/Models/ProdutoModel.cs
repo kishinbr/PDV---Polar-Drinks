@@ -31,7 +31,6 @@ namespace pim3semestre.Models
 
         public bool ProdutoAtivo { get; set; }
 
-        // 🔥 ALTERADO AQUI
         [Required(ErrorMessage = "Selecione uma categoria")]
         public int? CategoriaID { get; set; }
 

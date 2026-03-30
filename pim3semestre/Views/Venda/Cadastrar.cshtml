@@ -1,0 +1,300 @@
+﻿@{
+    ViewData["Title"] = "Nova Venda";
+}
+
+<div class="container bg-dark p-4 rounded-4">
+
+    <h2 class="text-light text-center mb-4">Nova Venda</h2>
+
+    <!-- ================= LINHA 1 ================= -->
+    <div class="row mb-4">
+
+        <!-- BUSCA -->
+        <div class="col-md-12">
+            <label class="form-label text-light">Buscar Produto (Código ou Nome)</label>
+
+            <div class="position-relative">
+                <input type="text" id="buscaProduto" class="form-control"
+                       placeholder="Digite o código ou nome do produto">
+
+                <div id="listaSugestoes"
+                     class="list-group position-absolute w-100"
+                     style="z-index:1000;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= LINHA 2 ================= -->
+    <div class="row">
+
+        <!-- ESQUERDA -->
+        <div class="col-md-4">
+
+            <div class="mb-3">
+                <label class="form-label text-light">Quantidade</label>
+                <input type="number" id="quantidade" class="form-control" value="1">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-light">Valor Unitário</label>
+                <input type="text" id="valorUnitario" class="form-control" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-light">Total</label>
+                <input type="text" id="valorTotal" class="form-control" readonly>
+            </div>
+
+            <button id="btnAdicionar" class="btn btn-success w-100 mt-2">
+                Adicionar Item
+            </button>
+
+        </div>
+
+        <!-- DIREITA -->
+        <div class="col-md-8 d-flex flex-column">
+
+            <div class="flex-grow-1">
+                <table class="table table-light table-hover">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th class="text-end">Qtd</th>
+                            <th class="text-end">Unitário</th>
+                            <th class="text-end">Total</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabelaItens"></tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3 p-3 rounded-3">
+                <h4 class="text-light m-0">
+                    Total: <span id="totalVenda">R$ 0,00</span>
+                </h4>
+
+                <button id="btnConfirmarVenda" class="btn btn-success">
+                    Confirmar Venda
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+@section Scripts {
+    <script>
+
+                let totalVenda = 0;
+        let produtoSelecionado = null;
+
+        const produtos = @Html.Raw(Json.Serialize(ViewBag.Produtos));
+
+        const buscaInput = document.getElementById("buscaProduto");
+        const lista = document.getElementById("listaSugestoes");
+
+        const qtdInput = document.getElementById("quantidade");
+        const valorUnitario = document.getElementById("valorUnitario");
+        const valorTotal = document.getElementById("valorTotal");
+        const tabela = document.getElementById("tabelaItens");
+        const totalVendaLabel = document.getElementById("totalVenda");
+
+        // ================= BUSCA =================
+        let indiceSelecionado = -1;
+
+        function renderLista(filtro = "") {
+
+            lista.innerHTML = "";
+            indiceSelecionado = -1;
+
+            let filtrados = produtos
+                .filter(p =>
+                    p.produtoNome.toLowerCase().includes(filtro) ||
+                    p.produtoCodBarra.toLowerCase().includes(filtro)
+                )
+                .slice(0, 8);
+
+            filtrados.forEach((p, index) => {
+
+                let item = document.createElement("a");
+                item.classList.add("list-group-item", "list-group-item-action");
+
+                item.textContent = `${p.produtoNome} (${p.produtoCodBarra})`;
+
+                item.onclick = function () {
+                    selecionarProduto(p);
+                };
+
+                lista.appendChild(item);
+            });
+        }
+
+        // 🔥 SELECIONAR PRODUTO
+        function selecionarProduto(p) {
+            produtoSelecionado = p;
+            buscaInput.value = p.produtoNome;
+            lista.innerHTML = "";
+
+            valorUnitario.value = formatarMoeda(p.produtoPrecoVenda);
+            calcularTotal();
+        }
+
+        // 🔹 MOSTRA AO CLICAR
+        buscaInput.addEventListener("focus", function () {
+            let valor = buscaInput.value.toLowerCase();
+            renderLista(valor);
+        });
+
+        // 🔹 FILTRA AO DIGITAR
+        buscaInput.addEventListener("input", function () {
+            let valor = buscaInput.value.toLowerCase();
+            renderLista(valor);
+        });
+
+        // 🔥 FECHAR LISTA AO CLICAR FORA (AQUI ESTÁ A CORREÇÃO)
+        document.addEventListener("click", function (e) {
+
+            if (!buscaInput.contains(e.target) && !lista.contains(e.target)) {
+                lista.innerHTML = "";
+            }
+
+        });
+
+        // 🔥 CONTROLE DE TECLADO
+        buscaInput.addEventListener("keydown", function (e) {
+
+            let itens = lista.querySelectorAll(".list-group-item");
+
+            if (itens.length === 0) return;
+
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                indiceSelecionado++;
+
+                if (indiceSelecionado >= itens.length) {
+                    indiceSelecionado = 0;
+                }
+            }
+
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                indiceSelecionado--;
+
+                if (indiceSelecionado < 0) {
+                    indiceSelecionado = itens.length - 1;
+                }
+            }
+
+            if (e.key === "Enter") {
+                e.preventDefault();
+
+                if (indiceSelecionado >= 0) {
+                    itens[indiceSelecionado].click();
+                }
+                return;
+            }
+
+            itens.forEach(item => item.classList.remove("active"));
+
+            if (indiceSelecionado >= 0) {
+                itens[indiceSelecionado].classList.add("active");
+            }
+        });
+
+        // ================= CALCULO =================
+        qtdInput.addEventListener("input", calcularTotal);
+
+        function calcularTotal() {
+
+            let qtd = parseFloat(qtdInput.value) || 0;
+            let preco = produtoSelecionado?.produtoPrecoVenda || 0;
+
+            let total = qtd * preco;
+
+            valorTotal.value = formatarMoeda(total);
+        }
+
+        // ================= ADICIONAR ITEM =================
+        document.getElementById("btnAdicionar").addEventListener("click", function () {
+
+            if (!produtoSelecionado) {
+                alert("Selecione um produto!");
+                return;
+            }
+
+            let nome = produtoSelecionado.produtoNome;
+            let preco = parseFloat(produtoSelecionado.produtoPrecoVenda);
+            let qtd = parseFloat(qtdInput.value) || 0;
+
+            let total = qtd * preco;
+
+            let linha = `
+                <tr>
+                    <td>${nome}</td>
+                    <td class="text-end">${qtd}</td>
+                    <td class="text-end">${formatarMoeda(preco)}</td>
+                    <td class="text-end">${formatarMoeda(total)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm btn-remover">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            tabela.innerHTML += linha;
+
+            totalVenda += total;
+            totalVendaLabel.innerText = formatarMoeda(totalVenda);
+
+            // RESET
+            produtoSelecionado = null;
+            buscaInput.value = "";
+            qtdInput.value = 1;
+            valorUnitario.value = "";
+            valorTotal.value = "";
+        });
+
+        // ================= REMOVER ITEM =================
+        tabela.addEventListener("click", function (e) {
+
+            if (e.target.closest(".btn-remover")) {
+
+                let row = e.target.closest("tr");
+
+                let valorTexto = row.children[3].innerText
+                    .replace("R$", "")
+                    .replace(".", "")
+                    .replace(",", ".");
+
+                let valor = parseFloat(valorTexto) || 0;
+
+                totalVenda -= valor;
+                totalVendaLabel.innerText = formatarMoeda(totalVenda);
+
+                row.remove();
+            }
+        });
+
+        // ================= CONFIRMAR =================
+        document.getElementById("btnConfirmarVenda").addEventListener("click", function () {
+
+            if (tabela.children.length === 0) {
+                alert("Adicione pelo menos um item!");
+                return;
+            }
+
+            alert("Venda confirmada! Próximo passo: salvar no banco.");
+        });
+
+        // ================= FORMATAR =================
+        function formatarMoeda(valor) {
+            return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
+        }
+
+    </script>
+}
