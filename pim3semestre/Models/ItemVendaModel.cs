@@ -11,11 +11,13 @@ namespace pim3semestre.Models
 
         public decimal ItemVendaPreco { get; set; }
 
+        public decimal ItemVendaCusto { get; set; }
+        public decimal ItemVendaTotal { get; set; } 
+
         public int ProdutoID { get; set; }
         public ProdutoModel? Produto { get; set; }
 
         public int VendaID { get; set; }
         public VendaFinalModel? Venda { get; set; }
-
     }
 }

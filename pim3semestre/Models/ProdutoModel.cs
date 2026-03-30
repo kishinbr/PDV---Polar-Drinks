@@ -15,7 +15,10 @@ namespace pim3semestre.Models
         [StringLength(300)]
         public string? ProdutoDescricao { get; set; }
 
- 
+        [Required(ErrorMessage = "O custo é obrigatório")]
+        [Range(0.00, 999999.99)]
+        public decimal? ProdutoPrecoCusto { get; set; }
+
         [Required(ErrorMessage = "O preço é obrigatório")]
         [Range(0.00, 999999.99, ErrorMessage = "O preço inválido")]
         public decimal? ProdutoPrecoVenda { get; set; }

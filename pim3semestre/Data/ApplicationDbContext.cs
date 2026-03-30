@@ -19,89 +19,104 @@ namespace pim3semestre.Data
         public DbSet<VendaFinalModel> Vendas { get; set; }
         public DbSet<ItemVendaModel> ItensVenda { get; set; }
 
-
-        public DbSet<ClienteModel> Clientes { get; set; }
-        public DbSet<FuncionarioModel> Funcionarios { get; set; }
-
         public DbSet<MovimentacaoEstoqueModel> MovimentacoesEstoque { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // ================= RELACIONAMENTOS =================
+
+            // PRODUTO -> CATEGORIA
             modelBuilder.Entity<ProdutoModel>()
                 .HasOne(p => p.Categoria)
                 .WithMany(c => c.Produtos)
                 .HasForeignKey(p => p.CategoriaID);
 
+            // COMPRA -> FORNECEDOR
             modelBuilder.Entity<CompraEstoqueModel>()
                 .HasOne(c => c.Fornecedor)
                 .WithMany(f => f.Compras)
                 .HasForeignKey(c => c.FornecedorID);
 
+            // IGNORAR TOTAL (calculado)
             modelBuilder.Entity<CompraEstoqueModel>()
                 .Ignore(c => c.CompraValorTotal);
 
+            // ITEM COMPRA -> COMPRA
             modelBuilder.Entity<ItemCompraModel>()
                 .HasOne(ic => ic.Compra)
                 .WithMany(c => c.Itens)
                 .HasForeignKey(ic => ic.CompraID);
 
+            // ITEM COMPRA -> PRODUTO
             modelBuilder.Entity<ItemCompraModel>()
                 .HasOne(ic => ic.Produto)
                 .WithMany()
                 .HasForeignKey(ic => ic.ProdutoID);
 
+            // ITEM VENDA -> VENDA
             modelBuilder.Entity<ItemVendaModel>()
                 .HasOne(iv => iv.Venda)
                 .WithMany(v => v.Itens)
                 .HasForeignKey(iv => iv.VendaID);
 
+            // ITEM VENDA -> PRODUTO
             modelBuilder.Entity<ItemVendaModel>()
                 .HasOne(iv => iv.Produto)
                 .WithMany()
                 .HasForeignKey(iv => iv.ProdutoID);
 
-            modelBuilder.Entity<VendaFinalModel>()
-                .HasOne(v => v.Cliente)
-                .WithMany(c => c.Vendas)
-                .HasForeignKey(v => v.ClienteID)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<VendaFinalModel>()
-                .HasOne(v => v.Funcionario)
-                .WithMany(f => f.Vendas)
-                .HasForeignKey(v => v.FuncionarioID);
-
+            // MOVIMENTAÇÃO -> PRODUTO
             modelBuilder.Entity<MovimentacaoEstoqueModel>()
                 .HasOne(m => m.Produto)
                 .WithMany()
                 .HasForeignKey(m => m.ProdutoID);
 
+            // MOVIMENTAÇÃO -> ITEM COMPRA
             modelBuilder.Entity<MovimentacaoEstoqueModel>()
                 .HasOne(m => m.ItemCompra)
                 .WithMany()
                 .HasForeignKey(m => m.ItemCompraID)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // MOVIMENTAÇÃO -> ITEM VENDA
             modelBuilder.Entity<MovimentacaoEstoqueModel>()
                 .HasOne(m => m.ItemVenda)
                 .WithMany()
                 .HasForeignKey(m => m.ItemVendaID)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // ================= PRECISÃO DECIMAL =================
+
+            // PRODUTO
             modelBuilder.Entity<ProdutoModel>()
                 .Property(p => p.ProdutoPrecoVenda)
                 .HasPrecision(18, 2);
 
+            modelBuilder.Entity<ProdutoModel>()
+                .Property(p => p.ProdutoPrecoCusto)
+                .HasPrecision(18, 2);
+
+            // ITEM COMPRA
             modelBuilder.Entity<ItemCompraModel>()
                 .Property(ic => ic.ItemCompraPreco)
                 .HasPrecision(18, 2);
 
+            // ITEM VENDA
             modelBuilder.Entity<ItemVendaModel>()
                 .Property(iv => iv.ItemVendaPreco)
                 .HasPrecision(18, 2);
 
+            modelBuilder.Entity<ItemVendaModel>()
+                .Property(iv => iv.ItemVendaCusto)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<ItemVendaModel>()
+                .Property(iv => iv.ItemVendaTotal)
+                .HasPrecision(18, 2);
+
+            // VENDA FINAL
             modelBuilder.Entity<VendaFinalModel>()
                 .Property(v => v.VendaValorTotal)
                 .HasPrecision(18, 2);

@@ -89,7 +89,7 @@
 @section Scripts {
     <script>
 
-                let totalVenda = 0;
+        let totalVenda = 0;
         let produtoSelecionado = null;
 
         const produtos = @Html.Raw(Json.Serialize(ViewBag.Produtos));
@@ -103,9 +103,9 @@
         const tabela = document.getElementById("tabelaItens");
         const totalVendaLabel = document.getElementById("totalVenda");
 
-        // ================= BUSCA =================
         let indiceSelecionado = -1;
 
+        // ================= BUSCA =================
         function renderLista(filtro = "") {
 
             lista.innerHTML = "";
@@ -118,7 +118,7 @@
                 )
                 .slice(0, 8);
 
-            filtrados.forEach((p, index) => {
+            filtrados.forEach((p) => {
 
                 let item = document.createElement("a");
                 item.classList.add("list-group-item", "list-group-item-action");
@@ -133,7 +133,6 @@
             });
         }
 
-        // 🔥 SELECIONAR PRODUTO
         function selecionarProduto(p) {
             produtoSelecionado = p;
             buscaInput.value = p.produtoNome;
@@ -143,55 +142,37 @@
             calcularTotal();
         }
 
-        // 🔹 MOSTRA AO CLICAR
         buscaInput.addEventListener("focus", function () {
-            let valor = buscaInput.value.toLowerCase();
-            renderLista(valor);
+            renderLista(buscaInput.value.toLowerCase());
         });
 
-        // 🔹 FILTRA AO DIGITAR
         buscaInput.addEventListener("input", function () {
-            let valor = buscaInput.value.toLowerCase();
-            renderLista(valor);
+            renderLista(buscaInput.value.toLowerCase());
         });
 
-        // 🔥 FECHAR LISTA AO CLICAR FORA (AQUI ESTÁ A CORREÇÃO)
         document.addEventListener("click", function (e) {
-
             if (!buscaInput.contains(e.target) && !lista.contains(e.target)) {
                 lista.innerHTML = "";
             }
-
         });
 
-        // 🔥 CONTROLE DE TECLADO
         buscaInput.addEventListener("keydown", function (e) {
 
             let itens = lista.querySelectorAll(".list-group-item");
-
             if (itens.length === 0) return;
 
             if (e.key === "ArrowDown") {
                 e.preventDefault();
-                indiceSelecionado++;
-
-                if (indiceSelecionado >= itens.length) {
-                    indiceSelecionado = 0;
-                }
+                indiceSelecionado = (indiceSelecionado + 1) % itens.length;
             }
 
             if (e.key === "ArrowUp") {
                 e.preventDefault();
-                indiceSelecionado--;
-
-                if (indiceSelecionado < 0) {
-                    indiceSelecionado = itens.length - 1;
-                }
+                indiceSelecionado = (indiceSelecionado - 1 + itens.length) % itens.length;
             }
 
             if (e.key === "Enter") {
                 e.preventDefault();
-
                 if (indiceSelecionado >= 0) {
                     itens[indiceSelecionado].click();
                 }
@@ -199,7 +180,6 @@
             }
 
             itens.forEach(item => item.classList.remove("active"));
-
             if (indiceSelecionado >= 0) {
                 itens[indiceSelecionado].classList.add("active");
             }
@@ -209,12 +189,10 @@
         qtdInput.addEventListener("input", calcularTotal);
 
         function calcularTotal() {
-
             let qtd = parseFloat(qtdInput.value) || 0;
             let preco = produtoSelecionado?.produtoPrecoVenda || 0;
 
             let total = qtd * preco;
-
             valorTotal.value = formatarMoeda(total);
         }
 
@@ -226,14 +204,34 @@
                 return;
             }
 
+            let qtd = parseFloat(qtdInput.value) || 0;
+            let estoque = produtoSelecionado.produtoQtdEstoque || 0;
+
+            // 🔥 SOMA JÁ ADICIONADA
+            let qtdJaAdicionada = 0;
+
+            let linhas = tabela.querySelectorAll("tr");
+
+            linhas.forEach(linha => {
+                let id = parseInt(linha.getAttribute("data-id"));
+
+                if (id === produtoSelecionado.produtoID) {
+                    qtdJaAdicionada += parseInt(linha.children[1].innerText);
+                }
+            });
+
+            // 🔥 VALIDAÇÃO COMPLETA
+            if ((qtd + qtdJaAdicionada) > estoque) {
+                alert(`Estoque insuficiente! Já adicionado: ${qtdJaAdicionada} | Disponível: ${estoque}`);
+                return;
+            }
+
             let nome = produtoSelecionado.produtoNome;
             let preco = parseFloat(produtoSelecionado.produtoPrecoVenda);
-            let qtd = parseFloat(qtdInput.value) || 0;
-
             let total = qtd * preco;
 
             let linha = `
-                <tr>
+                <tr data-id="${produtoSelecionado.produtoID}">
                     <td>${nome}</td>
                     <td class="text-end">${qtd}</td>
                     <td class="text-end">${formatarMoeda(preco)}</td>
@@ -288,7 +286,65 @@
                 return;
             }
 
-            alert("Venda confirmada! Próximo passo: salvar no banco.");
+            let itens = [];
+
+            let linhas = tabela.querySelectorAll("tr");
+
+            linhas.forEach(linha => {
+
+                let produtoID = parseInt(linha.getAttribute("data-id"));
+
+                let qtd = parseInt(linha.children[1].innerText);
+
+                let precoTexto = linha.children[2].innerText
+                    .replace("R$", "")
+                    .replace(".", "")
+                    .replace(",", ".");
+
+                let preco = parseFloat(precoTexto);
+
+                let totalTexto = linha.children[3].innerText
+                    .replace("R$", "")
+                    .replace(".", "")
+                    .replace(",", ".");
+
+                let total = parseFloat(totalTexto);
+
+                itens.push({
+                    produtoID: produtoID,
+                    itemVendaQtd: qtd,
+                    itemVendaPreco: preco,
+                    itemVendaTotal: total
+                });
+            });
+
+            let venda = {
+                vendaValorTotal: totalVenda,
+                itens: itens
+            };
+
+            fetch("/Venda/FinalizarVenda", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(venda)
+            })
+            .then(async res => {
+                if (!res.ok) {
+                    let erro = await res.text();
+                    throw new Error(erro);
+                }
+                return res.json();
+            })
+            .then(data => {
+                alert(data.mensagem);
+                location.reload();
+            })
+            .catch(err => {
+                alert(err.message);
+            });
+
         });
 
         // ================= FORMATAR =================
