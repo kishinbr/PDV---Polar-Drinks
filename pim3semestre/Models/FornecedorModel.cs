@@ -49,6 +49,8 @@ namespace pim3semestre.Models
         [StringLength(10)]
         public string? FornecedorNum { get; set; }
 
+        public bool FornecedorAtivo { get; set; } = true;
+
         public List<CompraEstoqueModel> Compras { get; set; } = new List<CompraEstoqueModel>();
     }
 }

@@ -24,8 +24,6 @@ namespace pim3semestre.Controllers
         }
 
 
-
-
         [HttpGet]
         public IActionResult Editar(int? id)
         {
@@ -44,7 +42,6 @@ namespace pim3semestre.Controllers
             return View(fornecedor);
         }
 
-        // 🟢 POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(FornecedorModel fornecedor)
@@ -73,6 +70,7 @@ namespace pim3semestre.Controllers
             fornecedorDb.FornecedorBairro = fornecedor.FornecedorBairro;
             fornecedorDb.FornecedorLogradouro = fornecedor.FornecedorLogradouro;
             fornecedorDb.FornecedorNum = fornecedor.FornecedorNum;
+            fornecedorDb.FornecedorAtivo = fornecedor.FornecedorAtivo;
 
             _db.SaveChanges();
 
@@ -80,40 +78,39 @@ namespace pim3semestre.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public IActionResult Excluir(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            FornecedorModel? fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
+        //[HttpGet]
+        //public IActionResult Excluir(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    FornecedorModel? fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
 
-            if (fornecedor == null)
-            {
-                return NotFound();
-            }
-            return View(fornecedor);
-        }
+        //    if (fornecedor == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(fornecedor);
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Excluir(int id)
-        {
-            var fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Excluir(int id)
+        //{
+        //    var fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
 
-            if (fornecedor == null)
-            {
-                return NotFound();
-            }
+        //    if (fornecedor == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _db.Fornecedores.Remove(fornecedor);
-            _db.SaveChanges();
+        //    _db.Fornecedores.Remove(fornecedor);
+        //    _db.SaveChanges();
 
-            TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
-            return RedirectToAction("Index");
-        }
-
+        //    TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
+        //    return RedirectToAction("Index");
+        //}
 
 
         public IActionResult Cadastrar()
