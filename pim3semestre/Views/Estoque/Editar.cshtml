@@ -26,28 +26,49 @@
             <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
         </div>
 
-        <!-- LINHA -->
+        <!-- LINHA: CODIGO + PREÇO CUSTO + PREÇO VENDA -->
         <div class="row mb-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label class="form-label text-light">Código de Barras</label>
                 <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoCodBarra">
                 <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
             </div>
 
-            <div class="col-md-3">
-                <label class="form-label text-light">Preço</label>
+            <div class="col-md-4">
+                <label class="form-label text-light">Preço de Custo</label>
+                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoCusto">
+                <span asp-validation-for="ProdutoPrecoCusto" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label text-light">Preço de Venda</label>
                 <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoVenda">
                 <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
             </div>
+        </div>
 
-            <div class="col-md-3">
-                <label class="form-label text-light">Quantidade</label>
+        <!-- LINHA: QUANTIDADE + ESTOQUE MINIMO + PROMOÇÃO -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label class="form-label text-light">Quantidade em Estoque</label>
                 <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoQtdEstoque">
                 <span asp-validation-for="ProdutoQtdEstoque" class="text-danger"></span>
             </div>
+
+            <div class="col-md-4">
+                <label class="form-label text-light">Estoque Mínimo</label>
+                <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoEstoqueMinimo">
+                <span asp-validation-for="ProdutoEstoqueMinimo" class="text-danger"></span>
+            </div>
+
+            @* <div class="col-md-4">
+                <label class="form-label text-light">Promoção (%)</label>
+                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPromocao">
+                <span asp-validation-for="ProdutoPromocao" class="text-danger"></span>
+            </div> *@
         </div>
 
-        <!-- LINHA -->
+        <!-- LINHA: CATEGORIA + ATIVO -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <label class="form-label text-light">Categoria</label>

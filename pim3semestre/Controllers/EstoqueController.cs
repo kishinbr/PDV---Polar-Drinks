@@ -119,10 +119,27 @@ namespace pim3semestre.Controllers
             produtoDb.ProdutoQtdEstoque = produto.ProdutoQtdEstoque;
             produtoDb.CategoriaID = produto.CategoriaID;
             produtoDb.ProdutoAtivo = produto.ProdutoAtivo;
+            produtoDb.ProdutoEstoqueMinimo= produto.ProdutoEstoqueMinimo;
+            produtoDb.ProdutoPrecoCusto = produto.ProdutoPrecoCusto;
 
             _db.SaveChanges();
 
             TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult EdicaoRapida(int ProdutoID, decimal ProdutoPrecoVenda, decimal ProdutoPromocao)
+        {
+            var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == ProdutoID);
+            if (produto != null)
+            {
+                produto.ProdutoPrecoVenda = ProdutoPrecoVenda;
+                produto.ProdutoPromocao = ProdutoPromocao;
+
+                _db.SaveChanges();
+                TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+            }
             return RedirectToAction("Index");
         }
     }

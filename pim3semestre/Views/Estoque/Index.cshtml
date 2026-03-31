@@ -25,11 +25,12 @@
             <tr>
                 <th style="width: 20%;">Nome</th>
                 <th style="width: 20%;">Descrição</th>
-                <th style="width: 15%;">Categoria</th>
-                <th style="width: 10%;" class="text-end">Preço</th>
-                <th style="width: 10%;" class="text-end">Qtd</th>
-                <th style="width: 10%;" class="text-center">Status</th>
-                <th style="width: 15%;" class="text-center">Edição</th>
+                <th style="width: 20%;">Categoria</th>
+                <th style="width: 5%;" class="text-end">Preço</th>
+                <th style="width: 5%;" class="text-end">Qtd</th>
+                <th style="width: 5%;" class="text-center">Promoção</th>
+                <th style="width: 5%;" class="text-center">Status</th>
+                <th style="width: 10%;" class="text-center">Edição</th>
             </tr>
         </thead>
 
@@ -54,7 +55,28 @@
                         </td>
 
                         <td class="text-end">
-                            @produto.ProdutoQtdEstoque
+                            @if (produto.ProdutoQtdEstoque.GetValueOrDefault(0) <= produto.ProdutoEstoqueMinimo)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    @($"{produto.ProdutoQtdEstoque.GetValueOrDefault(0)}/{produto.ProdutoEstoqueMinimo}")
+                                </span>
+                            }
+                            else
+                            {
+                                @($"{produto.ProdutoQtdEstoque.GetValueOrDefault(0)}/{produto.ProdutoEstoqueMinimo}")
+                            }
+                        </td>
+
+                        <!-- COLUNA PROMOÇÃO -->
+                        <td class="text-center">
+                            @if (produto.ProdutoPromocao > 0)
+                            {
+                                <span class="text-success">@produto.ProdutoPromocao.ToString("0.#")%</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
                         </td>
 
                         <!-- STATUS -->
@@ -70,19 +92,23 @@
                         </td>
 
                         <td class="text-center">
+                            <!-- Botão editar normal -->
                             <a class="btn btn-warning btn-sm mx-1"
-                                   asp-controller="Estoque"
-                                   asp-action="Editar"
-                                   asp-route-id="@produto.ProdutoID">
+                               asp-controller="Estoque"
+                               asp-action="Editar"
+                               asp-route-id="@produto.ProdutoID">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
 
-                            @* <a class="btn btn-danger btn-sm mx-1"
-                                   asp-controller="Estoque"
-                                   asp-action="Excluir"
-                                   asp-route-id="@produto.ProdutoID">
-                                <i class="bi bi-trash3-fill"></i>
-                            </a> *@
+                            <!-- Botão de edição rápida de preço/promocao -->
+                            <a class="btn btn-info btn-sm mx-1 btn-edicao-rapida"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#edicaoRapidaModal"
+                                   data-id="@produto.ProdutoID"
+                                   data-preco="@produto.ProdutoPrecoVenda"
+                                   data-promocao="@produto.ProdutoPromocao">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
                         </td>
                     </tr>
                 }
@@ -91,4 +117,59 @@
     </table>
 
 </div>
+<!-- Modal de Edição Rápida -->
+<div class="modal fade" id="edicaoRapidaModal" tabindex="-1" aria-labelledby="edicaoRapidaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edicaoRapidaLabel">Edição Rápida do Produto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEdicaoRapida" method="post" asp-controller="Estoque" asp-action="EdicaoRapida">
+                    <input type="hidden" id="ProdutoID" name="ProdutoID" />
 
+                    <div class="mb-3">
+                        <label class="form-label">Preço de Venda</label>
+                        <input type="text" class="form-control" id="PrecoVenda" name="ProdutoPrecoVenda" placeholder="0,00">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Promoção (%)</label>
+                        <input type="text" class="form-control" id="Promocao" name="ProdutoPromocao" placeholder="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success" id="btnConfirmarEdicao">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal = document.getElementById('edicaoRapidaModal');
+            var btnConfirmar = document.getElementById('btnConfirmarEdicao');
+
+            // Ao abrir o modal, carrega os valores atuais
+            modal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget; // botão que abriu o modal
+                var id = button.getAttribute('data-id');
+                var preco = button.getAttribute('data-preco');
+                var promocao = button.getAttribute('data-promocao');
+
+                // Preenche os campos do modal
+                modal.querySelector('#ProdutoID').value = id;
+                modal.querySelector('#PrecoVenda').value = preco;
+                modal.querySelector('#Promocao').value = promocao;
+            });
+
+            // Botão confirmar apenas submete o formulário
+            btnConfirmar.addEventListener('click', function() {
+                document.getElementById('formEdicaoRapida').submit();
+            });
+        });
+    </script>
+}

@@ -11,14 +11,11 @@ namespace pim3semestre.Data
 
         public DbSet<ProdutoModel> Produtos { get; set; }
         public DbSet<CategoriaModel> Categorias { get; set; }
-
         public DbSet<FornecedorModel> Fornecedores { get; set; }
         public DbSet<CompraEstoqueModel> ComprasEstoque { get; set; }
         public DbSet<ItemCompraModel> ItensCompra { get; set; }
-
         public DbSet<VendaFinalModel> Vendas { get; set; }
         public DbSet<ItemVendaModel> ItensVenda { get; set; }
-
         public DbSet<MovimentacaoEstoqueModel> MovimentacoesEstoque { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -97,6 +94,10 @@ namespace pim3semestre.Data
             modelBuilder.Entity<ProdutoModel>()
                 .Property(p => p.ProdutoPrecoCusto)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<ProdutoModel>()
+                .Property(p => p.ProdutoPromocao)
+                .HasPrecision(5, 2); // <--- novo: precision adequada para 0-100%
 
             // ITEM COMPRA
             modelBuilder.Entity<ItemCompraModel>()
