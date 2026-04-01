@@ -143,24 +143,28 @@
         return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
     }
 
-    document.getElementById("formVenda").addEventListener("submit", function (e) {
 
-        const msg = document.getElementById("mensagemErro");
+    //document.getElementById("formVenda").addEventListener("submit", function (e) {
+    //    const msg = document.getElementById("mensagemErro");
+    //    msg.classList.add("d-none");
+    //    msg.innerText = "";
 
-        // limpa erro anterior
-        msg.classList.add("d-none");
-        msg.innerText = "";
+    //    // Verifica se há itens adicionados (olhando os inputs hidden)
+    //    const itens = document.querySelectorAll('#itensHidden input[name$=".ProdutoID"]');
+    //    if (itens.length === 0) {
+    //        e.preventDefault();
+    //        msg.innerText = "Adicione pelo menos um item à venda!aaaaaa";
+    //        msg.classList.remove("d-none");
+    //        return false;
+    //    }
 
-        const pagamentoSelecionado = document.querySelector('input[name="VendaTipoPagamento"]:checked');
-
-        if (!pagamentoSelecionado) {
-            e.preventDefault();
-
-            msg.innerText = "Selecione um tipo de pagamento!aaaaaaaa";
-            msg.classList.remove("d-none");
-
-            return;
-        }
-
-    });
+    //    // Verifica se o pagamento foi selecionado
+    //    const pagamentoSelecionado = document.querySelector('input[name="VendaTipoPagamento"]:checked');
+    //    if (!pagamentoSelecionado) {
+    //        e.preventDefault();
+    //        msg.innerText = "Selecione um tipo de pagamento!aaaaa";
+    //        msg.classList.remove("d-none");
+    //        return false;
+    //    }
+    //});
 });
