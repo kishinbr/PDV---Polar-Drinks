@@ -1,356 +1,130 @@
-﻿@{
+﻿@model pim3semestre.Models.VendaFinalModel
+@{
     ViewData["Title"] = "Nova Venda";
 }
 
 <div class="container bg-dark p-4 rounded-4">
 
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    <div id="mensagemErro" class="alert alert-danger @(TempData["MensagemErro"] == null ? "d-none" : "")">
+        @TempData["MensagemErro"]
+    </div>
+
     <h2 class="text-light text-center mb-4">Nova Venda</h2>
 
-    <!-- ================= LINHA 1 ================= -->
-    <div class="row mb-4">
+    <div id="mensagemErroJs" class="alert alert-danger d-none"></div>
 
-        <!-- BUSCA -->
-        <div class="col-md-12">
-            <label class="form-label text-light">Buscar Produto (Código ou Nome)</label>
+    <form asp-action="FinalizarVenda" method="post" id="formVenda">
+        @Html.AntiForgeryToken()
 
-            <div class="position-relative">
-                <input type="text" id="buscaProduto" class="form-control"
-                       placeholder="Digite o código ou nome do produto">
+        <!-- ================= LINHA 1 ================= -->
+        <div class="row mb-4">
 
-                <div id="listaSugestoes"
-                     class="list-group position-absolute w-100"
-                     style="z-index:1000;"></div>
+            <!-- BUSCA -->
+            <div class="col-md-12">
+                <label class="form-label text-light">Buscar Produto (Código ou Nome)</label>
+                <div class="position-relative">
+                    <input type="text" id="buscaProduto" class="form-control" placeholder="Digite o código ou nome do produto" autocomplete="off">
+                    <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
+                </div>
             </div>
-        </div>
-
-    </div>
-
-    <!-- ================= LINHA 2 ================= -->
-    <div class="row">
-
-        <!-- ESQUERDA -->
-        <div class="col-md-4">
-
-            <div class="mb-3">
-                <label class="form-label text-light">Quantidade</label>
-                <input type="number" id="quantidade" class="form-control" value="1">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-light">Valor Unitário</label>
-                <input type="text" id="valorUnitario" class="form-control" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label text-light">Total</label>
-                <input type="text" id="valorTotal" class="form-control" readonly>
-            </div>
-
-            <button id="btnAdicionar" class="btn btn-success w-100 mt-2">
-                Adicionar Item
-            </button>
 
         </div>
 
-        <!-- DIREITA -->
-        <div class="col-md-8 d-flex flex-column">
+        <!-- ================= LINHA 2 ================= -->
+        <div class="row">
 
-            <div class="flex-grow-1">
-                <table class="table table-light table-hover">
-                    <thead>
-                        <tr>
-                            <th>Produto</th>
-                            <th class="text-end">Qtd</th>
-                            <th class="text-end">Unitário</th>
-                            <th class="text-end">Total</th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                    </thead>
+            <!-- ESQUERDA -->
+            <div class="col-md-4">
 
-                    <tbody id="tabelaItens"></tbody>
-                </table>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label text-light">Quantidade</label>
+                    <input type="number" id="quantidade" class="form-control" value="1">
+                </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-3 p-3 rounded-3">
-                <h4 class="text-light m-0">
-                    Total: <span id="totalVenda">R$ 0,00</span>
-                </h4>
+                <div class="mb-3">
+                    <label class="form-label text-light">Valor Unitário</label>
+                    <input type="text" id="valorUnitario" class="form-control" readonly>
+                </div>
 
-                <button id="btnConfirmarVenda" class="btn btn-success">
-                    Confirmar Venda
+                <div class="mb-3">
+                    <label class="form-label text-light">Total</label>
+                    <input type="text" id="valorTotal" class="form-control" readonly>
+                </div>
+
+                <button type="button" id="btnAdicionar" class="btn btn-success w-100 mt-2">
+                    Adicionar Item
                 </button>
+
+            </div>
+
+            <!-- DIREITA -->
+            <div class="col-md-8 d-flex flex-column">
+
+                <div class="flex-grow-1">
+                    <table class="table table-light table-hover">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th class="text-end">Qtd</th>
+                                <th class="text-end">Unitário</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabelaItens"></tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 p-3 rounded-3">
+                    <h4 class="text-light m-0">
+                        Total: <span id="totalVenda">R$ 0,00</span>
+                    </h4>
+
+                    <div class="mb-3 mt-2">
+                        <label class="form-label text-light">Tipo de Pagamento:</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="VendaTipoPagamento" id="pagDinheiro" value="Dinheiro">
+                                <label class="form-check-label text-light" for="pagDinheiro">Dinheiro</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="VendaTipoPagamento" id="pagPix" value="Pix">
+                                <label class="form-check-label text-light" for="pagPix">Pix</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="VendaTipoPagamento" id="pagCartao" value="Cartão">
+                                <label class="form-check-label text-light" for="pagCartao">Cartão</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        Confirmar Venda
+                    </button>
+                </div>
+
             </div>
 
         </div>
 
-    </div>
+        <!-- INPUTS HIDDEN PARA ITENS -->
+        <div id="itensHidden"></div>
+
+    </form>
 
 </div>
+
 @section Scripts {
     <script>
-
-        let totalVenda = 0;
-        let produtoSelecionado = null;
-
         const produtos = @Html.Raw(Json.Serialize(ViewBag.Produtos));
-
-        const buscaInput = document.getElementById("buscaProduto");
-        const lista = document.getElementById("listaSugestoes");
-
-        const qtdInput = document.getElementById("quantidade");
-        const valorUnitario = document.getElementById("valorUnitario");
-        const valorTotal = document.getElementById("valorTotal");
-        const tabela = document.getElementById("tabelaItens");
-        const totalVendaLabel = document.getElementById("totalVenda");
-
-        let indiceSelecionado = -1;
-
-        // ================= BUSCA =================
-        function renderLista(filtro = "") {
-
-            lista.innerHTML = "";
-            indiceSelecionado = -1;
-
-            let filtrados = produtos
-                .filter(p =>
-                    p.produtoNome.toLowerCase().includes(filtro) ||
-                    p.produtoCodBarra.toLowerCase().includes(filtro)
-                )
-                .slice(0, 8);
-
-            filtrados.forEach((p) => {
-
-                let item = document.createElement("a");
-                item.classList.add("list-group-item", "list-group-item-action");
-
-                item.textContent = `${p.produtoNome} (${p.produtoCodBarra})`;
-
-                item.onclick = function () {
-                    selecionarProduto(p);
-                };
-
-                lista.appendChild(item);
-            });
-        }
-
-        function selecionarProduto(p) {
-            produtoSelecionado = p;
-            buscaInput.value = p.produtoNome;
-            lista.innerHTML = "";
-
-            valorUnitario.value = formatarMoeda(p.produtoPrecoVenda);
-            calcularTotal();
-        }
-
-        buscaInput.addEventListener("focus", function () {
-            renderLista(buscaInput.value.toLowerCase());
-        });
-
-        buscaInput.addEventListener("input", function () {
-            renderLista(buscaInput.value.toLowerCase());
-        });
-
-        document.addEventListener("click", function (e) {
-            if (!buscaInput.contains(e.target) && !lista.contains(e.target)) {
-                lista.innerHTML = "";
-            }
-        });
-
-        buscaInput.addEventListener("keydown", function (e) {
-
-            let itens = lista.querySelectorAll(".list-group-item");
-            if (itens.length === 0) return;
-
-            if (e.key === "ArrowDown") {
-                e.preventDefault();
-                indiceSelecionado = (indiceSelecionado + 1) % itens.length;
-            }
-
-            if (e.key === "ArrowUp") {
-                e.preventDefault();
-                indiceSelecionado = (indiceSelecionado - 1 + itens.length) % itens.length;
-            }
-
-            if (e.key === "Enter") {
-                e.preventDefault();
-                if (indiceSelecionado >= 0) {
-                    itens[indiceSelecionado].click();
-                }
-                return;
-            }
-
-            itens.forEach(item => item.classList.remove("active"));
-            if (indiceSelecionado >= 0) {
-                itens[indiceSelecionado].classList.add("active");
-            }
-        });
-
-        // ================= CALCULO =================
-        qtdInput.addEventListener("input", calcularTotal);
-
-        function calcularTotal() {
-            let qtd = parseFloat(qtdInput.value) || 0;
-            let preco = produtoSelecionado?.produtoPrecoVenda || 0;
-
-            let total = qtd * preco;
-            valorTotal.value = formatarMoeda(total);
-        }
-
-        // ================= ADICIONAR ITEM =================
-        document.getElementById("btnAdicionar").addEventListener("click", function () {
-
-            if (!produtoSelecionado) {
-                alert("Selecione um produto!");
-                return;
-            }
-
-            let qtd = parseFloat(qtdInput.value) || 0;
-            let estoque = produtoSelecionado.produtoQtdEstoque || 0;
-
-            // 🔥 SOMA JÁ ADICIONADA
-            let qtdJaAdicionada = 0;
-
-            let linhas = tabela.querySelectorAll("tr");
-
-            linhas.forEach(linha => {
-                let id = parseInt(linha.getAttribute("data-id"));
-
-                if (id === produtoSelecionado.produtoID) {
-                    qtdJaAdicionada += parseInt(linha.children[1].innerText);
-                }
-            });
-
-            // 🔥 VALIDAÇÃO COMPLETA
-            if ((qtd + qtdJaAdicionada) > estoque) {
-                alert(`Estoque insuficiente! Já adicionado: ${qtdJaAdicionada} | Disponível: ${estoque}`);
-                return;
-            }
-
-            let nome = produtoSelecionado.produtoNome;
-            let preco = parseFloat(produtoSelecionado.produtoPrecoVenda);
-            let total = qtd * preco;
-
-            let linha = `
-                <tr data-id="${produtoSelecionado.produtoID}">
-                    <td>${nome}</td>
-                    <td class="text-end">${qtd}</td>
-                    <td class="text-end">${formatarMoeda(preco)}</td>
-                    <td class="text-end">${formatarMoeda(total)}</td>
-                    <td class="text-center">
-                        <button class="btn btn-danger btn-sm btn-remover">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-
-            tabela.innerHTML += linha;
-
-            totalVenda += total;
-            totalVendaLabel.innerText = formatarMoeda(totalVenda);
-
-            // RESET
-            produtoSelecionado = null;
-            buscaInput.value = "";
-            qtdInput.value = 1;
-            valorUnitario.value = "";
-            valorTotal.value = "";
-        });
-
-        // ================= REMOVER ITEM =================
-        tabela.addEventListener("click", function (e) {
-
-            if (e.target.closest(".btn-remover")) {
-
-                let row = e.target.closest("tr");
-
-                let valorTexto = row.children[3].innerText
-                    .replace("R$", "")
-                    .replace(".", "")
-                    .replace(",", ".");
-
-                let valor = parseFloat(valorTexto) || 0;
-
-                totalVenda -= valor;
-                totalVendaLabel.innerText = formatarMoeda(totalVenda);
-
-                row.remove();
-            }
-        });
-
-        // ================= CONFIRMAR =================
-        document.getElementById("btnConfirmarVenda").addEventListener("click", function () {
-
-            if (tabela.children.length === 0) {
-                alert("Adicione pelo menos um item!");
-                return;
-            }
-
-            let itens = [];
-
-            let linhas = tabela.querySelectorAll("tr");
-
-            linhas.forEach(linha => {
-
-                let produtoID = parseInt(linha.getAttribute("data-id"));
-
-                let qtd = parseInt(linha.children[1].innerText);
-
-                let precoTexto = linha.children[2].innerText
-                    .replace("R$", "")
-                    .replace(".", "")
-                    .replace(",", ".");
-
-                let preco = parseFloat(precoTexto);
-
-                let totalTexto = linha.children[3].innerText
-                    .replace("R$", "")
-                    .replace(".", "")
-                    .replace(",", ".");
-
-                let total = parseFloat(totalTexto);
-
-                itens.push({
-                    produtoID: produtoID,
-                    itemVendaQtd: qtd,
-                    itemVendaPreco: preco,
-                    itemVendaTotal: total
-                });
-            });
-
-            let venda = {
-                vendaValorTotal: totalVenda,
-                itens: itens
-            };
-
-            fetch("/Venda/FinalizarVenda", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(venda)
-            })
-            .then(async res => {
-                if (!res.ok) {
-                    let erro = await res.text();
-                    throw new Error(erro);
-                }
-                return res.json();
-            })
-            .then(data => {
-                alert(data.mensagem);
-                location.reload();
-            })
-            .catch(err => {
-                alert(err.message);
-            });
-
-        });
-
-        // ================= FORMATAR =================
-        function formatarMoeda(valor) {
-            return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
-        }
-
     </script>
+
+    <script src="~/js/vendas.js"></script>
 }

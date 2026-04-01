@@ -26,30 +26,50 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        public IActionResult FinalizarVenda([FromBody] VendaFinalModel venda)
+        [ValidateAntiForgeryToken]
+        public IActionResult FinalizarVenda(VendaFinalModel venda)
         {
+            // ================= VALIDAÇÕES =================
             if (venda == null || venda.Itens.Count == 0)
             {
-                return BadRequest("Venda inválida");
+                TempData["MensagemErro"] = "Adicione pelo menos um item à venda.";
+                var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
+                ViewBag.Produtos = produtos;
+                return View("Cadastrar", venda);
+            }
+
+            if (string.IsNullOrEmpty(venda.VendaTipoPagamento))
+            {
+                TempData["MensagemErro"] = "Selecione um tipo de pagamento.";
+                var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
+                ViewBag.Produtos = produtos;
+                return View("Cadastrar", venda);
             }
 
             using var transaction = _db.Database.BeginTransaction();
-
             try
             {
                 // ================= VALIDAR ESTOQUE =================
                 foreach (var item in venda.Itens)
                 {
                     var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == item.ProdutoID);
-
                     if (produto == null)
                     {
-                        return BadRequest("Produto não encontrado.");
+                        TempData["MensagemErro"] = $"Produto não encontrado: ID {item.ProdutoID}";
+                        transaction.Rollback();
+                        var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
+                        ViewBag.Produtos = produtos;
+                        return View("Cadastrar", venda);
                     }
 
                     if (produto.ProdutoQtdEstoque < item.ItemVendaQtd)
                     {
-                        return BadRequest($"Estoque insuficiente para: {produto.ProdutoNome}");
+                        TempData["MensagemErro"] = $"Estoque insuficiente para: {produto.ProdutoNome}";
+                        transaction.Rollback();
+                        var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
+                        ViewBag.Produtos = produtos;
+
+                        return View("Cadastrar", venda);
                     }
                 }
 
@@ -64,7 +84,6 @@ namespace pim3semestre.Controllers
                 foreach (var item in venda.Itens)
                 {
                     var produto = _db.Produtos.First(p => p.ProdutoID == item.ProdutoID);
-
                     produto.ProdutoQtdEstoque -= item.ItemVendaQtd;
 
                     var movimentacao = new MovimentacaoEstoqueModel
@@ -80,18 +99,19 @@ namespace pim3semestre.Controllers
                 }
 
                 _db.SaveChanges();
-
-                // 🔥 CONFIRMA TUDO
                 transaction.Commit();
 
-                return Ok(new { mensagem = "Venda realizada com sucesso!" });
+                TempData["MensagemSucesso"] = "Venda realizada com sucesso!";
+
+                return RedirectToAction("Cadastrar");
             }
             catch (Exception ex)
             {
-                // 🔥 DESFAZ TUDO
                 transaction.Rollback();
-
-                return BadRequest($"Erro ao salvar venda: {ex.Message}");
+                TempData["MensagemErro"] = $"Erro ao salvar venda: {ex.Message}";
+                var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
+                ViewBag.Produtos = produtos;
+                return View("Cadastrar", venda);
             }
         }
     }

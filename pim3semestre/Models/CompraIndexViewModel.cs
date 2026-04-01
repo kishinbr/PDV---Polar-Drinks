@@ -3,6 +3,8 @@ using pim3semestre.Models;
 
 namespace pim3semestre.ViewModels
 {
+    //essa classe/model é usada para organizar as compras em duas listas, uma para as compras pendentes e outra para as compras concluídas, facilitando a exibição na view
+    //ela tem duas propriedades, Pendentes e Concluidas, que são listas de CompraEstoqueModel, e ambas são inicializadas como vazias para evitar null reference
     public class CompraIndexViewModel
     {
         public List<CompraEstoqueModel> Pendentes { get; set; } = new();

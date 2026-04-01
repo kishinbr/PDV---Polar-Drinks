@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace pim3semestre.Models
 {
+    //representa cada item comprado individualmente, com a quantidade, preço e o produto relacionado
     public class ItemCompraModel
     {
         [Key]
