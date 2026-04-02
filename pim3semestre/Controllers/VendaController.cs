@@ -13,15 +13,39 @@ namespace pim3semestre.Controllers
         {
             _db = db;
         }
-        public IActionResult Historico()
+        public IActionResult Historico(DateTime? dataInicio, DateTime? dataFim)
         {
-            var vendas = _db.Vendas
+            var query = _db.Vendas
                 .Include(v => v.Itens)
                 .ThenInclude(i => i.Produto)
-                .OrderByDescending(v => v.VendaID)
+                .AsQueryable();
+
+            if (dataInicio.HasValue)
+                query = query.Where(v => v.VendaData >= dataInicio.Value);
+
+            if (dataFim.HasValue)
+                query = query.Where(v => v.VendaData <= dataFim.Value);
+
+            var vendas = query
+                .OrderByDescending(v => v.VendaData)
                 .ToList();
 
+            ViewBag.DataInicio = dataInicio;
+            ViewBag.DataFim = dataFim;
+
             return View(vendas);
+        }
+        public IActionResult Detalhes(int id)
+        {
+            var venda = _db.Vendas
+                .Include(v => v.Itens)
+                .ThenInclude(i => i.Produto)
+                .FirstOrDefault(v => v.VendaID == id);
+
+            if (venda == null)
+                return NotFound();
+
+            return View(venda);
         }
         public IActionResult Cadastrar()
         {
