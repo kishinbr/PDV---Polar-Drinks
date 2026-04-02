@@ -92,6 +92,7 @@
     qtdInput.addEventListener("input", calcularTotal);
 
     // ==================== ADICIONAR ITEM ====================
+    // ==================== ADICIONAR ITEM ====================
     document.getElementById("btnAdicionar").addEventListener("click", () => {
         // nova div de erro específica
         let msgAdicionar = document.getElementById("mensagemErroAdicionar");
@@ -103,20 +104,36 @@
             document.getElementById("formVenda").prepend(msgAdicionar);
         }
 
+        // função para mostrar erro com fade
+        function mostrarErro(texto) {
+            msgAdicionar.innerText = texto;
+            msgAdicionar.style.opacity = 1;
+            msgAdicionar.style.display = "block";
+            msgAdicionar.style.transition = "opacity 0.5s";
+
+            setTimeout(() => {
+                msgAdicionar.style.opacity = 0;
+                setTimeout(() => {
+                    msgAdicionar.style.display = "none";
+                    msgAdicionar.innerText = "";
+                }, 500); // tempo do fade
+            }, 2000);
+        }
+
         // limpa mensagem anterior
         msgAdicionar.style.display = "none";
         msgAdicionar.innerText = "";
 
+        // valida produto selecionado
         if (!produtoSelecionado) {
-            msgAdicionar.innerText = "Selecione um produto antes de adicionar!";
-            msgAdicionar.style.display = "block";
-            return; // interrompe
+            mostrarErro("Selecione um produto antes de adicionar!");
+            return;
         }
 
+        // valida quantidade
         let qtd = parseInt(qtdInput.value) || 0;
         if (qtd <= 0) {
-            msgAdicionar.innerText = "Quantidade inválida!";
-            msgAdicionar.style.display = "block";
+            mostrarErro("Quantidade inválida!");
             return;
         }
 
@@ -128,9 +145,9 @@
             }
         });
 
+        // valida estoque
         if (qtd + qtdJaAdicionada > produtoSelecionado.produtoQtdEstoque) {
-            msgAdicionar.innerText = `Estoque insuficiente! Disponível: ${produtoSelecionado.produtoQtdEstoque - qtdJaAdicionada}`;
-            msgAdicionar.style.display = "block";
+            mostrarErro(`Estoque insuficiente! Disponível: ${produtoSelecionado.produtoQtdEstoque - qtdJaAdicionada}`);
             return;
         }
 
@@ -175,6 +192,8 @@
         // Atualiza botão confirmar
         atualizarBotaoConfirmar();
     });
+
+
 
     // ==================== REMOVER ITEM ====================
     tabela.addEventListener("click", e => {
