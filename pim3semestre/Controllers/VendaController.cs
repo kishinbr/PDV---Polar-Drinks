@@ -13,7 +13,16 @@ namespace pim3semestre.Controllers
         {
             _db = db;
         }
+        public IActionResult Historico()
+        {
+            var vendas = _db.Vendas
+                .Include(v => v.Itens)
+                .ThenInclude(i => i.Produto)
+                .OrderByDescending(v => v.VendaID)
+                .ToList();
 
+            return View(vendas);
+        }
         public IActionResult Cadastrar()
         {
             var produtos = _db.Produtos

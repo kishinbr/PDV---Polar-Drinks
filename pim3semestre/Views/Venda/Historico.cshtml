@@ -1,0 +1,69 @@
+﻿@model IEnumerable<pim3semestre.Models.VendaFinalModel>
+@{
+    ViewData["Title"] = "Historico de vendas";
+}
+<div class="container bg-dark p-4 rounded-4">
+
+    <h2 class="text-light text-center mb-4">Histórico de Vendas</h2>
+
+    <table class="table table-light table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Total</th>
+                <th>Pagamento</th>
+                <th>Itens</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var venda in Model)
+            {
+                <tr>
+                    <td>@venda.VendaID</td>
+                    <td>@venda.VendaData.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>R$ @venda.VendaValorTotal</td>
+                    <td>@venda.VendaTipoPagamento</td>
+                    <td>@venda.Itens.Count</td>
+                    <td class="text-center">
+                        <button class="btn btn-primary btn-sm"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#detalhe-@venda.VendaID">
+                            Detalhes
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- DETALHES -->
+                <tr class="collapse" id="detalhe-@venda.VendaID">
+                    <td colspan="6">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Qtd</th>
+                                    <th>Unitário</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in venda.Itens)
+                                {
+                                    <tr>
+                                        <td>@item.Produto.ProdutoNome</td>
+                                        <td>@item.ItemVendaQtd</td>
+                                        <td>R$ @item.ItemVendaPreco</td>
+                                        <td>R$ @item.ItemVendaTotal</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

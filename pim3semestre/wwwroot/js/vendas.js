@@ -5,6 +5,11 @@
     const lista = document.getElementById("listaSugestoes");
 
     const qtdInput = document.getElementById("quantidade");
+    qtdInput.addEventListener("input", () => {
+        if (qtdInput.value < 0) {
+            qtdInput.value = "";
+        }
+    });
     const valorUnitario = document.getElementById("valorUnitario");
     const valorTotal = document.getElementById("valorTotal");
     const tabela = document.getElementById("tabelaItens");
@@ -91,7 +96,6 @@
 
     qtdInput.addEventListener("input", calcularTotal);
 
-    // ==================== ADICIONAR ITEM ====================
     // ==================== ADICIONAR ITEM ====================
     document.getElementById("btnAdicionar").addEventListener("click", () => {
         // nova div de erro específica
@@ -185,15 +189,13 @@
         // Limpa seleção
         produtoSelecionado = null;
         buscaInput.value = "";
-        qtdInput.value = 1;
+        qtdInput.value = 0;
         valorUnitario.value = "";
         valorTotal.value = "";
 
         // Atualiza botão confirmar
         atualizarBotaoConfirmar();
     });
-
-
 
     // ==================== REMOVER ITEM ====================
     tabela.addEventListener("click", e => {
