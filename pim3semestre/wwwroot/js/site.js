@@ -219,7 +219,8 @@ $(document).ready(function () {
         let dataInicio = $('#dataInicio').val();
         let dataFim = $('#dataFim').val();
 
-        let dataCompra = data[1]; 
+        let linha = table.row(dataIndex).node();
+        let dataCompra = linha.children[1].getAttribute("data-order");
 
         if (!dataInicio && !dataFim) return true;
 
