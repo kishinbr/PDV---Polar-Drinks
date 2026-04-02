@@ -1,5 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
 
+    // ==================== ELEMENTOS ====================
     const buscaInput = document.getElementById("buscaProduto");
     const lista = document.getElementById("listaSugestoes");
 
@@ -10,22 +11,45 @@
     const totalVendaLabel = document.getElementById("totalVenda");
     const itensHidden = document.getElementById("itensHidden");
 
+    const btnConfirmar = document.getElementById("btnConfirmar");
+    const radiosPagamento = document.querySelectorAll('input[name="VendaTipoPagamento"]');
+
     let totalVenda = 0;
     let produtoSelecionado = null;
     let indiceSelecionado = -1;
 
+    // ==================== FUNÇÕES AUXILIARES ====================
+    function formatarMoeda(valor) {
+        return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
+    }
+
+    function atualizarBotaoConfirmar() {
+        const pagamentoSelecionado = document.querySelector('input[name="VendaTipoPagamento"]:checked');
+        const itens = itensHidden.querySelectorAll('input[name$=".ProdutoID"]');
+        btnConfirmar.disabled = !(pagamentoSelecionado && itens.length > 0);
+    }
+
+    // ==================== BUSCA DE PRODUTOS ====================
     function renderLista(filtro = "") {
         lista.innerHTML = "";
         indiceSelecionado = -1;
 
-        let filtrados = produtos
+        const filtrados = produtos
             .filter(p => p.produtoNome.toLowerCase().includes(filtro) || p.produtoCodBarra.toLowerCase().includes(filtro))
             .slice(0, 8);
 
         filtrados.forEach(p => {
             const item = document.createElement("a");
             item.classList.add("list-group-item", "list-group-item-action");
-            item.textContent = `${p.produtoNome} (${p.produtoCodBarra})`;
+
+            // Flex: nome/código à esquerda, estoque à direita
+            item.innerHTML = `
+            <div style="display:flex; justify-content:space-between;">
+                <span>${p.produtoNome} [${p.produtoCodBarra}]</span>
+                <span>${p.produtoQtdEstoque} QTD</span>
+            </div>
+        `;
+
             item.onclick = () => selecionarProduto(p);
             lista.appendChild(item);
         });
@@ -58,20 +82,45 @@
         if (indiceSelecionado >= 0) itens[indiceSelecionado].classList.add("active");
     });
 
-    qtdInput.addEventListener("input", calcularTotal);
-
+    // ==================== CÁLCULO DE TOTAL ====================
     function calcularTotal() {
-        let qtd = parseFloat(qtdInput.value) || 0;
-        let preco = produtoSelecionado ? produtoSelecionado.produtoPrecoVenda : 0;
+        const qtd = parseFloat(qtdInput.value) || 0;
+        const preco = produtoSelecionado ? produtoSelecionado.produtoPrecoVenda : 0;
         valorTotal.value = formatarMoeda(qtd * preco);
     }
 
+    qtdInput.addEventListener("input", calcularTotal);
+
+    // ==================== ADICIONAR ITEM ====================
     document.getElementById("btnAdicionar").addEventListener("click", () => {
-        if (!produtoSelecionado) { alert("Selecione um produto!"); return; }
+        // nova div de erro específica
+        let msgAdicionar = document.getElementById("mensagemErroAdicionar");
+        if (!msgAdicionar) {
+            msgAdicionar = document.createElement("div");
+            msgAdicionar.id = "mensagemErroAdicionar";
+            msgAdicionar.classList.add("alert", "alert-danger", "mt-2");
+            msgAdicionar.style.display = "none";
+            document.getElementById("formVenda").prepend(msgAdicionar);
+        }
+
+        // limpa mensagem anterior
+        msgAdicionar.style.display = "none";
+        msgAdicionar.innerText = "";
+
+        if (!produtoSelecionado) {
+            msgAdicionar.innerText = "Selecione um produto antes de adicionar!";
+            msgAdicionar.style.display = "block";
+            return; // interrompe
+        }
 
         let qtd = parseInt(qtdInput.value) || 0;
-        if (qtd <= 0) { alert("Quantidade inválida!"); return; }
+        if (qtd <= 0) {
+            msgAdicionar.innerText = "Quantidade inválida!";
+            msgAdicionar.style.display = "block";
+            return;
+        }
 
+        // Verifica estoque já adicionado
         let qtdJaAdicionada = 0;
         tabela.querySelectorAll("tr").forEach(linha => {
             if (parseInt(linha.getAttribute("data-id")) === produtoSelecionado.produtoID) {
@@ -80,47 +129,54 @@
         });
 
         if (qtd + qtdJaAdicionada > produtoSelecionado.produtoQtdEstoque) {
-            alert(`Estoque insuficiente! Disponível: ${produtoSelecionado.produtoQtdEstoque - qtdJaAdicionada}`);
+            msgAdicionar.innerText = `Estoque insuficiente! Disponível: ${produtoSelecionado.produtoQtdEstoque - qtdJaAdicionada}`;
+            msgAdicionar.style.display = "block";
             return;
         }
 
         const preco = produtoSelecionado.produtoPrecoVenda;
         const total = qtd * preco;
 
+        // Adiciona linha na tabela
         const linha = document.createElement("tr");
         linha.setAttribute("data-id", produtoSelecionado.produtoID);
         linha.innerHTML = `
-            <td>${produtoSelecionado.produtoNome}</td>
-            <td class="text-end">${qtd}</td>
-            <td class="text-end">${formatarMoeda(preco)}</td>
-            <td class="text-end">${formatarMoeda(total)}</td>
-            <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm btn-remover">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
+        <td>${produtoSelecionado.produtoNome}</td>
+        <td class="text-end">${qtd}</td>
+        <td class="text-end">${formatarMoeda(preco)}</td>
+        <td class="text-end">${formatarMoeda(total)}</td>
+        <td class="text-center">
+            <button type="button" class="btn btn-danger btn-sm btn-remover">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>
+    `;
         tabela.appendChild(linha);
 
+        // Adiciona hidden inputs
         const index = tabela.children.length - 1;
-
         itensHidden.insertAdjacentHTML('beforeend', `
-            <input type="hidden" name="Itens[${index}].ProdutoID" value="${produtoSelecionado.produtoID}" />
-            <input type="hidden" name="Itens[${index}].ItemVendaQtd" value="${qtd}" />
-            <input type="hidden" name="Itens[${index}].ItemVendaPreco" value="${preco}" />
-            <input type="hidden" name="Itens[${index}].ItemVendaTotal" value="${total}" />
-        `);
+        <input type="hidden" name="Itens[${index}].ProdutoID" value="${produtoSelecionado.produtoID}" />
+        <input type="hidden" name="Itens[${index}].ItemVendaQtd" value="${qtd}" />
+        <input type="hidden" name="Itens[${index}].ItemVendaPreco" value="${preco}" />
+        <input type="hidden" name="Itens[${index}].ItemVendaTotal" value="${total}" />
+    `);
 
         totalVenda += total;
         totalVendaLabel.innerText = formatarMoeda(totalVenda);
 
+        // Limpa seleção
         produtoSelecionado = null;
         buscaInput.value = "";
         qtdInput.value = 1;
         valorUnitario.value = "";
         valorTotal.value = "";
+
+        // Atualiza botão confirmar
+        atualizarBotaoConfirmar();
     });
 
+    // ==================== REMOVER ITEM ====================
     tabela.addEventListener("click", e => {
         const btn = e.target.closest(".btn-remover");
         if (!btn) return;
@@ -129,42 +185,26 @@
         const index = Array.from(tabela.children).indexOf(row);
 
         const total = parseFloat(row.children[3].innerText.replace("R$", "").replace(/\./g, "").replace(",", "."));
-
         totalVenda -= total;
         totalVendaLabel.innerText = formatarMoeda(totalVenda);
 
         row.remove();
 
+        // Remove hidden inputs
         const inputs = itensHidden.querySelectorAll(`[name^="Itens[${index}]"]`);
         inputs.forEach(i => i.remove());
+
+        // Atualiza botão confirmar
+        atualizarBotaoConfirmar();
     });
 
-    function formatarMoeda(valor) {
-        return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
-    }
+    // ==================== RADIO PAGAMENTO ====================
+    radiosPagamento.forEach(radio => {
+        radio.addEventListener("change", atualizarBotaoConfirmar);
+    });
 
 
-    //document.getElementById("formVenda").addEventListener("submit", function (e) {
-    //    const msg = document.getElementById("mensagemErro");
-    //    msg.classList.add("d-none");
-    //    msg.innerText = "";
 
-    //    // Verifica se há itens adicionados (olhando os inputs hidden)
-    //    const itens = document.querySelectorAll('#itensHidden input[name$=".ProdutoID"]');
-    //    if (itens.length === 0) {
-    //        e.preventDefault();
-    //        msg.innerText = "Adicione pelo menos um item à venda!aaaaaa";
-    //        msg.classList.remove("d-none");
-    //        return false;
-    //    }
-
-    //    // Verifica se o pagamento foi selecionado
-    //    const pagamentoSelecionado = document.querySelector('input[name="VendaTipoPagamento"]:checked');
-    //    if (!pagamentoSelecionado) {
-    //        e.preventDefault();
-    //        msg.innerText = "Selecione um tipo de pagamento!aaaaa";
-    //        msg.classList.remove("d-none");
-    //        return false;
-    //    }
-    //});
+    // ==================== INICIALIZAÇÃO ====================
+    atualizarBotaoConfirmar(); // garante botão correto ao carregar
 });
