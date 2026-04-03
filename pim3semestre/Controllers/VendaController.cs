@@ -28,22 +28,6 @@ namespace pim3semestre.Controllers
             var vendas = vendasQuery.OrderByDescending(v => v.VendaData).ToList();
             return View(vendas);
         }
-        public IActionResult Historico()
-        {
-            var vendas = _db.Vendas
-                .OrderByDescending(v => v.VendaData)
-                .Take(10)  
-                .Select(v => new VendaFinalModel
-                {
-                    VendaID = v.VendaID,
-                    VendaData = v.VendaData,
-                    VendaValorTotal = v.VendaValorTotal,
-                    VendaTipoPagamento = v.VendaTipoPagamento
-                })
-                .ToList();
-
-            return View(vendas);
-        }
         public IActionResult Detalhes(int id)
         {
             var venda = _db.Vendas

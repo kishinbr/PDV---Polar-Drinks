@@ -10,9 +10,9 @@
     <h2 class="text-light mb-4">Detalhes da Venda #@Model.VendaID</h2>
 
     <div class="text-light mb-3">
-        <strong>Data:</strong> @Model.VendaData.ToString("dd/MM/yyyy HH:mm") <br />
+        <strong>Data:</strong> @Model.VendaData.ToString("dd/MM/yyyy") <br />
+        <strong>Hora:</strong> @Model.VendaData.ToString("HH:mm") <br />
         <strong>Pagamento:</strong> @Model.VendaTipoPagamento <br />
-        <strong>Total:</strong> @Model.VendaValorTotal.ToString("C")
     </div>
     
 
@@ -23,7 +23,7 @@
                 <th>Produto</th>
                 <th>Qtd</th>
                 <th>Unitário</th>
-                <th>Total</th>
+                <th class="text-end">Valor</th>
             </tr>
         </thead>
         <tbody>
@@ -33,12 +33,12 @@
                     <td>@item.Produto?.ProdutoNome</td>
                     <td>@item.ItemVendaQtd</td>
                     <td>@item.ItemVendaPreco.ToString("C")</td>
-                    <td>@item.ItemVendaTotal.ToString("C")</td>
+                    <td class ="text-end">@item.ItemVendaTotal.ToString("C")</td>
                 </tr>
             }
         </tbody>
     </table>
-
-    <a asp-action="Historico" class="btn btn-primary">Voltar</a>
+    <div class="text-end text-light mt-3"> <h4>Total:   @Model.VendaValorTotal.ToString("C")</h4> </div>
+    <a asp-action="Index" class="btn btn-primary">Voltar</a>
 
 </div>
