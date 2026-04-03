@@ -186,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+
 $(document).ready(function () {
 
     var table = $('#tabelaConcluidos').DataTable({
@@ -215,6 +216,7 @@ $(document).ready(function () {
     });
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (settings.nTable.id !== "tabelaConcluidos") return true;
 
         let dataInicio = $('#dataInicio').val();
         let dataFim = $('#dataFim').val();
@@ -234,5 +236,77 @@ $(document).ready(function () {
     $('#dataInicio, #dataFim').on('change', function () {
         table.draw();
     });
+
+});
+$(document).ready(function () {
+
+    // Inicializa o DataTable após a tabela estar totalmente renderizada
+    var table = $('#tabelaVendas').DataTable({
+        pageLength: 10,
+        lengthMenu: [10,15, 20],
+        paging: true,
+        columnDefs: [
+            { orderable: false, targets: [4] }, 
+            //{ className: "text-end", targets: [] }, 
+            { className: "text-center", targets: [0,1,3,4] } 
+        ],
+        order: [[1, 'desc']], // ordena pela data da venda
+        language: {
+            "decimal": "",
+            "emptyTable": "Nenhuma venda registrada",
+            "info": "Mostrando de _START_ a _END_ de um total de _TOTAL_ vendas",
+            "infoEmpty": "Mostrando de 0 a 0 de 0 vendas",
+            "infoFiltered": "(filtrado de _MAX_ vendas no total)",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ vendas",
+            "loadingRecords": "Carregando...",
+            "search": "Procurar:",
+            "zeroRecords": "Venda não encontrada",
+            "paginate": {
+                "first": "Primeiro",
+                "last": "Último",
+                "next": "Próximo",
+                "previous": "Anterior"
+            },
+            "aria": {
+                "orderable": "Ordenar por esta coluna",
+                "orderableReverse": "Ordem reversa desta coluna"
+            }
+        }
+    });
+
+    // Ajusta colunas para a primeira carga
+    table.columns.adjust().draw();
+
+    // =====================
+    // Filtro de datas isolado para #tabelaVendas
+    // =====================
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        if (settings.nTable.id !== "tabelaVendas") return true; // só aplica nesta tabela
+
+        let dataInicio = $('#dataInicio').val();
+        let dataFim = $('#dataFim').val();
+
+        let linha = table.row(dataIndex).node();
+        let dataVenda = linha.children[1].getAttribute("data-order"); // pega data-order da coluna Data Venda
+
+        if (!dataInicio && !dataFim) return true;
+
+        if (dataInicio && dataVenda < dataInicio) return false;
+        if (dataFim && dataVenda > dataFim) return false;
+
+        return true;
+    });
+
+    // Redesenha a tabela quando os inputs de data mudarem
+    $('#dataInicio, #dataFim').on('change', function () {
+        table.draw();
+    });
+
+    setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+            $(this).alert('close');
+        });
+    }, 3000);
 
 });

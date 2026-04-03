@@ -1,0 +1,81 @@
+﻿@model IEnumerable<pim3semestre.Models.VendaFinalModel>
+@{
+    ViewData["Title"] = "Vendas Realizadas";
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success text-light">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Vendas Realizadas</h2>
+        <a asp-action="Cadastrar" class="btn btn-success">+ Nova Venda</a>
+    </div>
+
+    <div class="mb-3 d-flex justify-content-center">
+        <div class="d-flex align-items-end gap-2 flex-wrap">
+            <div>
+                <label class="form-label small mb-1">Início</label>
+                <input type="date" id="dataInicio" class="form-control form-control-sm">
+            </div>
+            <div>
+                <label class="form-label small mb-1">Fim</label>
+                <input type="date" id="dataFim" class="form-control form-control-sm">
+            </div>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-2">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        </div>
+    </div>
+
+    <table id="tabelaVendas" class="table table-success table-hover display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data Venda</th>
+                <th>Valor Total</th>
+                <th>Tipo Pagamento</th>
+                <th class="text-center">Detalhes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var venda in Model)
+            {
+                <tr>
+                    <td>@venda.VendaID</td>
+                    <td data-order="@venda.VendaData.ToString("yyyy-MM-dd")">
+                        @venda.VendaData.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>@venda.VendaValorTotal.ToString("C")</td>
+                    <td>
+                        @if (venda.VendaTipoPagamento == "Pix")
+                        {
+                            <span class="badge bg-success">Pix</span>
+                        }
+                        else if (venda.VendaTipoPagamento == "Dinheiro")
+                        {
+                            <span class="badge bg-warning text-dark">Dinheiro</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary">Cartão</span>
+                        }
+                        <td class="text-center">
+                        <a class="btn btn-primary btn-sm"
+                               asp-action="Detalhes"
+                               asp-route-id="@venda.VendaID">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+

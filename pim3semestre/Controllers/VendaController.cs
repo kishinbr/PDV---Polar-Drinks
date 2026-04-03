@@ -13,25 +13,34 @@ namespace pim3semestre.Controllers
         {
             _db = db;
         }
-        public IActionResult Historico(DateTime? dataInicio, DateTime? dataFim)
+        public IActionResult Index(DateTime? dataInicio, DateTime? dataFim)
         {
-            var query = _db.Vendas
-                .Include(v => v.Itens)
-                .ThenInclude(i => i.Produto)
-                .AsQueryable();
+            var vendasQuery = _db.Vendas
+                                 .Include(v => v.Itens)
+                                 .AsQueryable();
 
             if (dataInicio.HasValue)
-                query = query.Where(v => v.VendaData >= dataInicio.Value);
+                vendasQuery = vendasQuery.Where(v => v.VendaData.Date >= dataInicio.Value.Date);
 
             if (dataFim.HasValue)
-                query = query.Where(v => v.VendaData <= dataFim.Value);
+                vendasQuery = vendasQuery.Where(v => v.VendaData.Date <= dataFim.Value.Date);
 
-            var vendas = query
+            var vendas = vendasQuery.OrderByDescending(v => v.VendaData).ToList();
+            return View(vendas);
+        }
+        public IActionResult Historico()
+        {
+            var vendas = _db.Vendas
                 .OrderByDescending(v => v.VendaData)
+                .Take(10)  
+                .Select(v => new VendaFinalModel
+                {
+                    VendaID = v.VendaID,
+                    VendaData = v.VendaData,
+                    VendaValorTotal = v.VendaValorTotal,
+                    VendaTipoPagamento = v.VendaTipoPagamento
+                })
                 .ToList();
-
-            ViewBag.DataInicio = dataInicio;
-            ViewBag.DataFim = dataFim;
 
             return View(vendas);
         }
