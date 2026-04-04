@@ -25,8 +25,9 @@
             <tr>
                 <th style="width: 20%;">Nome</th>
                 <th style="width: 20%;">Descrição</th>
-                <th style="width: 20%;">Categoria</th>
-                <th style="width: 5%;" class="text-end">Preço</th>
+                <th style="width: 10%;">Categoria</th>
+                <th style="width: 10%;" class="text-end">Preço Compra</th>
+                <th style="width: 10%;" class="text-end">Preço Venda</th>
                 <th style="width: 5%;" class="text-end">Qtd</th>
                 <th style="width: 5%;" class="text-center">Promoção</th>
                 <th style="width: 5%;" class="text-center">Status</th>
@@ -49,7 +50,8 @@
                                 @produto.Categoria?.CategoriaNome
                             </span>
                         </td>
-
+                        <td class="text-end">
+                            @produto.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("C")
                         <td class="text-end">
                             @produto.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("C")
                         </td>

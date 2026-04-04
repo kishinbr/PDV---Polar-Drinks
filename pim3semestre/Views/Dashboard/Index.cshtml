@@ -1,0 +1,156 @@
+﻿@model pim3semestre.Models.DashboardViewModel
+
+<div class="container-fluid">
+
+    <h2 class="mb-4">📊 Dashboard</h2>
+
+    <!-- ===================== -->
+    <!-- 💰 FINANCEIRO -->
+    <!-- ===================== -->
+    <h5 class="text-muted mb-3">Financeiro</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white p-3 shadow">
+                <small>Total Hoje</small>
+                <h4>@Model.TotalHoje.ToString("C")</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white p-3 shadow">
+                <small>Total Mês</small>
+                <h4>@Model.TotalMes.ToString("C")</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white p-3 shadow">
+                <small>Lucro Hoje</small>
+                <h4>@Model.LucroHoje.ToString("C")</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark p-3 shadow">
+                <small>Lucro Mês</small>
+                <h4>@Model.LucroMes.ToString("C")</h4>
+            </div>
+        </div>
+
+    </div>
+    <h5 class="text-muted mb-3">Pagamentos hoje </h5>
+
+    <div class="row g-3 mb-4">
+
+        <!-- PIX -->
+        <div class="col-md-4">
+            <div class="card bg-success text-white p-3 shadow">
+                <small>Pix</small>
+                <h6>@Model.QtdPix vendas</h6>
+                <h4>@Model.TotalPix.ToString("C")</h4>
+            </div>
+        </div>
+
+        <!-- CARTÃO -->
+        <div class="col-md-4">
+            <div class="card bg-primary text-white p-3 shadow">
+                <small>Cartão</small>
+                <h6>@Model.QtdCartao vendas</h6>
+                <h4>@Model.TotalCartao.ToString("C")</h4>
+            </div>
+        </div>
+
+        <!-- DINHEIRO -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-white p-3 shadow">
+                <small>Dinheiro</small>
+                <h6>@Model.QtdDinheiro vendas</h6>
+                <h4>@Model.TotalDinheiro.ToString("C")</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== -->
+    <!-- 📊 VENDAS -->
+    <!-- ===================== -->
+    <h5 class="text-muted mb-3">Vendas</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card bg-info text-white p-3 shadow">
+                <small>Vendas Hoje</small>
+                <h4>@Model.VendasHoje</h4>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-secondary text-bg-dark bg-dark p-3 shadow">
+                <small>Vendas no Mês</small>
+                <h4>@Model.VendasMes</h4>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- ===================== -->
+    <!-- 📦 ESTOQUE -->
+    <!-- ===================== -->
+    <h5 class="text-muted mb-3">Estoque</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark p-3 shadow">
+                <small>Estoque Baixo</small>
+                <h4>@Model.EstoqueBaixo</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-danger text-white p-3 shadow">
+                <small>Sem Estoque</small>
+                <h4>@Model.SemEstoque</h4>
+            </div>
+        </div>
+
+        
+
+        <div class="col-md-3">
+            <div class="card bg-dark text-white p-3 shadow">
+                <small>Produto Mais Vendido</small>
+                <h4>@Model.ProdutoMaisVendido</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== -->
+    <!-- 📈 INTELIGÊNCIA -->
+    <!-- ===================== -->
+    <h5 class="text-muted mb-3">Análise Inteligente</h5>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+            <div class="card bg-dark text-white p-3 shadow">
+                <small>Previsão de vendas amanhã</small>
+                <h4>@Model.PrevisaoAmanha.ToString("C")</h4>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card bg-warning text-dark p-3 shadow">
+                <small>Produto mais lucrativo</small>
+                <h5>@Model.ProdutoMaisLucrativo</h5>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

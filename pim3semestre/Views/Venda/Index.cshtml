@@ -37,7 +37,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Data Venda</th>
+                <th>Data / Hora</th>
                 <th>Valor Total</th>
                 <th>Tipo Pagamento</th>
                 <th class="text-center">Detalhes</th>
@@ -49,7 +49,7 @@
                 <tr>
                     <td>@venda.VendaID</td>
                     <td data-order="@venda.VendaData.ToString("yyyy-MM-dd")">
-                        @venda.VendaData.ToString("dd/MM/yyyy")
+                        @venda.VendaData.ToString("dd/MM/yyyy HH:mm")
                     </td>
                     <td>@venda.VendaValorTotal.ToString("C")</td>
                     <td>
