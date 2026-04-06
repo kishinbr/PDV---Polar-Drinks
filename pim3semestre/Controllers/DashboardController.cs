@@ -131,25 +131,16 @@ namespace pim3semestre.Controllers
             // =========================
             // 🔮 ML 1 - PREVISÃO
             // =========================
-            //var ultimos7Dias = vendas
-            //    .Where(v => v.VendaData >= hoje.AddDays(-7))
-            //    .ToList();
 
-            //model.PrevisaoAmanha = ultimos7Dias.Any()
-            //    ? ultimos7Dias.Average(v => v.VendaValorTotal)
-            //    : 0;
 
-            //var ultimos14Dias = vendas
-            //    .Where(v => v.VendaData >= hoje.AddDays(-14))
-            //    .ToList();
+            var ultimos7Dias = vendas
+                .Where(v => v.VendaData >= hoje.AddDays(-7))
+                .ToList();
 
-            //var semanaAtual = ultimos14Dias
-            //    .Where(v => v.VendaData >= hoje.AddDays(-7))
-            //    .Sum(v => v.VendaValorTotal);
+            model.PrevisaoAmanha = ultimos7Dias.Any()
+                ? ultimos7Dias.Average(v => v.VendaValorTotal)
+                : 0;
 
-            //var semanaAnterior = ultimos14Dias
-            //    .Where(v => v.VendaData < hoje.AddDays(-7))
-            //    .Sum(v => v.VendaValorTotal);
 
             model.ProdutoMaisLucrativo = vendas
              .SelectMany(v => v.Itens)
@@ -160,14 +151,6 @@ namespace pim3semestre.Controllers
              .Select(g => g.Key)
              .FirstOrDefault();
 
-            var diasPassados = DateTime.DaysInMonth(hoje.Year, hoje.Month);
-            var diasDecorridos = hoje.Day;
-
-            var mediaDiaria = diasDecorridos > 0
-                ? model.TotalMes / diasDecorridos
-                : 0;
-
-            model.PrevisaoMes = mediaDiaria * diasPassados;
 
             return View(model);
         }

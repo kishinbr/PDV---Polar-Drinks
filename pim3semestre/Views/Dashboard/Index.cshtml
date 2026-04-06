@@ -1,156 +1,182 @@
 ﻿@model pim3semestre.Models.DashboardViewModel
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
 
-    <h2 class="mb-4">📊 Dashboard</h2>
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">📊 Dashboard</h3>
+
+        <div class="d-flex align-items-center gap-3">
+            <input type="text" class="form-control" placeholder="Buscar..." style="width:250px;">
+            <span class="fw-semibold">Admin</span>
+        </div>
+    </div>
 
     <!-- ===================== -->
     <!-- 💰 FINANCEIRO -->
     <!-- ===================== -->
-    <h5 class="text-muted mb-3">Financeiro</h5>
-
     <div class="row g-3 mb-4">
 
         <div class="col-md-3">
-            <div class="card bg-success text-white p-3 shadow">
+            <div class="card shadow border-0 p-3 bg-success text-white rounded-4">
                 <small>Total Hoje</small>
                 <h4>@Model.TotalHoje.ToString("C")</h4>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card bg-primary text-white p-3 shadow">
+            <div class="card shadow border-0 p-3 bg-primary text-white rounded-4">
                 <small>Total Mês</small>
                 <h4>@Model.TotalMes.ToString("C")</h4>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card bg-dark text-white p-3 shadow">
+            <div class="card shadow border-0 p-3 bg-dark text-white rounded-4">
                 <small>Lucro Hoje</small>
                 <h4>@Model.LucroHoje.ToString("C")</h4>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card bg-warning text-dark p-3 shadow">
+            <div class="card shadow border-0 p-3 bg-warning rounded-4">
                 <small>Lucro Mês</small>
                 <h4>@Model.LucroMes.ToString("C")</h4>
             </div>
         </div>
 
     </div>
-    <h5 class="text-muted mb-3">Pagamentos hoje </h5>
 
+    <!-- ===================== -->
+    <!-- 💳 PAGAMENTOS + GRÁFICO -->
+    <!-- ===================== -->
     <div class="row g-3 mb-4">
 
-        <!-- PIX -->
-        <div class="col-md-4">
-            <div class="card bg-success text-white p-3 shadow">
-                <small>Pix</small>
-                <h6>@Model.QtdPix vendas</h6>
-                <h4>@Model.TotalPix.ToString("C")</h4>
+        <!-- PAGAMENTOS -->
+        <div class="col-md-6">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="card p-3 shadow border-0 rounded-4 bg-success text-white">
+                        <small>Pix</small>
+                        <div>@Model.QtdPix vendas</div>
+                        <h5>@Model.TotalPix.ToString("C")</h5>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card p-3 shadow border-0 rounded-4 bg-primary text-white">
+                        <small>Cartão</small>
+                        <div>@Model.QtdCartao vendas</div>
+                        <h5>@Model.TotalCartao.ToString("C")</h5>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card p-3 shadow border-0 rounded-4 bg-dark text-white">
+                        <small>Dinheiro</small>
+                        <div>@Model.QtdDinheiro vendas</div>
+                        <h5>@Model.TotalDinheiro.ToString("C")</h5>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <!-- CARTÃO -->
-        <div class="col-md-4">
-            <div class="card bg-primary text-white p-3 shadow">
-                <small>Cartão</small>
-                <h6>@Model.QtdCartao vendas</h6>
-                <h4>@Model.TotalCartao.ToString("C")</h4>
-            </div>
-        </div>
-
-        <!-- DINHEIRO -->
-        <div class="col-md-4">
-            <div class="card bg-dark text-white p-3 shadow">
-                <small>Dinheiro</small>
-                <h6>@Model.QtdDinheiro vendas</h6>
-                <h4>@Model.TotalDinheiro.ToString("C")</h4>
+        <!-- GRÁFICO -->
+        <div class="col-md-6">
+            <div class="card shadow border-0 rounded-4 p-3 h-100">
+                <h6 class="mb-3">Formas de Pagamento</h6>
+                <canvas id="graficoPagamentos"></canvas>
             </div>
         </div>
 
     </div>
 
     <!-- ===================== -->
-    <!-- 📊 VENDAS -->
+    <!-- 📈 VENDAS + DESTAQUES -->
     <!-- ===================== -->
-    <h5 class="text-muted mb-3">Vendas</h5>
-
     <div class="row g-3 mb-4">
 
-        <div class="col-md-4">
-            <div class="card bg-info text-white p-3 shadow">
-                <small>Vendas Hoje</small>
-                <h4>@Model.VendasHoje</h4>
+        <!-- GRÁFICO VENDAS -->
+        <div class="col-md-8">
+            <div class="card shadow border-0 rounded-4 p-3">
+                <h6>Vendas na última semana</h6>
+                <canvas id="graficoVendas"></canvas>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card bg-secondary text-bg-dark bg-dark p-3 shadow">
-                <small>Vendas no Mês</small>
-                <h4>@Model.VendasMes</h4>
-            </div>
-        </div>
+        <!-- DESTAQUES -->
+        <div class="col-md-4 d-flex flex-column gap-3">
 
+            <div class="card bg-dark text-white p-3 shadow rounded-4">
+                <small>Produto mais vendido</small>
+                <h5>@Model.ProdutoMaisVendido</h5>
+            </div>
+
+            <div class="card bg-warning p-3 shadow rounded-4">
+                <small>Produto mais lucrativo</small>
+                <h5>@Model.ProdutoMaisLucrativo</h5>
+            </div>
+
+            <div class="card bg-secondary text-white p-3 shadow rounded-4">
+                <small>Previsão amanhã</small>
+                <h5>@Model.PrevisaoAmanha.ToString("C")</h5>
+            </div>
+
+        </div>
 
     </div>
 
     <!-- ===================== -->
     <!-- 📦 ESTOQUE -->
     <!-- ===================== -->
-    <h5 class="text-muted mb-3">Estoque</h5>
-
     <div class="row g-3 mb-4">
 
-        <div class="col-md-3">
-            <div class="card bg-warning text-dark p-3 shadow">
+        <div class="col-md-6">
+            <div class="card bg-warning p-3 shadow rounded-4">
                 <small>Estoque Baixo</small>
                 <h4>@Model.EstoqueBaixo</h4>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card bg-danger text-white p-3 shadow">
+        <div class="col-md-6">
+            <div class="card bg-danger text-white p-3 shadow rounded-4">
                 <small>Sem Estoque</small>
                 <h4>@Model.SemEstoque</h4>
             </div>
         </div>
 
-        
-
-        <div class="col-md-3">
-            <div class="card bg-dark text-white p-3 shadow">
-                <small>Produto Mais Vendido</small>
-                <h4>@Model.ProdutoMaisVendido</h4>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- ===================== -->
-    <!-- 📈 INTELIGÊNCIA -->
-    <!-- ===================== -->
-    <h5 class="text-muted mb-3">Análise Inteligente</h5>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-6">
-            <div class="card bg-dark text-white p-3 shadow">
-                <small>Previsão de vendas amanhã</small>
-                <h4>@Model.PrevisaoAmanha.ToString("C")</h4>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card bg-warning text-dark p-3 shadow">
-                <small>Produto mais lucrativo</small>
-                <h5>@Model.ProdutoMaisLucrativo</h5>
-            </div>
-        </div>
-
-
     </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // GRÁFICO DE PAGAMENTO
+    new Chart(document.getElementById('graficoPagamentos'), {
+    type: 'pie',
+    data: {
+    labels: ['Pix', 'Cartão', 'Dinheiro'],
+    datasets: [{
+    data: [
+    @Model.TotalPix,
+    @Model.TotalCartao,
+    @Model.TotalDinheiro
+    ]
+    }]
+    }
+    });
+
+    // GRÁFICO DE VENDAS (EXEMPLO)
+    new Chart(document.getElementById('graficoVendas'), {
+    type: 'line',
+    data: {
+    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+    datasets: [{
+    label: 'Vendas',
+    data: [5, 8, 6, 10, 7, 12, 9]
+    }]
+    }
+    });
+</script>
