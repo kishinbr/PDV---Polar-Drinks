@@ -4,73 +4,39 @@
 
     <h3 class="fw-bold mb-4">📊 Dashboard</h3>
 
-    <!-- ===================== -->
-    <!-- 💰 FINANCEIRO -->
-    <!-- ===================== -->
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-            <div class="card bg-success text-white p-3 shadow rounded-4">
-                <small>Total Hoje</small>
-                <h4>@Model.TotalHoje.ToString("C")</h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card bg-primary text-white p-3 shadow rounded-4">
-                <small>Total Mês</small>
-                <h4>@Model.TotalMes.ToString("C")</h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card bg-dark text-white p-3 shadow rounded-4">
-                <small>Lucro Hoje</small>
-                <h4>@Model.LucroHoje.ToString("C")</h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card bg-warning p-3 shadow rounded-4">
-                <small>Lucro Mês</small>
-                <h4>@Model.LucroMes.ToString("C")</h4>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- ===================== -->
-    <!-- 📊 GRID PRINCIPAL -->
-    <!-- ===================== -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-4 ">
 
         <!-- COLUNA ESQUERDA -->
         <div class="col-md-8 d-flex flex-column gap-3">
 
-            <!-- PAGAMENTOS (CARDS) -->
+            <!-- FINANCEIRO (2x2) -->
             <div class="row g-3">
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card bg-success text-white p-3 shadow rounded-4">
-                        <small>Pix</small>
-                        <div>@Model.QtdPix vendas</div>
-                        <h5>@Model.TotalPix.ToString("C")</h5>
+                        <small>Total Hoje</small>
+                        <h4>@Model.TotalHoje.ToString("C")</h4>
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card bg-primary text-white p-3 shadow rounded-4">
-                        <small>Cartão</small>
-                        <div>@Model.QtdCartao vendas</div>
-                        <h5>@Model.TotalCartao.ToString("C")</h5>
+                        <small>Total Mês</small>
+                        <h4>@Model.TotalMes.ToString("C")</h4>
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card bg-dark text-white p-3 shadow rounded-4">
-                        <small>Dinheiro</small>
-                        <div>@Model.QtdDinheiro vendas</div>
-                        <h5>@Model.TotalDinheiro.ToString("C")</h5>
+                        <small>Lucro Hoje</small>
+                        <h4>@Model.LucroHoje.ToString("C")</h4>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card bg-warning p-3 shadow rounded-4">
+                        <small>Lucro Mês</small>
+                        <h4>@Model.LucroMes.ToString("C")</h4>
                     </div>
                 </div>
 
@@ -79,15 +45,14 @@
             <!-- GRÁFICO VENDAS -->
             <div class="card shadow border-0 rounded-4 p-3 flex-fill">
 
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
                     <h6 class="mb-0">Vendas</h6>
 
                     <span class="badge bg-light text-dark border" id="totalVendasLabel">
                         Qtd vendas: 0
                     </span>
 
-                    <div class="btn-group btn-group-sm">
-                        
+                    <div class="btn-group btn-group-sm flex-wrap">
                         <button class="btn btn-outline-primary" onclick="atualizarVendas('hoje')">Hoje</button>
                         <button class="btn btn-outline-primary" onclick="atualizarVendas('semana')">7d</button>
                         <button class="btn btn-outline-primary" onclick="atualizarVendas('mes')">30d</button>
@@ -102,23 +67,55 @@
         </div>
 
         <!-- COLUNA DIREITA -->
-        <div class="col-md-4">
-            <div class="card shadow border-0 rounded-4 p-3 h-100 d-flex flex-column">
+        <div class="col-md-4 d-flex flex-column gap-3">
 
-                <div class="d-flex justify-content-between align-items-center mb-2">
+            <!-- PAGAMENTOS (CARDS) -->
+            <div class="row g-3">
+
+                <div class="col-12 col-xl-4">
+                    <div class="card bg-success text-white p-3 shadow rounded-4 h-100">
+                        <small>Pix</small>
+                        <div>@Model.QtdPix vendas</div>
+                        <h5>@Model.TotalPix.ToString("C")</h5>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-4">
+                    <div class="card bg-primary text-white p-3 shadow rounded-4 h-100">
+                        <small>Cartão</small>
+                        <div>@Model.QtdCartao vendas</div>
+                        <h5>@Model.TotalCartao.ToString("C")</h5>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-4">
+                    <div class="card bg-dark text-white p-3 shadow rounded-4 h-100">
+                        <small>Dinheiro</small>
+                        <div>@Model.QtdDinheiro vendas</div>
+                        <h5>@Model.TotalDinheiro.ToString("C")</h5>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- GRÁFICO PAGAMENTOS -->
+            <div class="card shadow border-0 rounded-4 p-3 flex-fill">
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+
                     <h6 class="mb-0">Formas de Pagamento</h6>
 
                     <span class="badge bg-success" id="qtdPagamentosLabel">
                         Qtd vendas: 0
                     </span>
 
-
-                    <div class="btn-group btn-group-sm">
+                    <div class="btn-group btn-group-sm flex-wrap">
                         <button class="btn btn-outline-success" onclick="atualizarPagamentos('hoje')">Hoje</button>
                         <button class="btn btn-outline-success" onclick="atualizarPagamentos('semana')">7d</button>
                         <button class="btn btn-outline-success" onclick="atualizarPagamentos('mes')">30d</button>
                         <button class="btn btn-outline-success" onclick="atualizarPagamentos('total')">Total</button>
                     </div>
+
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center flex-fill">
@@ -126,6 +123,7 @@
                 </div>
 
             </div>
+
         </div>
 
     </div>
@@ -145,7 +143,7 @@
                         <small>Estoque Baixo</small>
                         <h5 class="mb-0">@Model.EstoqueBaixo</h5>
                     </div>
-                    <span class="badge bg-dark">Alerta</span>
+                    
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center p-2 rounded bg-danger text-white">
@@ -153,7 +151,7 @@
                         <small>Sem Estoque</small>
                         <h5 class="mb-0">@Model.SemEstoque</h5>
                     </div>
-                    <span class="badge bg-dark">Crítico</span>
+                    
                 </div>
 
             </div>
@@ -249,14 +247,18 @@
     // 📈 GRÁFICO LINHA
     // =====================
     let graficoVendas = new Chart(document.getElementById('graficoVendas'), {
-    type: 'line',
+    type: 'bar',
     data: {
     labels: [],
     datasets: [{
     label: 'Vendas',
     data: [],
-    tension: 0.4 // deixa linha mais suave
+    borderWidth: 1
     }]
+    },
+    options: {
+    responsive: true,
+    maintainAspectRatio: false
     }
     });
 
