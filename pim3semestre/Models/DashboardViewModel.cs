@@ -2,6 +2,9 @@
 {
     public class DashboardViewModel
     {
+        // =========================
+        // 💰 FINANCEIRO
+        // =========================
         public decimal TotalHoje { get; set; }
         public decimal TotalMes { get; set; }
         public decimal TotalAno { get; set; }
@@ -15,6 +18,9 @@
         public string? HorarioPico { get; set; }
         public string? DiaMaisVendas { get; set; }
 
+        // =========================
+        // 💰 LUCRO
+        // =========================
         public decimal LucroHoje { get; set; }
         public decimal LucroMes { get; set; }
 
@@ -43,7 +49,9 @@
         public decimal FaturamentoHoje { get; set; }
         public decimal MetaMesPercentual { get; set; }
 
-
+        // =========================
+        // 💳 PAGAMENTOS (CARDS - HOJE)
+        // =========================
         public int QtdPix { get; set; }
         public int QtdCartao { get; set; }
         public int QtdDinheiro { get; set; }
@@ -51,6 +59,33 @@
         public decimal TotalPix { get; set; }
         public decimal TotalCartao { get; set; }
         public decimal TotalDinheiro { get; set; }
+
+        // =========================
+        // 💳 PAGAMENTOS (GRÁFICO)
+        // =========================
+        public decimal PixHoje { get; set; }
+        public decimal CartaoHoje { get; set; }
+        public decimal DinheiroHoje { get; set; }
+
+        public decimal PixSemana { get; set; }
+        public decimal CartaoSemana { get; set; }
+        public decimal DinheiroSemana { get; set; }
+
+        public decimal PixMes { get; set; }
+        public decimal CartaoMes { get; set; }
+        public decimal DinheiroMes { get; set; }
+
+        public decimal PixTotal { get; set; }
+        public decimal CartaoTotal { get; set; }
+        public decimal DinheiroTotal { get; set; }
+
+        // =========================
+        // 📈 VENDAS (GRÁFICOS)
+        // =========================
+        public List<decimal> VendasHojeLista { get; set; } = new();   // por hora
+        public List<decimal> VendasSemana { get; set; } = new();      // últimos 7 dias
+        public List<decimal> VendasMesGrafico { get; set; } = new();  // últimos 30 dias
+        public List<decimal> VendasAno { get; set; } = new();         // por mês
 
         // =========================
         // 🔮 ML SIMPLES

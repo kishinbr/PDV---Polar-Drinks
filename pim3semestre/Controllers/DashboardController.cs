@@ -49,11 +49,14 @@ namespace pim3semestre.Controllers
                 : 0;
 
             // =========================
-            // 💰 LUCRO
+            // 📊 BASE
             // =========================
             var vendasHoje = vendas.Where(v => v.VendaData.Date == hoje).ToList();
             var vendasMes = vendas.Where(v => v.VendaData >= inicioMes).ToList();
 
+            // =========================
+            // 💰 LUCRO
+            // =========================
             model.LucroHoje = vendasHoje.Sum(v =>
                 v.Itens.Sum(i =>
                     (i.ItemVendaPreco - (i.Produto.ProdutoPrecoCusto ?? 0)) * i.ItemVendaQtd
@@ -70,7 +73,6 @@ namespace pim3semestre.Controllers
             // 📊 VENDAS
             // =========================
             model.VendasHoje = vendasHoje.Count;
-
             model.VendasMes = vendasMes.Count;
 
             model.DiaMaisVendas = vendas
@@ -78,37 +80,54 @@ namespace pim3semestre.Controllers
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key.ToString())
                 .FirstOrDefault();
+
             // =========================
-            // 💳 PAGAMENTOS (HOJE)
+            // 💳 PAGAMENTOS (CARDS HOJE)
             // =========================
-            model.QtdPix = vendasHoje.Count(v =>
-                (v.VendaTipoPagamento ?? "").ToLower() == "pix");
+            model.QtdPix = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
+            model.QtdCartao = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
+            model.QtdDinheiro = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
 
-            model.QtdCartao = vendasHoje.Count(v =>
-                (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
+            model.TotalPix = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix").Sum(v => v.VendaValorTotal);
+            model.TotalCartao = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão").Sum(v => v.VendaValorTotal);
+            model.TotalDinheiro = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro").Sum(v => v.VendaValorTotal);
 
-            model.QtdDinheiro = vendasHoje.Count(v =>
-                (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
+            // =========================
+            // 💳 PAGAMENTOS (GRÁFICOS)
+            // =========================
+            Func<string, DateTime?, int> totalQtd = (tipo, dataInicio) =>
+                vendas.Count(v =>
+                    (v.VendaTipoPagamento ?? "").ToLower() == tipo &&
+                    (dataInicio == null || v.VendaData >= dataInicio)
+                );
 
+            // HOJE
+            model.PixHoje = totalQtd("pix", hoje);
+            model.CartaoHoje = totalQtd("cartão", hoje);
+            model.DinheiroHoje = totalQtd("dinheiro", hoje);
 
-            model.TotalPix = vendasHoje
-                .Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix")
-                .Sum(v => v.VendaValorTotal);
+            // SEMANA
+            var inicioSemana = hoje.AddDays(-7);
+            model.PixSemana = totalQtd("pix", inicioSemana);
+            model.CartaoSemana = totalQtd("cartão", inicioSemana);
+            model.DinheiroSemana = totalQtd("dinheiro", inicioSemana);
 
-            model.TotalCartao = vendasHoje
-                .Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão")
-                .Sum(v => v.VendaValorTotal);
+            // MÊS (30 dias)
+            var inicio30 = hoje.AddDays(-30);
+            model.PixMes = totalQtd("pix", inicio30);
+            model.CartaoMes = totalQtd("cartão", inicio30);
+            model.DinheiroMes = totalQtd("dinheiro", inicio30);
 
-            model.TotalDinheiro = vendasHoje
-                .Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro")
-                .Sum(v => v.VendaValorTotal);
+            // TOTAL
+            model.PixTotal = totalQtd("pix", null);
+            model.CartaoTotal = totalQtd("cartão", null);
+            model.DinheiroTotal = totalQtd("dinheiro", null);
+
             // =========================
             // 📦 ESTOQUE
             // =========================
             model.TotalProdutos = produtos.Count();
-
             model.SemEstoque = produtos.Count(p => (p.ProdutoQtdEstoque ?? 0) == 0);
-
             model.EstoqueBaixo = produtos.Count(p =>
                 (p.ProdutoQtdEstoque ?? 0) <= p.ProdutoEstoqueMinimo);
 
@@ -129,28 +148,61 @@ namespace pim3semestre.Controllers
             model.FaturamentoHoje = model.TotalHoje;
 
             // =========================
-            // 🔮 ML 1 - PREVISÃO
+            // 🔮 ML
             // =========================
-
-
-            var ultimos7Dias = vendas
-                .Where(v => v.VendaData >= hoje.AddDays(-7))
-                .ToList();
+            var ultimos7Dias = vendas.Where(v => v.VendaData >= hoje.AddDays(-7)).ToList();
 
             model.PrevisaoAmanha = ultimos7Dias.Any()
                 ? ultimos7Dias.Average(v => v.VendaValorTotal)
                 : 0;
 
-
             model.ProdutoMaisLucrativo = vendas
-             .SelectMany(v => v.Itens)
-             .GroupBy(i => i.Produto.ProdutoNome)
-             .OrderByDescending(g => g.Sum(i =>
-                 (i.ItemVendaPreco - (i.Produto.ProdutoPrecoCusto ?? 0)) * i.ItemVendaQtd
-             ))
-             .Select(g => g.Key)
-             .FirstOrDefault();
+                .SelectMany(v => v.Itens)
+                .GroupBy(i => i.Produto.ProdutoNome)
+                .OrderByDescending(g => g.Sum(i =>
+                    (i.ItemVendaPreco - (i.Produto.ProdutoPrecoCusto ?? 0)) * i.ItemVendaQtd
+                ))
+                .Select(g => g.Key)
+                .FirstOrDefault();
 
+            // =========================
+            // 📈 VENDAS (GRÁFICOS)
+            // =========================
+
+            // HOJE (por hora)
+            model.VendasHojeLista = vendasHoje
+                .GroupBy(v => v.VendaData.Hour)
+                .OrderBy(g => g.Key)
+                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(x => (decimal)x)
+                .ToList();
+
+            // SEMANA
+            model.VendasSemana = vendas
+                .Where(v => v.VendaData >= hoje.AddDays(-7))
+                .GroupBy(v => v.VendaData.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(x => (decimal)x)
+                .ToList();
+
+            // MÊS (30 dias)
+            model.VendasMesGrafico = vendas
+                .Where(v => v.VendaData >= hoje.AddDays(-30))
+                .GroupBy(v => v.VendaData.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(x => (decimal)x)
+                .ToList();
+
+            // ANO (por mês)
+            model.VendasAno = vendas
+                .Where(v => v.VendaData.Year == hoje.Year)
+                .GroupBy(v => v.VendaData.Month)
+                .OrderBy(g => g.Key)
+                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(x => (decimal)x)
+                .ToList();
 
             return View(model);
         }

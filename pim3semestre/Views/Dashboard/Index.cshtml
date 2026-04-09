@@ -2,15 +2,7 @@
 
 <div class="container-fluid py-4">
 
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold">📊 Dashboard</h3>
-
-        <div class="d-flex align-items-center gap-3">
-            <input type="text" class="form-control" placeholder="Buscar..." style="width:250px;">
-            <span class="fw-semibold">Admin</span>
-        </div>
-    </div>
+    <h3 class="fw-bold mb-4">📊 Dashboard</h3>
 
     <!-- ===================== -->
     <!-- 💰 FINANCEIRO -->
@@ -18,28 +10,28 @@
     <div class="row g-3 mb-4">
 
         <div class="col-md-3">
-            <div class="card shadow border-0 p-3 bg-success text-white rounded-4">
+            <div class="card bg-success text-white p-3 shadow rounded-4">
                 <small>Total Hoje</small>
                 <h4>@Model.TotalHoje.ToString("C")</h4>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card shadow border-0 p-3 bg-primary text-white rounded-4">
+            <div class="card bg-primary text-white p-3 shadow rounded-4">
                 <small>Total Mês</small>
                 <h4>@Model.TotalMes.ToString("C")</h4>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card shadow border-0 p-3 bg-dark text-white rounded-4">
+            <div class="card bg-dark text-white p-3 shadow rounded-4">
                 <small>Lucro Hoje</small>
                 <h4>@Model.LucroHoje.ToString("C")</h4>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card shadow border-0 p-3 bg-warning rounded-4">
+            <div class="card bg-warning p-3 shadow rounded-4">
                 <small>Lucro Mês</small>
                 <h4>@Model.LucroMes.ToString("C")</h4>
             </div>
@@ -48,32 +40,34 @@
     </div>
 
     <!-- ===================== -->
-    <!-- 💳 PAGAMENTOS + GRÁFICO -->
+    <!-- 📊 GRID PRINCIPAL -->
     <!-- ===================== -->
     <div class="row g-3 mb-4">
 
-        <!-- PAGAMENTOS -->
-        <div class="col-md-6">
+        <!-- COLUNA ESQUERDA -->
+        <div class="col-md-8 d-flex flex-column gap-3">
+
+            <!-- PAGAMENTOS (CARDS) -->
             <div class="row g-3">
 
-                <div class="col-md-6">
-                    <div class="card p-3 shadow border-0 rounded-4 bg-success text-white">
+                <div class="col-md-4">
+                    <div class="card bg-success text-white p-3 shadow rounded-4">
                         <small>Pix</small>
                         <div>@Model.QtdPix vendas</div>
                         <h5>@Model.TotalPix.ToString("C")</h5>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="card p-3 shadow border-0 rounded-4 bg-primary text-white">
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white p-3 shadow rounded-4">
                         <small>Cartão</small>
                         <div>@Model.QtdCartao vendas</div>
                         <h5>@Model.TotalCartao.ToString("C")</h5>
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="card p-3 shadow border-0 rounded-4 bg-dark text-white">
+                <div class="col-md-4">
+                    <div class="card bg-dark text-white p-3 shadow rounded-4">
                         <small>Dinheiro</small>
                         <div>@Model.QtdDinheiro vendas</div>
                         <h5>@Model.TotalDinheiro.ToString("C")</h5>
@@ -81,102 +75,263 @@
                 </div>
 
             </div>
+
+            <!-- GRÁFICO VENDAS -->
+            <div class="card shadow border-0 rounded-4 p-3 flex-fill">
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Vendas</h6>
+
+                    <span class="badge bg-light text-dark border" id="totalVendasLabel">
+                        Qtd vendas: 0
+                    </span>
+
+                    <div class="btn-group btn-group-sm">
+                        
+                        <button class="btn btn-outline-primary" onclick="atualizarVendas('hoje')">Hoje</button>
+                        <button class="btn btn-outline-primary" onclick="atualizarVendas('semana')">7d</button>
+                        <button class="btn btn-outline-primary" onclick="atualizarVendas('mes')">30d</button>
+                        <button class="btn btn-outline-primary" onclick="atualizarVendas('ano')">Ano</button>
+                    </div>
+                </div>
+
+                <canvas id="graficoVendas" style="height:300px;"></canvas>
+
+            </div>
+
         </div>
 
-        <!-- GRÁFICO -->
-        <div class="col-md-6">
-            <div class="card shadow border-0 rounded-4 p-3 h-100">
-                <h6 class="mb-3">Formas de Pagamento</h6>
-                <canvas id="graficoPagamentos"></canvas>
+        <!-- COLUNA DIREITA -->
+        <div class="col-md-4">
+            <div class="card shadow border-0 rounded-4 p-3 h-100 d-flex flex-column">
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Formas de Pagamento</h6>
+
+                    <span class="badge bg-success" id="qtdPagamentosLabel">
+                        Qtd vendas: 0
+                    </span>
+
+
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-success" onclick="atualizarPagamentos('hoje')">Hoje</button>
+                        <button class="btn btn-outline-success" onclick="atualizarPagamentos('semana')">7d</button>
+                        <button class="btn btn-outline-success" onclick="atualizarPagamentos('mes')">30d</button>
+                        <button class="btn btn-outline-success" onclick="atualizarPagamentos('total')">Total</button>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center flex-fill">
+                    <canvas id="graficoPagamentos" style="max-width:280px; max-height:280px;"></canvas>
+                </div>
+
             </div>
         </div>
 
     </div>
 
     <!-- ===================== -->
-    <!-- 📈 VENDAS + DESTAQUES -->
+    <!-- LINHA INFERIOR -->
     <!-- ===================== -->
     <div class="row g-3 mb-4">
 
-        <!-- GRÁFICO VENDAS -->
-        <div class="col-md-8">
-            <div class="card shadow border-0 rounded-4 p-3">
-                <h6>Vendas na última semana</h6>
-                <canvas id="graficoVendas"></canvas>
+        <!-- ESTOQUE -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 h-100 p-3">
+                <h6 class="mb-3">📦 Estoque</h6>
+
+                <div class="d-flex justify-content-between align-items-center mb-3 p-2 rounded bg-warning">
+                    <div>
+                        <small>Estoque Baixo</small>
+                        <h5 class="mb-0">@Model.EstoqueBaixo</h5>
+                    </div>
+                    <span class="badge bg-dark">Alerta</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center p-2 rounded bg-danger text-white">
+                    <div>
+                        <small>Sem Estoque</small>
+                        <h5 class="mb-0">@Model.SemEstoque</h5>
+                    </div>
+                    <span class="badge bg-dark">Crítico</span>
+                </div>
+
             </div>
         </div>
 
-        <!-- DESTAQUES -->
-        <div class="col-md-4 d-flex flex-column gap-3">
+        <!-- PRODUTOS -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 h-100 p-3">
+                <h6 class="mb-3">🏆 Produtos</h6>
 
-            <div class="card bg-dark text-white p-3 shadow rounded-4">
-                <small>Produto mais vendido</small>
-                <h5>@Model.ProdutoMaisVendido</h5>
-            </div>
+                <div class="mb-3 p-2 rounded bg-dark text-white">
+                    <small>Mais Vendido</small>
+                    <h5 class="mb-0">@Model.ProdutoMaisVendido</h5>
+                </div>
 
-            <div class="card bg-warning p-3 shadow rounded-4">
-                <small>Produto mais lucrativo</small>
-                <h5>@Model.ProdutoMaisLucrativo</h5>
-            </div>
+                <div class="p-2 rounded bg-warning">
+                    <small>Mais Lucrativo</small>
+                    <h5 class="mb-0">@Model.ProdutoMaisLucrativo</h5>
+                </div>
 
-            <div class="card bg-secondary text-white p-3 shadow rounded-4">
-                <small>Previsão amanhã</small>
-                <h5>@Model.PrevisaoAmanha.ToString("C")</h5>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ===================== -->
-    <!-- 📦 ESTOQUE -->
-    <!-- ===================== -->
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-6">
-            <div class="card bg-warning p-3 shadow rounded-4">
-                <small>Estoque Baixo</small>
-                <h4>@Model.EstoqueBaixo</h4>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card bg-danger text-white p-3 shadow rounded-4">
-                <small>Sem Estoque</small>
-                <h4>@Model.SemEstoque</h4>
+        <!-- ANÁLISE -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 h-100 p-3 d-flex flex-column justify-content-center">
+                <h6 class="mb-3">📈 Análise</h6>
+
+                <div class="text-center">
+                    <small>Previsão de vendas amanhã</small>
+                    <h3 class="mt-2">@Model.PrevisaoAmanha.ToString("C")</h3>
+                </div>
+
             </div>
         </div>
 
     </div>
 
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // GRÁFICO DE PAGAMENTO
-    new Chart(document.getElementById('graficoPagamentos'), {
+
+    // =====================
+    // 📊 DADOS
+    // =====================
+    const pagamentos = {
+    hoje: [@Model.PixHoje, @Model.CartaoHoje, @Model.DinheiroHoje],
+    semana: [@Model.PixSemana, @Model.CartaoSemana, @Model.DinheiroSemana],
+    mes: [@Model.PixMes, @Model.CartaoMes, @Model.DinheiroMes],
+    total: [@Model.PixTotal, @Model.CartaoTotal, @Model.DinheiroTotal]
+    };
+
+
+    const vendas = {
+    hoje: @Html.Raw(Json.Serialize(Model.VendasHojeLista)),
+    semana: @Html.Raw(Json.Serialize(Model.VendasSemana)),
+    mes: @Html.Raw(Json.Serialize(Model.VendasMesGrafico)),
+    ano: @Html.Raw(Json.Serialize(Model.VendasAno))
+    };
+
+    // =====================
+    // 🥧 GRÁFICO PIZZA
+    // =====================
+    let graficoPagamentos = new Chart(document.getElementById('graficoPagamentos'), {
     type: 'pie',
     data: {
     labels: ['Pix', 'Cartão', 'Dinheiro'],
     datasets: [{
-    data: [
-    @Model.TotalPix,
-    @Model.TotalCartao,
-    @Model.TotalDinheiro
-    ]
+    data: pagamentos.hoje
     }]
     }
     });
 
-    // GRÁFICO DE VENDAS (EXEMPLO)
-    new Chart(document.getElementById('graficoVendas'), {
+    function atualizarPagamentos(tipo) {
+
+    const dados = pagamentos[tipo];
+
+    // atualiza gráfico
+    graficoPagamentos.data.datasets[0].data = dados;
+    graficoPagamentos.update();
+
+    // 🔥 soma usando a própria const pagamentos
+    const totalQtd = dados.reduce((acc, val) => acc + val, 0);
+
+    // atualiza label
+    document.getElementById("qtdPagamentosLabel").innerText =
+    `Qtd vendas: ${totalQtd}`;
+    }
+
+    // =====================
+    // 📈 GRÁFICO LINHA
+    // =====================
+    let graficoVendas = new Chart(document.getElementById('graficoVendas'), {
     type: 'line',
     data: {
-    labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+    labels: [],
     datasets: [{
     label: 'Vendas',
-    data: [5, 8, 6, 10, 7, 12, 9]
+    data: [],
+    tension: 0.4 // deixa linha mais suave
     }]
     }
     });
+
+    function atualizarVendas(tipo) {
+
+    let labels = [];
+
+    // =====================
+    // 🕒 HOJE (horas)
+    // =====================
+    if (tipo === "hoje") {
+    labels = vendas.hoje.map((_, i) => `${i}h`);
+    }
+
+    // =====================
+    // 📅 SEMANA (7 dias)
+    // =====================
+    else if (tipo === "semana") {
+
+    const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const hoje = new Date();
+
+    labels = vendas.semana.map((_, i) => {
+    let data = new Date();
+    data.setDate(hoje.getDate() - (vendas.semana.length - 1 - i));
+    return diasSemana[data.getDay()];
+    });
+    }
+
+    // =====================
+    // 📆 MÊS (dias do mês)
+    // =====================
+    else if (tipo === "mes") {
+    labels = vendas.mes.map((_, i) => `${i + 1}`);
+    }
+
+    // =====================
+    // 📊 ANO (12 meses reais)
+    // =====================
+    else if (tipo === "ano") {
+
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+    const hoje = new Date();
+
+    labels = vendas.ano.map((_, i) => {
+    let data = new Date();
+    data.setMonth(hoje.getMonth() - (vendas.ano.length - 1 - i));
+
+    let mes = meses[data.getMonth()];
+    let ano = data.getFullYear();
+
+    return `${mes}/${ano}`;
+    });
+    }
+
+    // =====================
+    // 🔄 ATUALIZA GRÁFICO
+    // =====================
+    graficoVendas.data.labels = labels;
+    graficoVendas.data.datasets[0].data = vendas[tipo];
+    graficoVendas.update();
+    const total = vendas[tipo].reduce((acc, val) => acc + val, 0);
+
+    document.getElementById("totalVendasLabel").innerText =
+    `Qtd vendas: ${total}`;
+
+    }
+
+    // =====================
+    // 🚀 INICIALIZAÇÃO
+    // =====================
+    atualizarVendas("semana");
+    atualizarPagamentos("hoje");
+
+
 </script>
