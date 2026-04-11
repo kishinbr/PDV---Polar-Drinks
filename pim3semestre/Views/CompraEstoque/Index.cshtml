@@ -2,14 +2,15 @@
 @{
     ViewData["Title"] = "Reabastecimento";
 }
-@if (TempData["MensagemSucesso"] != null)
-{
-    <div class="alert bg-success text-light">
-        @TempData["MensagemSucesso"]
-    </div>
-}
+
 
 <div class="container">
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert bg-success text-light">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Reabastecimento</h2>

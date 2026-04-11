@@ -71,7 +71,6 @@
 <script>
     let index = @Model.Itens.Count;
 
-    // Função para atualizar o total
     function atualizarTotal() {
         let total = 0;
 
@@ -87,7 +86,6 @@
         $("#totalPreco").text("Total: R$ " + total.toFixed(2));
     }
 
-    // Adicionar nova linha
     $("#addItem").click(function () {
         let options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
 
@@ -100,13 +98,14 @@
                         <option value="">Selecione</option>
                         ${options}
                     </select>
-                    <span class="text-danger field-validation-valid" 
-                          data-valmsg-for="Itens[${index}].ProdutoID" 
+                    <span class="text-danger field-validation-valid"
+                          data-valmsg-for="Itens[${index}].ProdutoID"
                           data-valmsg-replace="true"></span>
                 </td>
+
                 <td>
                     <input type="number" name="Itens[${index}].Quantidade" class="form-control"
-                           value="0"
+                           value=""
                            data-val="true"
                            data-val-required="Informe a quantidade"
                            data-val-range="Quantidade inválida"
@@ -116,9 +115,10 @@
                           data-valmsg-for="Itens[${index}].Quantidade"
                           data-valmsg-replace="true"></span>
                 </td>
+
                 <td>
                     <input type="text" name="Itens[${index}].Preco" class="form-control"
-                           value="0.00"
+                           value=""
                            data-val="true"
                            data-val-required="Informe o preço"
                            data-val-number="Preço deve ser um número"
@@ -129,43 +129,80 @@
                           data-valmsg-for="Itens[${index}].Preco"
                           data-valmsg-replace="true"></span>
                 </td>
+
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-remover">X</button>
                 </td>
             </tr>
         `);
 
-        // Adiciona a linha na tabela
         $("#tabelaItens tbody").append(newRow);
-
-        // Reparse apenas a nova linha para validação Unobtrusive
         $.validator.unobtrusive.parse(newRow);
 
-        // Remove erro imediato da quantidade inicial 0
-        newRow.find('input[name$="Quantidade"]').removeClass('input-validation-error');
-        newRow.find('span[data-valmsg-for$="Quantidade"]').text('');
-
-        // Atualiza o total
         atualizarTotal();
-
         index++;
     });
 
-    // Remover linha
     $(document).on("click", ".btn-remover", function () {
         $(this).closest("tr").remove();
         atualizarTotal();
     });
 
-    // Atualizar total automaticamente quando usuário altera quantidade ou preço
     $(document).on("input", 'input[name$=".Quantidade"], input[name$=".Preco"]', function () {
         atualizarTotal();
     });
 
-    // Atualiza total ao carregar a página (caso haja itens iniciais)
+    // =========================
+    // 🔒 QUANTIDADE: só números
+    // =========================
+    $(document).on("input", 'input[name$=".Quantidade"]', function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // =========================
+    // 💰 PREÇO: formatação
+    // =========================
+    $(document).on("input", 'input[name$=".Preco"]', function () {
+        let value = this.value;
+
+        value = value.replace(/[^0-9,]/g, '');
+
+        let parts = value.split(',');
+        if (parts.length > 2) {
+            value = parts[0] + ',' + parts[1];
+        }
+
+        if (value.includes(',')) {
+            let [intPart, decPart] = value.split(',');
+            decPart = decPart.substring(0, 2);
+            value = intPart + ',' + decPart;
+        }
+
+        this.value = value;
+    });
+
+    $("form").on("submit", function () {
+
+        $('input[name$=".Preco"]').each(function () {
+            if (this.value.trim() === "") {
+                this.value = "0,00";
+            }
+        });
+
+        $('input[name$=".Quantidade"]').each(function () {
+            let value = this.value.trim();
+
+            if (value === "" || isNaN(value)) {
+                this.value = "0";
+            }
+        });
+
+    });
+
     $(document).ready(function () {
         atualizarTotal();
     });
+
 </script>
 }
 

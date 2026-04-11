@@ -18,6 +18,7 @@ namespace pim3semestre.Models
         [Range(0, 999999.99, ErrorMessage = "O preço deve ser positivo")]
         public decimal ItemCompraPreco { get; set; }
 
+
         [Required(ErrorMessage = "Selecione um produto")]
         public int ProdutoID { get; set; }
 
