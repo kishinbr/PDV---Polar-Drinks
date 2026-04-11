@@ -24,8 +24,7 @@
         <thead>
             <tr>
                 <th style="width: 20%;">Nome</th>
-                <th style="width: 20%;">Descrição</th>
-                <th style="width: 10%;">Categoria</th>
+                <th style="width: 25%;">Descrição</th>
                 <th style="width: 10%;" class="text-end">Preço Compra</th>
                 <th style="width: 10%;" class="text-end">Preço Venda</th>
                 <th style="width: 5%;" class="text-end">Qtd</th>
@@ -45,13 +44,10 @@
 
                         <td>@produto.ProdutoDescricao</td>
 
-                        <td>
-                            <span class="badge bg-secondary">
-                                @produto.Categoria?.CategoriaNome
-                            </span>
-                        </td>
                         <td class="text-end">
                             @produto.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("C")
+                        </td>
+
                         <td class="text-end">
                             @produto.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("C")
                         </td>
@@ -69,7 +65,7 @@
                             }
                         </td>
 
-                        <!-- COLUNA PROMOÇÃO -->
+                        <!-- PROMOÇÃO -->
                         <td class="text-center">
                             @if (produto.ProdutoPromocao > 0)
                             {
@@ -94,15 +90,13 @@
                         </td>
 
                         <td class="text-center">
-                            <!-- Botão editar normal -->
                             <a class="btn btn-warning btn-sm mx-1"
-                               asp-controller="Estoque"
-                               asp-action="Editar"
-                               asp-route-id="@produto.ProdutoID">
+                                   asp-controller="Estoque"
+                                   asp-action="Editar"
+                                   asp-route-id="@produto.ProdutoID">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
 
-                            <!-- Botão de edição rápida de preço/promocao -->
                             <a class="btn btn-info btn-sm mx-1 btn-edicao-rapida"
                                    data-bs-toggle="modal"
                                    data-bs-target="#edicaoRapidaModal"
@@ -119,13 +113,14 @@
     </table>
 
 </div>
+
 <!-- Modal de Edição Rápida -->
-<div class="modal fade" id="edicaoRapidaModal" tabindex="-1" aria-labelledby="edicaoRapidaLabel" aria-hidden="true">
+<div class="modal fade" id="edicaoRapidaModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
             <div class="modal-header">
-                <h5 class="modal-title" id="edicaoRapidaLabel">Edição Rápida do Produto</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <h5 class="modal-title">Edição Rápida do Produto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="formEdicaoRapida" method="post" asp-controller="Estoque" asp-action="EdicaoRapida">
@@ -133,12 +128,12 @@
 
                     <div class="mb-3">
                         <label class="form-label">Preço de Venda</label>
-                        <input type="text" class="form-control" id="PrecoVenda" name="ProdutoPrecoVenda" placeholder="0,00">
+                        <input type="text" class="form-control" id="PrecoVenda" name="ProdutoPrecoVenda">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Promoção (%)</label>
-                        <input type="text" class="form-control" id="Promocao" name="ProdutoPromocao" placeholder="0">
+                        <input type="text" class="form-control" id="Promocao" name="ProdutoPromocao">
                     </div>
                 </form>
             </div>
@@ -149,26 +144,24 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var modal = document.getElementById('edicaoRapidaModal');
             var btnConfirmar = document.getElementById('btnConfirmarEdicao');
 
-            // Ao abrir o modal, carrega os valores atuais
             modal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget; // botão que abriu o modal
+                var button = event.relatedTarget;
                 var id = button.getAttribute('data-id');
                 var preco = button.getAttribute('data-preco');
                 var promocao = button.getAttribute('data-promocao');
 
-                // Preenche os campos do modal
                 modal.querySelector('#ProdutoID').value = id;
                 modal.querySelector('#PrecoVenda').value = preco;
                 modal.querySelector('#Promocao').value = promocao;
             });
 
-            // Botão confirmar apenas submete o formulário
             btnConfirmar.addEventListener('click', function() {
                 document.getElementById('formEdicaoRapida').submit();
             });

@@ -11,6 +11,8 @@ namespace pim3semestre.Models
 
         public int MovimentacaoQtd { get; set; }
 
+        public string? MovimentacaoDescricao { get; set; }
+
         public DateTime MovimentacaoData { get; set; } = DateTime.Now;
 
         public int ProdutoID { get; set; }

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pim3semestre.Data;
 using pim3semestre.Models;
-using System.Diagnostics;
 
 namespace pim3semestre.Controllers
 {
@@ -18,22 +16,12 @@ namespace pim3semestre.Controllers
 
         public IActionResult Index()
         {
-            var produtos = _db.Produtos
-                .Include(p => p.Categoria)
-                .ToList();
-
+            var produtos = _db.Produtos.ToList();
             return View(produtos);
         }
 
-
         public IActionResult Cadastrar()
         {
-            ViewBag.Categorias = new SelectList(
-                _db.Categorias.Where(c => c.CategoriaAtiva).ToList(),
-                "CategoriaID",
-                "CategoriaNome"
-            );
-
             return View();
         }
 
@@ -49,13 +37,7 @@ namespace pim3semestre.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Categorias = new SelectList(
-                _db.Categorias.Where(c => c.CategoriaAtiva).ToList(),
-                "CategoriaID",
-                "CategoriaNome"
-            );
-
-            return View();
+            return View(produto);
         }
 
         [HttpGet]
@@ -69,13 +51,6 @@ namespace pim3semestre.Controllers
             var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == id);
             if (produto == null) return NotFound();
 
-            // Dropdown apenas com categorias ativas
-            ViewBag.Categorias = new SelectList(
-                _db.Categorias.Where(c => c.CategoriaAtiva).ToList(),
-                "CategoriaID",
-                "CategoriaNome"
-            );
-
             return View(produto);
         }
 
@@ -85,11 +60,6 @@ namespace pim3semestre.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categorias = new SelectList(
-                    _db.Categorias.Where(c => c.CategoriaAtiva).ToList(),
-                    "CategoriaID",
-                    "CategoriaNome"
-                );
                 return View(produto);
             }
 
@@ -107,7 +77,8 @@ namespace pim3semestre.Controllers
                     ProdutoID = produtoDb.ProdutoID,
                     MovimentacaoQtd = Math.Abs(diferenca),
                     MovimentacaoData = DateTime.Now,
-                    MovimentacaoTipo = "Edicao"
+                    MovimentacaoTipo = "Edicao",
+                    MovimentacaoDescricao = $"Alteração manual de estoque: {quantidadeAntiga} → {quantidadeNova}"
                 };
                 _db.MovimentacoesEstoque.Add(movimentacao);
             }
@@ -117,10 +88,10 @@ namespace pim3semestre.Controllers
             produtoDb.ProdutoCodBarra = produto.ProdutoCodBarra;
             produtoDb.ProdutoPrecoVenda = produto.ProdutoPrecoVenda;
             produtoDb.ProdutoQtdEstoque = produto.ProdutoQtdEstoque;
-            produtoDb.CategoriaID = produto.CategoriaID;
             produtoDb.ProdutoAtivo = produto.ProdutoAtivo;
-            produtoDb.ProdutoEstoqueMinimo= produto.ProdutoEstoqueMinimo;
+            produtoDb.ProdutoEstoqueMinimo = produto.ProdutoEstoqueMinimo;
             produtoDb.ProdutoPrecoCusto = produto.ProdutoPrecoCusto;
+            produtoDb.ProdutoPromocao = produto.ProdutoPromocao;
 
             _db.SaveChanges();
 

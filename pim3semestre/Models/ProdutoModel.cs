@@ -40,10 +40,6 @@ namespace pim3semestre.Models
 
         public bool ProdutoAtivo { get; set; }
 
-        [Required(ErrorMessage = "Selecione uma categoria")]
-        public int? CategoriaID { get; set; }
-
-        public CategoriaModel? Categoria { get; set; }
 
         // Propriedade calculada para indicar estoque baixo
         [NotMapped]

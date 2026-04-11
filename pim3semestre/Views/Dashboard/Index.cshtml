@@ -74,7 +74,7 @@
 
                 <div class="col-12 col-xl-4">
                     <div class="card bg-success text-white p-3 shadow rounded-4 h-100">
-                        <small>Pix</small>
+                        <small><img src="/img/pix.png" width="16" class="me-1">Pix</small>
                         <div>@Model.QtdPix vendas</div>
                         <h5>@Model.TotalPix.ToString("C")</h5>
                     </div>
@@ -82,7 +82,7 @@
 
                 <div class="col-12 col-xl-4">
                     <div class="card bg-primary text-white p-3 shadow rounded-4 h-100">
-                        <small>Cartão</small>
+                        <small>💳 Cartão</small>
                         <div>@Model.QtdCartao vendas</div>
                         <h5>@Model.TotalCartao.ToString("C")</h5>
                     </div>
@@ -90,7 +90,7 @@
 
                 <div class="col-12 col-xl-4">
                     <div class="card bg-dark text-white p-3 shadow rounded-4 h-100">
-                        <small>Dinheiro</small>
+                        <small>💵 Dinheiro</small>
                         <div>@Model.QtdDinheiro vendas</div>
                         <h5>@Model.TotalDinheiro.ToString("C")</h5>
                     </div>
@@ -253,12 +253,8 @@
     datasets: [{
     label: 'Vendas',
     data: [],
-    borderWidth: 1
+    tension: 0.4 
     }]
-    },
-    options: {
-    responsive: true,
-    maintainAspectRatio: false
     }
     });
 

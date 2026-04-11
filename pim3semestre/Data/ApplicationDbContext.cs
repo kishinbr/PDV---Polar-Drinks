@@ -10,7 +10,6 @@ namespace pim3semestre.Data
         }
 
         public DbSet<ProdutoModel> Produtos { get; set; }
-        public DbSet<CategoriaModel> Categorias { get; set; }
         public DbSet<FornecedorModel> Fornecedores { get; set; }
         public DbSet<CompraEstoqueModel> ComprasEstoque { get; set; }
         public DbSet<ItemCompraModel> ItensCompra { get; set; }
@@ -23,12 +22,6 @@ namespace pim3semestre.Data
             base.OnModelCreating(modelBuilder);
 
             // ================= RELACIONAMENTOS =================
-
-            // PRODUTO -> CATEGORIA
-            modelBuilder.Entity<ProdutoModel>()
-                .HasOne(p => p.Categoria)
-                .WithMany(c => c.Produtos)
-                .HasForeignKey(p => p.CategoriaID);
 
             // COMPRA -> FORNECEDOR
             modelBuilder.Entity<CompraEstoqueModel>()
