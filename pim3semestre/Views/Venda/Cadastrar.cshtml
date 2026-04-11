@@ -3,7 +3,8 @@
     ViewData["Title"] = "Nova Venda";
 }
 
-<div class="container bg-dark p-4 rounded-4">
+<div class="container bg-dark p-4 rounded-4 d-flex flex-column"
+     style="height:100vh; overflow:hidden; padding-top:20px; padding-bottom:20px;">
 
     @if (TempData["MensagemSucesso"] != null)
     {
@@ -11,63 +12,93 @@
             @TempData["MensagemSucesso"]
         </div>
     }
+
     <div id="mensagemErro" class="alert alert-danger @(TempData["MensagemErro"] == null ? "d-none" : "")">
         @TempData["MensagemErro"]
     </div>
 
-    <h2 class="text-light text-center mb-4">Nova Venda</h2>
+    <h2 class="text-light text-center mb-3">Nova Venda</h2>
 
-    <div id="mensagemErroJs" class="alert alert-danger d-none"></div>
-
-    <form asp-action="FinalizarVenda" method="post" id="formVenda">
+    <form asp-action="FinalizarVenda" method="post" id="formVenda"
+          class="d-flex flex-column flex-grow-1 overflow-hidden">
         @Html.AntiForgeryToken()
 
-        <!-- ================= LINHA 1 ================= -->
-        <div class="row mb-4">
-
-            <!-- BUSCA -->
-            <div class="col-md-12">
-                <label class="form-label text-light">Buscar Produto (Código ou Nome)</label>
-                <div class="position-relative">
-                    <input type="text" id="buscaProduto" class="form-control" placeholder="Digite o código ou nome do produto" autocomplete="off">
-                    <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
-                </div>
+        <!-- BUSCA -->
+        <div class="mb-3">
+            <label class="form-label text-light">Buscar Produto</label>
+            <div class="position-relative">
+                <input type="text" id="buscaProduto" class="form-control" placeholder="Código ou nome" autocomplete="off">
+                <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
             </div>
-
         </div>
 
-        <!-- ================= LINHA 2 ================= -->
-        <div class="row">
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div class="row flex-grow-1 overflow-hidden">
 
             <!-- ESQUERDA -->
-            <div class="col-md-4">
+            <div class="col-md-4 d-flex flex-column">
 
-                <div class="mb-3">
+                <div class="mb-2">
                     <label class="form-label text-light">Quantidade</label>
                     <input type="number" id="quantidade" class="form-control" value="0">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
                     <label class="form-label text-light">Valor Unitário</label>
                     <input type="text" id="valorUnitario" class="form-control" readonly>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2">
                     <label class="form-label text-light">Total</label>
                     <input type="text" id="valorTotal" class="form-control" readonly>
                 </div>
 
-                <button type="button" id="btnAdicionar" class="btn btn-success w-100 mt-2">
+                <!-- BOTÃO MAIOR -->
+                <button type="button" id="btnAdicionar"
+                        class="btn btn-success w-100 mt-2"
+                        style="height:60px; font-size:18px;">
                     Adicionar Item
                 </button>
 
+                <div class="mb-3 mt-4" style="padding-left:8px;">
+                    <label class="form-label text-light" style="font-size:18px; font-weight:600;">
+                        Tipo de Pagamento:
+                    </label>
+
+                    <div class="d-flex flex-column gap-3" style="font-size:18px;">
+
+                        <div class="form-check">
+                            <input class="form-check-input" style="transform:scale(1.2);" type="radio" name="VendaTipoPagamento" id="pagDinheiro" value="Dinheiro">
+                            <label class="form-check-label text-light" style="font-size:17px;" for="pagDinheiro">Dinheiro</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" style="transform:scale(1.2);" type="radio" name="VendaTipoPagamento" id="pagPix" value="Pix">
+                            <label class="form-check-label text-light" style="font-size:17px;" for="pagPix">Pix</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" style="transform:scale(1.2);" type="radio" name="VendaTipoPagamento" id="pagCartao" value="Cartão">
+                            <label class="form-check-label text-light" style="font-size:17px;" for="pagCartao">Cartão</label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mt-auto d-flex justify-content-center" style="margin-bottom:10px;">
+                    <h2 class="text-light m-0 text-center"
+                        style="font-size:34px; font-weight:700;">
+                        Total: <span id="totalVenda">R$ 0,00</span>
+                    </h2>
+                </div>
+
             </div>
 
-            <!-- DIREITA -->
-            <div class="col-md-8 d-flex flex-column">
+            <div class="col-md-8 d-flex flex-column" style="min-height:0;">
 
-                <div class="flex-grow-1">
-                    <table class="table table-light table-hover">
+                <!-- TABELA -->
+                <div class="flex-grow-1 overflow-auto">
+                    <table class="table table-light table-hover mb-0">
                         <thead>
                             <tr>
                                 <th>Produto</th>
@@ -77,50 +108,24 @@
                                 <th class="text-center">Ações</th>
                             </tr>
                         </thead>
-
                         <tbody id="tabelaItens"></tbody>
                     </table>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-3 p-3 rounded-3">
-                    <h4 class="text-light m-0">
-                        Total: <span id="totalVenda">R$ 0,00</span>
-                    </h4>
-
-                    <div class="mb-3 mt-2">
-                        <label class="form-label text-light">Tipo de Pagamento:</label>
-                        <div class="d-flex gap-3">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="VendaTipoPagamento" id="pagDinheiro" value="Dinheiro" >
-                                <label class="form-check-label text-light" for="pagDinheiro">Dinheiro</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="VendaTipoPagamento" id="pagPix" value="Pix" >
-                                <label class="form-check-label text-light" for="pagPix">Pix</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="VendaTipoPagamento" id="pagCartao" value="Cartão" >
-                                <label class="form-check-label text-light" for="pagCartao">Cartão</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button id="btnConfirmar" type="submit" class="btn btn-success" disabled>
+                <div class="mt-3 p-3 rounded-3">
+                    <button id="btnConfirmar" type="submit" class="btn btn-success w-100" disabled>
                         Confirmar Venda
                     </button>
                 </div>
 
             </div>
-
         </div>
 
-        <!-- INPUTS HIDDEN PARA ITENS -->
         <div id="itensHidden"></div>
 
     </form>
 
 </div>
-
 @section Scripts {
     <script>
         const produtos = @Html.Raw(Json.Serialize(ViewBag.Produtos));

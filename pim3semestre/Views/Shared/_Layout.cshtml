@@ -4,77 +4,249 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <script type="importmap"></script>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/Materia.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/pim3semestre.styles.css" asp-append-version="true" />
+
+    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link href="https://cdn.datatables.net/v/dt/dt-2.3.7/datatables.min.css" rel="stylesheet" integrity="sha384-wCnlGUpaekN+Mtc+qIoipdqIqe2dvC7hWyzVg8wajZ1sxKnVTbnyBd7pyx7JT0Su" crossorigin="anonymous">
-    <link rel="icon" type="image/png" sizes="64x64" href="~/img/icon.png">
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/v/dt/dt-2.3.7/datatables.min.css" rel="stylesheet">
+
+    <!-- Fonte -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="~/img/icon.png" type="image/x-icon" />
+    <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background: #f4f6f9;
+                margin: 0;
+            }
+
+            /* SIDEBAR DESKTOP */
+            .sidebar {
+                width: 260px;
+                height: 100vh;
+                position: fixed;
+                left: 0;
+                top: 0;
+                background: #181818;
+                color: white;
+                padding: 20px 15px;
+            }
+
+                .sidebar .brand {
+                    font-size: 20px;
+                    font-weight: 600;
+                    margin-bottom: 30px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .sidebar a {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 12px;
+                    color: #d1d5db;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    margin-bottom: 5px;
+                    transition: 0.2s;
+                }
+
+                    .sidebar a:hover {
+                        background: #303030;
+                        transform: translateX(3px);
+                        color: white;
+                    }
+
+                .sidebar i {
+                    font-size: 18px;
+                }
+
+            /* CONTENT (não alterado) */
+            .content {
+                margin-left: 260px;
+            }
+
+            /* TOP BAR MOBILE */
+            .topbar {
+                display: none;
+                background: #181818;
+                padding: 10px 15px;
+                color: white;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            /* RESPONSIVO */
+            @@media (max-width: 768px) {
+
+                .sidebar {
+                    display: none;
+                }
+
+                .content {
+                    margin-left: 0;
+                }
+
+                .topbar {
+                    display: flex;
+                }
+            }
+    </style>
 </head>
-<body >
-    <header >
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3 fixed-top ">
-            <div class="container-fluid">
-                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Polar Drinks</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-fill mx-2"></i>Home</a>
-                        </li>
-                      
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Estoque" asp-action="Index"><i class="bi bi-diagram-3-fill mx-2"></i>Estoque</a>
-                        </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Estoque" asp-action="Movimentacoes"><i class="bi bi-graph-up mx-2"></i>Movimentações</a>
-                            </li>
+<body>
 
-                        <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Fornecedor" asp-action="Index"><i class="bi bi-truck mx-2"></i>Fornecedor</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="CompraEstoque" asp-action="Index"><i class="bi bi-truck mx-2"></i>Reabastecer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Venda" asp-action="Cadastrar"><i class="bi bi-truck mx-2"></i>Vendas</a>
-                        </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Venda" asp-action="Index"><i class="bi bi-truck mx-2"></i>Historico</a>
-                            </li>
-                        <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-graph-up mx-2"></i>DashBoard</a>
-                         </li>
 
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <div class="topbar">
+        <button class="btn btn-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
+            <i class="bi bi-list"></i>
+        </button>
 
-    <div class="container-fluid" style="margin-top: 100px;">
-        <main role="main" class="pb-3 m-auto" style="width: 90%;">
-            @RenderBody()
-        </main>
+        <div> Polar Drinks</div>
     </div>
 
-    @* <footer class="border-top footer text-muted bg-dark">
-        <div class="container text-light">
-            &copy; 2026 - Polar Drinks - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- SIDEBAR DESKTOP -->
+    <div class="sidebar">
+        <div class="brand"> Polar Drinks</div>
+
+        <a asp-controller="Home" asp-action="Index">
+            <i class="bi bi-house-fill"></i> Home
+        </a>
+
+        <a asp-controller="Estoque" asp-action="Index">
+            <i class="bi bi-box-seam"></i> Estoque
+        </a>
+
+        <a asp-controller="Estoque" asp-action="Movimentacoes">
+            <i class="bi bi-arrow-left-right"></i> Movimentações
+        </a>
+
+        <a asp-controller="Fornecedor" asp-action="Index">
+            <i class="bi bi-truck"></i> Fornecedor
+        </a>
+
+        <a asp-controller="CompraEstoque" asp-action="Index">
+            <i class="bi bi-bag-plus"></i> Reabastecer
+        </a>
+
+        <a asp-controller="Venda" asp-action="Cadastrar">
+            <i class="bi bi-cart-check"></i> Vendas
+        </a>
+
+        <a asp-controller="Venda" asp-action="Index">
+            <i class="bi bi-receipt"></i> Histórico
+        </a>
+
+        <a asp-controller="Dashboard" asp-action="Index">
+            <i class="bi bi-graph-up"></i> Dashboard
+        </a>
+    </div>
+
+   
+    <div class="offcanvas offcanvas-start text-light" tabindex="-1" id="menuLateral"
+         style="background:#181818;">
+
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title">Polar Drinks</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
-    </footer>  *@
 
+        <div class="offcanvas-body p-3">
 
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Home/Index"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-house-fill"></i> Home
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Estoque/Index"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-box-seam"></i> Estoque
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Estoque/Movimentacoes"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-arrow-left-right"></i> Movimentações
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Fornecedor/Index"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-truck"></i> Fornecedor
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/CompraEstoque/Index"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-bag-plus"></i> Reabastecer
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Venda/Cadastrar"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-cart-check"></i> Vendas
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Venda/Index"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-receipt"></i> Histórico
+            </a>
+
+            <a class="d-flex align-items-center gap-2 mb-2 text-decoration-none text-light p-2 rounded"
+                   href="/Dashboard/Index"
+                   style="color:#d1d5db;"
+                   onmouseover="this.style.background='#303030'"
+                   onmouseout="this.style.background='transparent'">
+
+                <i class="bi bi-graph-up"></i> Dashboard
+            </a>
+
+        </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content">
+        @RenderBody()
+    </div>
+
+    <!-- SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.datatables.net/v/dt/dt-2.3.7/datatables.min.js" integrity="sha384-aQ8I1X2x8U0AR8D7C4Ah0OvZlwMslQdN5YDAQBA56jXrrhcECijs/i7H+5DDrlV1" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-2.3.7/datatables.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
