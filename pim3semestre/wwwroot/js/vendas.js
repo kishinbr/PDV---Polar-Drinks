@@ -162,7 +162,7 @@
         if (!msgAdicionar) {
             msgAdicionar = document.createElement("div");
             msgAdicionar.id = "mensagemErroAdicionar";
-            msgAdicionar.classList.add("alert", "alert-danger", "mt-2");
+            msgAdicionar.classList.add("alert", "bg-danger", "text-light", "mt-2");
             msgAdicionar.style.display = "none";
             document.getElementById("formVenda").prepend(msgAdicionar);
         }

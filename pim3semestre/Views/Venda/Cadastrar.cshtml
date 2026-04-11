@@ -1,6 +1,6 @@
 ﻿@model pim3semestre.Models.VendaFinalModel
 @{
-    ViewData["Title"] = "Nova Venda";
+    ViewData["Title"] = "Vendas";
 }
 
 <div class="container bg-dark p-4 rounded-4 d-flex flex-column"
@@ -8,16 +8,22 @@
 
     @if (TempData["MensagemSucesso"] != null)
     {
-        <div class="alert alert-success">
+        <div class="alert bg-success text-light">
             @TempData["MensagemSucesso"]
         </div>
     }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light">
+            @TempData["MensagemErro"]
+        </div>
+    }
 
-    <div id="mensagemErro" class="alert alert-danger @(TempData["MensagemErro"] == null ? "d-none" : "")">
+    @* <div id="mensagemErro" class="alert bg-danger @(TempData["MensagemErro"] == null ? "d-none" : "")">
         @TempData["MensagemErro"]
-    </div>
+    </div> *@
 
-    <h2 class="text-light text-center mb-3">Nova Venda</h2>
+    <h2 class="text-light text-center mb-3">Vendas</h2>
 
     <form asp-action="FinalizarVenda" method="post" id="formVenda"
           class="d-flex flex-column flex-grow-1 overflow-hidden">

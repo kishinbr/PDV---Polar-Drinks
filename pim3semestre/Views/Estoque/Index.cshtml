@@ -15,13 +15,13 @@
 
     @if (TempData["MensagemSucesso"] != null)
     {
-        <div class="alert alert-success text-light" role="alert">
+        <div class="alert bg-success text-light" role="alert">
             @TempData["MensagemSucesso"]
         </div>
     }
     else if(TempData["MensagemErro"] != null)
     {
-        <div class="alert alert-danger text-light" role="alert">
+        <div class="alert bg-danger text-light" role="alert">
             @TempData["MensagemErro"]
         </div>
     }
