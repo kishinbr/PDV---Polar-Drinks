@@ -12,8 +12,8 @@ using pim3semestre.Data;
 namespace pim3semestre.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260330223900_addcusto")]
-    partial class addcusto
+    [Migration("20260411153741_CriandoBanco")]
+    partial class CriandoBanco
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,30 +24,6 @@ namespace pim3semestre.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("pim3semestre.Models.CategoriaModel", b =>
-                {
-                    b.Property<int>("CategoriaID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoriaID"));
-
-                    b.Property<bool>("CategoriaAtiva")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("CategoriaDescricao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CategoriaNome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CategoriaID");
-
-                    b.ToTable("Categorias");
-                });
 
             modelBuilder.Entity("pim3semestre.Models.CompraEstoqueModel", b =>
                 {
@@ -85,6 +61,9 @@ namespace pim3semestre.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FornecedorID"));
+
+                    b.Property<bool>("FornecedorAtivo")
+                        .HasColumnType("bit");
 
                     b.Property<string>("FornecedorBairro")
                         .IsRequired()
@@ -226,6 +205,9 @@ namespace pim3semestre.Migrations
                     b.Property<DateTime>("MovimentacaoData")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("MovimentacaoDescricao")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MovimentacaoQtd")
                         .HasColumnType("int");
 
@@ -254,9 +236,6 @@ namespace pim3semestre.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProdutoID"));
 
-                    b.Property<int>("CategoriaID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("ProdutoAtivo")
                         .HasColumnType("bit");
 
@@ -268,6 +247,9 @@ namespace pim3semestre.Migrations
                     b.Property<string>("ProdutoDescricao")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("ProdutoEstoqueMinimo")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProdutoNome")
                         .IsRequired()
@@ -282,12 +264,14 @@ namespace pim3semestre.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("ProdutoPromocao")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
                     b.Property<int>("ProdutoQtdEstoque")
                         .HasColumnType("int");
 
                     b.HasKey("ProdutoID");
-
-                    b.HasIndex("CategoriaID");
 
                     b.ToTable("Produtos");
                 });
@@ -302,6 +286,9 @@ namespace pim3semestre.Migrations
 
                     b.Property<DateTime>("VendaData")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("VendaTipoPagamento")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("VendaValorTotal")
                         .HasPrecision(18, 2)
@@ -384,22 +371,6 @@ namespace pim3semestre.Migrations
                     b.Navigation("ItemVenda");
 
                     b.Navigation("Produto");
-                });
-
-            modelBuilder.Entity("pim3semestre.Models.ProdutoModel", b =>
-                {
-                    b.HasOne("pim3semestre.Models.CategoriaModel", "Categoria")
-                        .WithMany("Produtos")
-                        .HasForeignKey("CategoriaID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categoria");
-                });
-
-            modelBuilder.Entity("pim3semestre.Models.CategoriaModel", b =>
-                {
-                    b.Navigation("Produtos");
                 });
 
             modelBuilder.Entity("pim3semestre.Models.CompraEstoqueModel", b =>

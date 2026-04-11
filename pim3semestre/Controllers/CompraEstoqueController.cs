@@ -193,5 +193,43 @@ namespace pim3semestre.Controllers
             TempData["MensagemSucesso"] = "Entrega confirmada e estoque atualizado!";
             return RedirectToAction("Index");
         }
+        public IActionResult Excluir(int id)
+        {
+            var compra = _context.ComprasEstoque
+                .Include(c => c.Itens)
+                .ThenInclude(i => i.Produto)
+                .Include(c => c.Fornecedor)
+                .FirstOrDefault(c => c.CompraID == id);
+
+            if (compra == null)
+                return NotFound();
+
+
+            var vm = new CompraDetalhesViewModel
+            {
+                Compra = compra,
+                Itens = compra.Itens.ToList(),
+                PodeConfirmar = false
+            };
+
+            return View(vm);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ConfirmarExclusao(int id)
+        {
+            var compra = _context.ComprasEstoque
+                .Include(c => c.Itens)
+                .FirstOrDefault(c => c.CompraID == id);
+
+            if (compra == null)
+                return NotFound();
+
+            _context.ComprasEstoque.Remove(compra);
+            _context.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Compra excluída com sucesso!";
+            return RedirectToAction("Index");
+        }
     }
 }

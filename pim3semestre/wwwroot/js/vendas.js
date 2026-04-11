@@ -51,30 +51,56 @@
         indiceSelecionado = -1;
 
         const filtrados = produtos
-            .filter(p => p.produtoNome.toLowerCase().includes(filtro) || p.produtoCodBarra.toLowerCase().includes(filtro))
+            .filter(p =>
+                p.produtoNome.toLowerCase().includes(filtro) ||
+                p.produtoCodBarra.toLowerCase().includes(filtro)
+            )
             .slice(0, 8);
 
         filtrados.forEach(p => {
+
             const item = document.createElement("a");
             item.classList.add("list-group-item", "list-group-item-action");
 
-            let preco = p.produtoPrecoVenda;
-            let precoFinal = calcularPrecoComDesconto(p);
+            const precoOriginal = parseFloat(p.produtoPrecoVenda || 0);
+
+            const precoFinal = p.produtoPromocao > 0
+                ? precoOriginal - (precoOriginal * (p.produtoPromocao / 100))
+                : precoOriginal;
 
             item.innerHTML = `
-            <div style="display:flex; justify-content:space-between;">
-                <span>
-                    ${p.produtoNome} [${p.produtoCodBarra}]
-                    ${p.produtoPromocao > 0 ? `<span class="badge bg-danger ms-2">-${p.produtoPromocao}%</span>` : ""}
-                </span>
-                <span>
-                    ${p.produtoPromocao > 0
-                    ? `<small style="text-decoration:line-through;">R$ ${preco.toFixed(2)}</small> 
-                           <strong class="text-success">R$ ${precoFinal.toFixed(2)}</strong>`
-                    : `R$ ${preco.toFixed(2)}`
-                }
-                </span>
-            </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; white-space:nowrap; gap:10px;">
+
+                    <!-- ESQUERDA -->
+                    <div style="overflow:hidden; text-overflow:ellipsis;">
+                        ${p.produtoNome} [${p.produtoCodBarra}]
+                    </div>
+
+                    <!-- CENTRO (ESTOQUE) -->
+                    <div class="text-muted">
+                        QTD ${p.produtoQtdEstoque}
+                    </div>
+
+                    <!-- DIREITA (PREÇO) -->
+                    <div class="text-end">
+                        ${p.produtoPromocao > 0
+                                ? `
+                                <small class="text-muted" style="text-decoration:line-through;">
+                                    R$ ${parseFloat(p.produtoPrecoVenda).toFixed(2)}
+                                </small>
+                                <strong class="text-success ms-1">
+                                    R$ ${(p.produtoPrecoVenda - (p.produtoPrecoVenda * (p.produtoPromocao / 100))).toFixed(2)}
+                                </strong>
+                              `
+                                : `
+                                <strong>
+                                    R$ ${parseFloat(p.produtoPrecoVenda).toFixed(2)}
+                                </strong>
+                              `
+                            }
+                    </div>
+
+                </div>
             `;
 
             item.onclick = () => selecionarProduto(p);
