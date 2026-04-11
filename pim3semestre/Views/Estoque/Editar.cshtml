@@ -49,12 +49,24 @@
 
         <!-- LINHA: QUANTIDADE + ESTOQUE MINIMO -->
         <div class="row mb-4">
+            
+            <!-- 🔒 QUANTIDADE BLOQUEADA + BOTÃO -->
             <div class="col-md-6">
                 <label class="form-label text-light">Quantidade em Estoque</label>
-                <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoQtdEstoque">
-                <span asp-validation-for="ProdutoQtdEstoque" class="text-danger"></span>
+
+                <div class="d-flex gap-2">
+                    <input type="number" class="form-control bg-white text-dark"
+                           value="@Model.ProdutoQtdEstoque" disabled>
+
+                    <button type="button" class="btn btn-info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#ajusteEstoqueModal">
+                        Ajustar
+                    </button>
+                </div>
             </div>
 
+            <!-- ESTOQUE MINIMO -->
             <div class="col-md-6">
                 <label class="form-label text-light">Estoque Mínimo</label>
                 <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoEstoqueMinimo">
@@ -79,4 +91,46 @@
         </div>
 
     </form>
+</div>
+
+<div class="modal fade" id="ajusteEstoqueModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Ajustar Estoque</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="post" asp-action="AjustarEstoque">
+                <div class="modal-body">
+
+                    <input type="hidden" name="ProdutoID" value="@Model.ProdutoID" />
+
+                    <div class="mb-3">
+                        <label>Quantidade Atual</label>
+                        <input type="text" class="form-control"
+                               value="@Model.ProdutoQtdEstoque" disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Nova Quantidade</label>
+                        <input type="number" class="form-control" name="NovaQuantidade" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Descrição da alteração</label>
+                        <textarea class="form-control" name="Descricao" rows="3" required></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
 </div>

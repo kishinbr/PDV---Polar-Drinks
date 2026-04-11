@@ -66,28 +66,11 @@ namespace pim3semestre.Controllers
             var produtoDb = _db.Produtos.FirstOrDefault(p => p.ProdutoID == produto.ProdutoID);
             if (produtoDb == null) return NotFound();
 
-            int quantidadeAntiga = produtoDb.ProdutoQtdEstoque ?? 0;
-            int quantidadeNova = produto.ProdutoQtdEstoque ?? 0;
-            int diferenca = quantidadeNova - quantidadeAntiga;
-
-            if (diferenca != 0)
-            {
-                var movimentacao = new MovimentacaoEstoqueModel
-                {
-                    ProdutoID = produtoDb.ProdutoID,
-                    MovimentacaoQtd = Math.Abs(diferenca),
-                    MovimentacaoData = DateTime.Now,
-                    MovimentacaoTipo = "Edicao",
-                    MovimentacaoDescricao = $"Alteração manual de estoque: {quantidadeAntiga} → {quantidadeNova}"
-                };
-                _db.MovimentacoesEstoque.Add(movimentacao);
-            }
 
             produtoDb.ProdutoNome = produto.ProdutoNome;
             produtoDb.ProdutoDescricao = produto.ProdutoDescricao;
             produtoDb.ProdutoCodBarra = produto.ProdutoCodBarra;
             produtoDb.ProdutoPrecoVenda = produto.ProdutoPrecoVenda;
-            produtoDb.ProdutoQtdEstoque = produto.ProdutoQtdEstoque;
             produtoDb.ProdutoAtivo = produto.ProdutoAtivo;
             produtoDb.ProdutoEstoqueMinimo = produto.ProdutoEstoqueMinimo;
             produtoDb.ProdutoPrecoCusto = produto.ProdutoPrecoCusto;
@@ -112,6 +95,67 @@ namespace pim3semestre.Controllers
                 TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult AjustarEstoque(int ProdutoID, int NovaQuantidade, string Descricao)
+        {
+            var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == ProdutoID);
+            if (produto == null) return NotFound();
+
+            int quantidadeAntiga = produto.ProdutoQtdEstoque ?? 0;
+            int diferenca = NovaQuantidade - quantidadeAntiga;
+
+            if (diferenca != 0)
+            {
+                var movimentacao = new MovimentacaoEstoqueModel
+                {
+                    ProdutoID = produto.ProdutoID,
+
+                    MovimentacaoQtd = diferenca,
+
+                    MovimentacaoData = DateTime.Now,
+                    MovimentacaoTipo = "Edicao",
+                    MovimentacaoDescricao = Descricao
+                };
+
+                _db.MovimentacoesEstoque.Add(movimentacao);
+            }
+
+            produto.ProdutoQtdEstoque = NovaQuantidade;
+
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Estoque ajustado com sucesso!";
+            return RedirectToAction("Editar", new { id = ProdutoID });
+        }
+
+        public IActionResult Movimentacoes(int? produtoId)
+        {
+            var produtos = _db.Produtos
+                .Where(p => p.ProdutoAtivo)
+                .ToList();
+
+            ViewBag.Produtos = produtos;
+
+            if (produtoId == null)
+            {
+                return View(new List<MovimentacaoEstoqueModel>());
+            }
+            var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId);
+
+            if (produto == null)
+            {
+                return View(new List<MovimentacaoEstoqueModel>());
+            }
+            var movimentacoes = _db.MovimentacoesEstoque
+                .Where(m => m.ProdutoID == produtoId)
+                .OrderByDescending(m => m.MovimentacaoData)
+                .ToList();
+
+            ViewBag.ProdutoSelecionado = produto;
+
+            return View(movimentacoes);
         }
     }
 }

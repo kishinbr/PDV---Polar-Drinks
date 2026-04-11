@@ -1,0 +1,225 @@
+﻿@model IEnumerable<MovimentacaoEstoqueModel>
+
+@{
+    ViewData["Title"] = "Movimentações de Estoque";
+}
+
+<div class="container bg-dark p-4 rounded-4">
+
+    <h2 class="text-light text-center mb-4">Movimentações de Estoque</h2>
+
+    <!-- 🔎 BUSCA -->
+    <div class="mb-4 position-relative">
+        <input type="text" id="buscaProduto" class="form-control" placeholder="Digite o nome ou código">
+        <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
+    </div>
+
+    <!-- ⚠️ AVISO -->
+    @if (ViewBag.ProdutoSelecionado == null)
+    {
+        <div class="alert alert-warning">
+            🔍 Selecione um produto para visualizar as movimentações
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0">
+            <div class="card-body d-flex justify-content-between align-items-center">
+
+                <!-- Nome do produto -->
+                <div>
+                    <h5 class="mb-1">Produto</h5>
+                    <strong>@ViewBag.ProdutoSelecionado.ProdutoNome</strong>
+                </div>
+
+                <!-- Estoque atual -->
+                <div class="text-center">
+                    <h6 class="mb-1">Estoque Atual</h6>
+
+                    @if (ViewBag.ProdutoSelecionado.ProdutoQtdEstoque <= ViewBag.ProdutoSelecionado.ProdutoEstoqueMinimo)
+                    {
+                        <span class="badge bg-warning text-dark fs-6">
+                            @ViewBag.ProdutoSelecionado.ProdutoQtdEstoque
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success fs-6">
+                            @ViewBag.ProdutoSelecionado.ProdutoQtdEstoque
+                        </span>
+                    }
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<!-- 📊 TABELA FORA DO FUNDO ESCURO -->
+<div class="container mt-4">
+
+    <table id="tabelaMovimentacoes" class="table table-light table-hover">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Quantidade</th>
+                <th>Descrição</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var mov in Model)
+                {
+                    <tr>
+                        <td>@mov.MovimentacaoData.ToString("dd/MM/yyyy HH:mm")</td>
+
+                        <td class="text-center">
+                            @if (mov.MovimentacaoTipo == "Entrada")
+                            {
+                                <span class="badge bg-success">Reabastecimento</span>
+                            }
+                            else if (mov.MovimentacaoTipo == "Saida")
+                            {
+                                <span class="badge bg-danger">Venda</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Edição</span>
+                            }
+                        </td>
+
+                        <td class="text-center">
+                            @if (mov.MovimentacaoTipo == "Entrada")
+                            {
+                                <span class="text-success">+@mov.MovimentacaoQtd</span>
+                            }
+                            else if (mov.MovimentacaoTipo == "Saida")
+                            {
+                                <span class="text-danger">-@mov.MovimentacaoQtd</span>
+                            }
+                            else
+                            {
+                                if (mov.MovimentacaoQtd > 0)
+                                {
+                                    <span class="text-success fw-bold">+@mov.MovimentacaoQtd</span>
+                                }
+                                else if (mov.MovimentacaoQtd < 0)
+                                {
+                                    <span class="text-danger fw-bold">@mov.MovimentacaoQtd</span>
+                                }
+                                else
+                                {
+                                    <span>0</span>
+                                }
+                            }
+                        </td>
+
+                        <td>@mov.MovimentacaoDescricao</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+@section Scripts {
+    <script>
+        const produtos = @Html.Raw(Json.Serialize(ViewBag.Produtos));
+
+        const buscaInput = document.getElementById("buscaProduto");
+        const lista = document.getElementById("listaSugestoes");
+
+        function renderLista(filtro = "") {
+            lista.innerHTML = "";
+
+            const filtrados = produtos
+                .filter(p =>
+                    p.produtoNome.toLowerCase().includes(filtro) ||
+                    p.produtoCodBarra.toLowerCase().includes(filtro)
+                )
+                .slice(0, 8);
+
+            filtrados.forEach(p => {
+                const item = document.createElement("a");
+                item.classList.add("list-group-item", "list-group-item-action");
+
+                item.innerHTML = `
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>${p.produtoNome} [${p.produtoCodBarra}]</span>
+                        <span>${p.produtoQtdEstoque} QTD</span>
+                    </div>
+                `;
+
+                item.onclick = () => {
+                    window.location.href = `/Estoque/Movimentacoes?produtoId=${p.produtoID}`;
+                };
+
+                lista.appendChild(item);
+            });
+        }
+
+        buscaInput.addEventListener("focus", () => renderLista(buscaInput.value.toLowerCase()));
+        buscaInput.addEventListener("input", () => renderLista(buscaInput.value.toLowerCase()));
+
+        document.addEventListener("click", e => {
+            if (!buscaInput.contains(e.target) && !lista.contains(e.target)) {
+                lista.innerHTML = "";
+            }
+        });
+
+        $(document).ready(function () {
+
+            $('#tabelaMovimentacoes').DataTable({
+                pageLength: 10,
+                lengthMenu: [10, 20, 30],
+                scrollY: "50vh",
+                scrollCollapse: true,
+                paging: true,
+                responsive: true,
+                autoWidth: false,
+
+                columnDefs: [
+                    { orderable: false, targets: [3] },
+                    // { className: "text-end", targets: [2] },
+                    { className: "text-center", targets: [1,2] }
+                ],
+
+                order: [],
+
+                language: {
+                    "decimal": "",
+                    "emptyTable": "Nenhuma movimentação encontrada",
+                    "info": "Mostrando de _START_ a _END_ de um total de _TOTAL_ movimentações",
+                    "infoEmpty": "Mostrando de 0 a 0 de 0 movimentações",
+                    "infoFiltered": "(filtrado de _MAX_ movimentações no total)",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ movimentações",
+                    "loadingRecords": "Carregando...",
+                    "search": "Procurar:",
+                    "zeroRecords": "Nenhuma movimentação encontrada",
+                    "paginate": {
+                        "first": "Primeiro",
+                        "last": "Último",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    },
+                    "aria": {
+                        "orderable": "Ordenar por esta coluna",
+                        "orderableReverse": "Ordem reversa desta coluna"
+                    }
+                }
+            });
+
+            setTimeout(function () {
+                $(".alert").fadeOut("slow", function () {
+                    $(this).alert('close');
+                });
+            }, 3000);
+
+        });
+    </script>
+}
