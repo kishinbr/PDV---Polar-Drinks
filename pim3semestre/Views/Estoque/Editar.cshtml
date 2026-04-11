@@ -7,6 +7,12 @@
     <div class="mb-5 text-center">
         <h1 class="text-light">Editar Produto</h1>
     </div>
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success text-light">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
 
     <form method="post" asp-action="Editar">
 

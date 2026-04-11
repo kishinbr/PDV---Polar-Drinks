@@ -10,6 +10,7 @@
             qtdInput.value = "";
         }
     });
+
     const valorUnitario = document.getElementById("valorUnitario");
     const valorTotal = document.getElementById("valorTotal");
     const tabela = document.getElementById("tabelaItens");
@@ -26,6 +27,16 @@
     // ==================== FUNÇÕES AUXILIARES ====================
     function formatarMoeda(valor) {
         return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
+    }
+
+    function calcularPrecoComDesconto(p) {
+        let preco = p.produtoPrecoVenda;
+
+        if (p.produtoPromocao > 0) {
+            preco = preco - (preco * (p.produtoPromocao / 100));
+        }
+
+        return preco;
     }
 
     function atualizarBotaoConfirmar() {
@@ -47,13 +58,24 @@
             const item = document.createElement("a");
             item.classList.add("list-group-item", "list-group-item-action");
 
-            // Flex: nome/código à esquerda, estoque à direita
+            let preco = p.produtoPrecoVenda;
+            let precoFinal = calcularPrecoComDesconto(p);
+
             item.innerHTML = `
             <div style="display:flex; justify-content:space-between;">
-                <span>${p.produtoNome} [${p.produtoCodBarra}]</span>
-                <span>${p.produtoQtdEstoque} QTD</span>
+                <span>
+                    ${p.produtoNome} [${p.produtoCodBarra}]
+                    ${p.produtoPromocao > 0 ? `<span class="badge bg-danger ms-2">-${p.produtoPromocao}%</span>` : ""}
+                </span>
+                <span>
+                    ${p.produtoPromocao > 0
+                    ? `<small style="text-decoration:line-through;">R$ ${preco.toFixed(2)}</small> 
+                           <strong class="text-success">R$ ${precoFinal.toFixed(2)}</strong>`
+                    : `R$ ${preco.toFixed(2)}`
+                }
+                </span>
             </div>
-        `;
+            `;
 
             item.onclick = () => selecionarProduto(p);
             lista.appendChild(item);
@@ -64,7 +86,14 @@
         produtoSelecionado = p;
         buscaInput.value = p.produtoNome;
         lista.innerHTML = "";
-        valorUnitario.value = formatarMoeda(p.produtoPrecoVenda);
+
+        let preco = calcularPrecoComDesconto(p);
+
+        valorUnitario.value = formatarMoeda(preco);
+
+        // salva preço com desconto
+        produtoSelecionado.precoCalculado = preco;
+
         calcularTotal();
     }
 
@@ -90,7 +119,11 @@
     // ==================== CÁLCULO DE TOTAL ====================
     function calcularTotal() {
         const qtd = parseFloat(qtdInput.value) || 0;
-        const preco = produtoSelecionado ? produtoSelecionado.produtoPrecoVenda : 0;
+
+        const preco = produtoSelecionado
+            ? (produtoSelecionado.precoCalculado || produtoSelecionado.produtoPrecoVenda)
+            : 0;
+
         valorTotal.value = formatarMoeda(qtd * preco);
     }
 
@@ -98,7 +131,7 @@
 
     // ==================== ADICIONAR ITEM ====================
     document.getElementById("btnAdicionar").addEventListener("click", () => {
-        // nova div de erro específica
+
         let msgAdicionar = document.getElementById("mensagemErroAdicionar");
         if (!msgAdicionar) {
             msgAdicionar = document.createElement("div");
@@ -108,7 +141,6 @@
             document.getElementById("formVenda").prepend(msgAdicionar);
         }
 
-        // função para mostrar erro com fade
         function mostrarErro(texto) {
             msgAdicionar.innerText = texto;
             msgAdicionar.style.opacity = 1;
@@ -120,28 +152,24 @@
                 setTimeout(() => {
                     msgAdicionar.style.display = "none";
                     msgAdicionar.innerText = "";
-                }, 500); // tempo do fade
+                }, 500);
             }, 2000);
         }
 
-        // limpa mensagem anterior
         msgAdicionar.style.display = "none";
         msgAdicionar.innerText = "";
 
-        // valida produto selecionado
         if (!produtoSelecionado) {
             mostrarErro("Selecione um produto antes de adicionar!");
             return;
         }
 
-        // valida quantidade
         let qtd = parseInt(qtdInput.value) || 0;
         if (qtd <= 0) {
             mostrarErro("Quantidade inválida!");
             return;
         }
 
-        // Verifica estoque já adicionado
         let qtdJaAdicionada = 0;
         tabela.querySelectorAll("tr").forEach(linha => {
             if (parseInt(linha.getAttribute("data-id")) === produtoSelecionado.produtoID) {
@@ -149,16 +177,14 @@
             }
         });
 
-        // valida estoque
         if (qtd + qtdJaAdicionada > produtoSelecionado.produtoQtdEstoque) {
             mostrarErro(`Estoque insuficiente! Disponível: ${produtoSelecionado.produtoQtdEstoque - qtdJaAdicionada}`);
             return;
         }
 
-        const preco = produtoSelecionado.produtoPrecoVenda;
+        const preco = produtoSelecionado.precoCalculado || produtoSelecionado.produtoPrecoVenda;
         const total = qtd * preco;
 
-        // Adiciona linha na tabela
         const linha = document.createElement("tr");
         linha.setAttribute("data-id", produtoSelecionado.produtoID);
         linha.innerHTML = `
@@ -171,29 +197,26 @@
                 <i class="bi bi-trash"></i>
             </button>
         </td>
-    `;
+        `;
         tabela.appendChild(linha);
 
-        // Adiciona hidden inputs
         const index = tabela.children.length - 1;
         itensHidden.insertAdjacentHTML('beforeend', `
         <input type="hidden" name="Itens[${index}].ProdutoID" value="${produtoSelecionado.produtoID}" />
         <input type="hidden" name="Itens[${index}].ItemVendaQtd" value="${qtd}" />
         <input type="hidden" name="Itens[${index}].ItemVendaPreco" value="${preco}" />
         <input type="hidden" name="Itens[${index}].ItemVendaTotal" value="${total}" />
-    `);
+        `);
 
         totalVenda += total;
         totalVendaLabel.innerText = formatarMoeda(totalVenda);
 
-        // Limpa seleção
         produtoSelecionado = null;
         buscaInput.value = "";
         qtdInput.value = 0;
         valorUnitario.value = "";
         valorTotal.value = "";
 
-        // Atualiza botão confirmar
         atualizarBotaoConfirmar();
     });
 
@@ -211,11 +234,9 @@
 
         row.remove();
 
-        // Remove hidden inputs
         const inputs = itensHidden.querySelectorAll(`[name^="Itens[${index}]"]`);
         inputs.forEach(i => i.remove());
 
-        // Atualiza botão confirmar
         atualizarBotaoConfirmar();
     });
 
@@ -224,8 +245,5 @@
         radio.addEventListener("change", atualizarBotaoConfirmar);
     });
 
-
-
-    // ==================== INICIALIZAÇÃO ====================
-    atualizarBotaoConfirmar(); // garante botão correto ao carregar
+    atualizarBotaoConfirmar();
 });

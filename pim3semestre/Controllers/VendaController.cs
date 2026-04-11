@@ -75,32 +75,48 @@ namespace pim3semestre.Controllers
             using var transaction = _db.Database.BeginTransaction();
             try
             {
-                // ================= VALIDAR ESTOQUE =================
+                decimal totalVenda = 0;
+
+                // ================= VALIDAR + CALCULAR COM DESCONTO =================
                 foreach (var item in venda.Itens)
                 {
                     var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == item.ProdutoID);
+
                     if (produto == null)
                     {
                         TempData["MensagemErro"] = $"Produto não encontrado: ID {item.ProdutoID}";
                         transaction.Rollback();
-                        var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
-                        ViewBag.Produtos = produtos;
+                        ViewBag.Produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
                         return View("Cadastrar", venda);
                     }
 
-                    if (produto.ProdutoQtdEstoque < item.ItemVendaQtd)
+                    if ((produto.ProdutoQtdEstoque ?? 0) < item.ItemVendaQtd)
                     {
                         TempData["MensagemErro"] = $"Estoque insuficiente para: {produto.ProdutoNome}";
                         transaction.Rollback();
-                        var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
-                        ViewBag.Produtos = produtos;
-
+                        ViewBag.Produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
                         return View("Cadastrar", venda);
                     }
+
+                    decimal precoBase = produto.ProdutoPrecoVenda ?? 0;
+                    decimal desconto = produto.ProdutoPromocao;
+
+                    decimal precoFinal = precoBase;
+
+                    if (desconto > 0)
+                    {
+                        precoFinal = precoBase - (precoBase * (desconto / 100));
+                    }
+
+                    // Atualiza item com valor correto (IGNORA o front)
+                    item.ItemVendaPreco = precoFinal;
+                    item.ItemVendaTotal = precoFinal * item.ItemVendaQtd;
+
+                    totalVenda += item.ItemVendaTotal;
                 }
 
-                // ================= CALCULAR TOTAL =================
-                venda.VendaValorTotal = venda.Itens.Sum(i => i.ItemVendaTotal);
+                // ================= TOTAL FINAL =================
+                venda.VendaValorTotal = totalVenda;
 
                 // ================= SALVAR VENDA =================
                 _db.Vendas.Add(venda);
@@ -128,15 +144,13 @@ namespace pim3semestre.Controllers
                 transaction.Commit();
 
                 TempData["MensagemSucesso"] = "Venda realizada com sucesso!";
-
                 return RedirectToAction("Cadastrar");
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
                 TempData["MensagemErro"] = $"Erro ao salvar venda: {ex.Message}";
-                var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
-                ViewBag.Produtos = produtos;
+                ViewBag.Produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
                 return View("Cadastrar", venda);
             }
         }

@@ -209,7 +209,7 @@ $(document).ready(function () {
             //{ className: "text-end", targets: [] }, 
             { className: "text-center", targets: [0,1,3,4] } 
         ],
-        order: [[1, 'desc']], // ordena pela data da venda
+        order: [], // ordena pela data da venda
         language: {
             "decimal": "",
             "emptyTable": "Nenhuma venda registrada",
@@ -237,9 +237,7 @@ $(document).ready(function () {
     // Ajusta colunas para a primeira carga
     table.columns.adjust().draw();
 
-    // =====================
-    // Filtro de datas isolado para #tabelaVendas
-    // =====================
+
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         if (settings.nTable.id !== "tabelaVendas") return true; // só aplica nesta tabela
 
@@ -247,7 +245,7 @@ $(document).ready(function () {
         let dataFim = $('#dataFim').val();
 
         let linha = table.row(dataIndex).node();
-        let dataVenda = linha.children[1].getAttribute("data-order"); // pega data-order da coluna Data Venda
+        let dataVenda = linha.children[1].getAttribute("data-order"); 
 
         if (!dataInicio && !dataFim) return true;
 
