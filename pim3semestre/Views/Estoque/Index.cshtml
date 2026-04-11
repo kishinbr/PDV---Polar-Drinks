@@ -19,6 +19,12 @@
             @TempData["MensagemSucesso"]
         </div>
     }
+    else if(TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger text-light" role="alert">
+            @TempData["MensagemErro"]
+        </div>
+    }
 
     <table id="Produtos" class="table table-light table-hover mb-auto">
         <thead>
@@ -165,6 +171,28 @@
             btnConfirmar.addEventListener('click', function() {
                 document.getElementById('formEdicaoRapida').submit();
             });
+
+            function bloquearPonto(id) {
+                var input = document.getElementById(id);
+
+                if (!input) return;
+
+                input.addEventListener("keydown", function(e) {
+                    if (e.key === ".") {
+                        e.preventDefault();
+                    }
+                });
+
+                input.addEventListener("input", function() {
+                    this.value = this.value.replace(/\./g, "");
+                });
+            }
+
+            bloquearPonto("PrecoVenda");
+            bloquearPonto("Promocao");
+
         });
+
+
     </script>
 }

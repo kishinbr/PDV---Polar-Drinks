@@ -15,7 +15,7 @@
     }
 
     <form method="post" asp-action="Editar">
-
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="ProdutoID" />
 
         <!-- NOME -->
@@ -62,7 +62,7 @@
 
                 <div class="d-flex gap-2">
                     <input type="number" class="form-control bg-white text-dark"
-                           value="@Model.ProdutoQtdEstoque" disabled>
+                           value="@Model.ProdutoQtdEstoque" readonly>
 
                     <button type="button" class="btn btn-info"
                             data-bs-toggle="modal"

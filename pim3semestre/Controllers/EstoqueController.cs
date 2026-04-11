@@ -60,7 +60,10 @@ namespace pim3semestre.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(produto);
+                var produtoOriginal = _db.Produtos
+                    .FirstOrDefault(p => p.ProdutoID == produto.ProdutoID);
+
+                return View(produtoOriginal);
             }
 
             var produtoDb = _db.Produtos.FirstOrDefault(p => p.ProdutoID == produto.ProdutoID);
@@ -75,6 +78,8 @@ namespace pim3semestre.Controllers
             produtoDb.ProdutoEstoqueMinimo = produto.ProdutoEstoqueMinimo;
             produtoDb.ProdutoPrecoCusto = produto.ProdutoPrecoCusto;
             produtoDb.ProdutoPromocao = produto.ProdutoPromocao;
+            produtoDb.ProdutoQtdEstoque = produto.ProdutoQtdEstoque;
+
 
             _db.SaveChanges();
 
@@ -83,17 +88,40 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        public IActionResult EdicaoRapida(int ProdutoID, decimal ProdutoPrecoVenda, decimal ProdutoPromocao)
+        public IActionResult EdicaoRapida(int ProdutoID, decimal? ProdutoPrecoVenda, decimal? ProdutoPromocao)
         {
-            var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == ProdutoID);
-            if (produto != null)
+            if (!ModelState.IsValid)
             {
-                produto.ProdutoPrecoVenda = ProdutoPrecoVenda;
-                produto.ProdutoPromocao = ProdutoPromocao;
-
-                _db.SaveChanges();
-                TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
+                TempData["MensagemErro"] = "Valores inválidos!";
+                return RedirectToAction("Index");
             }
+
+            var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == ProdutoID);
+
+            if (produto == null)
+            {
+                TempData["MensagemErro"] = "Produto não encontrado!";
+                return RedirectToAction("Index");
+            }
+
+            if (ProdutoPrecoVenda == null || ProdutoPrecoVenda < 0)
+            {
+                TempData["MensagemErro"] = "Preço inválido!";
+                return RedirectToAction("Index");
+            }
+
+            if (ProdutoPromocao == null || ProdutoPromocao < 0 || ProdutoPromocao > 100)
+            {
+                TempData["MensagemErro"] = "Promoção inválida!";
+                return RedirectToAction("Index");
+            }
+
+            produto.ProdutoPrecoVenda = ProdutoPrecoVenda.Value;
+            produto.ProdutoPromocao = ProdutoPromocao ?? 0;
+
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Produto atualizado com sucesso!";
             return RedirectToAction("Index");
         }
 
