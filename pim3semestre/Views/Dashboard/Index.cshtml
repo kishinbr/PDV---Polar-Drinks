@@ -1,6 +1,6 @@
 ﻿@model pim3semestre.Models.DashboardViewModel
 
-<div class="container-fluid">
+<div class="container-fluid mt-2">
 
     <h3 class="fw-bold mb-4">📊 Dashboard</h3>
 
@@ -13,28 +13,28 @@
             <div class="row g-3">
 
                 <div class="col-md-6">
-                    <div class="card bg-success text-white p-3 shadow rounded-4">
+                    <div class="card bg-dark text-white p-3 shadow rounded-4">
                         <small>Total Hoje</small>
                         <h4>@Model.TotalHoje.ToString("C")</h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="card bg-primary text-white p-3 shadow rounded-4">
+                    <div class="card bg-dark text-white p-3 shadow rounded-4">
                         <small>Total Mês</small>
                         <h4>@Model.TotalMes.ToString("C")</h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="card bg-dark text-white p-3 shadow rounded-4">
+                    <div class="card bg-dark-subtle  p-3 shadow rounded-4">
                         <small>Lucro Hoje</small>
                         <h4>@Model.LucroHoje.ToString("C")</h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="card bg-warning p-3 shadow rounded-4">
+                    <div class="card bg-dark-subtle p-3 shadow rounded-4">
                         <small>Lucro Mês</small>
                         <h4>@Model.LucroMes.ToString("C")</h4>
                     </div>
@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="col-12 col-xl-4">
-                    <div class="card bg-dark text-white p-3 shadow rounded-4 h-100">
+                    <div class="card bg-warning text-white p-3 shadow rounded-4 h-100">
                         <small>💵 Dinheiro</small>
                         <div>@Model.QtdDinheiro vendas</div>
                         <h5>@Model.TotalDinheiro.ToString("C")</h5>
@@ -167,7 +167,7 @@
                     <h5 class="mb-0">@Model.ProdutoMaisVendido</h5>
                 </div>
 
-                <div class="p-2 rounded bg-warning">
+                <div class="p-2 rounded bg-dark-subtle">
                     <small>Mais Lucrativo</small>
                     <h5 class="mb-0">@Model.ProdutoMaisLucrativo</h5>
                 </div>
@@ -222,7 +222,12 @@
     data: {
     labels: ['Pix', 'Cartão', 'Dinheiro'],
     datasets: [{
-    data: pagamentos.hoje
+    data: pagamentos.hoje,
+    backgroundColor: [
+    '#198754', // Pix 
+    '#0D6EFD', // Cartão
+    '#FFC107'  // Dinheiro
+    ],
     }]
     }
     });

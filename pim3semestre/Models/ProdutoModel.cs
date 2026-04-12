@@ -12,7 +12,7 @@ namespace pim3semestre.Models
         [StringLength(100)]
         public string? ProdutoNome { get; set; }
 
-        [StringLength(300)]
+        [StringLength(200)]
         public string? ProdutoDescricao { get; set; }
 
         [Required(ErrorMessage = "O custo é obrigatório")]

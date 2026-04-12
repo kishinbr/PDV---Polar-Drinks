@@ -3,7 +3,7 @@
     ViewData["title"] = "Editar Produto";
 }
 
-<div class="container bg-dark p-5 rounded-5">
+<div class="container bg-dark p-5 rounded-5 mt-5">
     <div class="mb-5 text-center">
         <h1 class="text-light">Editar Produto</h1>
     </div>
@@ -22,14 +22,14 @@
         <!-- NOME -->
         <div class="mb-4">
             <label class="form-label text-light">Nome</label>
-            <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoNome">
+            <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoNome" maxlength="100">
             <span asp-validation-for="ProdutoNome" class="text-danger"></span>
         </div>
 
         <!-- DESCRIÇÃO -->
         <div class="mb-4">
             <label class="form-label text-light">Descrição</label>
-            <textarea class="form-control bg-white text-dark" asp-for="ProdutoDescricao" rows="3"></textarea>
+            <textarea class="form-control bg-white text-dark" asp-for="ProdutoDescricao" rows="3" maxlength="200"></textarea>
             <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
         </div>
 
@@ -37,34 +37,33 @@
         <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label text-light">Código de Barras</label>
-                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoCodBarra">
+                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoCodBarra" maxlength="20">
                 <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
             </div>
 
             <div class="col-md-4">
                 <label class="form-label text-light">Preço de Custo</label>
-                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoCusto">
+                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoCusto" max="9999999999">
                 <span asp-validation-for="ProdutoPrecoCusto" class="text-danger"></span>
             </div>
 
             <div class="col-md-4">
                 <label class="form-label text-light">Preço de Venda</label>
-                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoVenda">
+                <input type="number" step="0.01" class="form-control bg-white text-dark" asp-for="ProdutoPrecoVenda" max="9999999999">
                 <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
             </div>
         </div>
 
-        <!-- LINHA: QUANTIDADE + ESTOQUE MINIMO -->
         <div class="row mb-4">
             
-            <!-- 🔒 QUANTIDADE BLOQUEADA + BOTÃO -->
             <div class="col-md-6">
                 <label class="form-label text-light">Quantidade em Estoque</label>
 
                 <div class="d-flex gap-2">
                     <input asp-for="ProdutoQtdEstoque"
-                    class="form-control bg-white text-dark"
-                    readonly />
+                            class="form-control bg-secondary text-white"
+                            readonly />
+
 
                     <button type="button" class="btn btn-info"
                             data-bs-toggle="modal"
@@ -77,7 +76,7 @@
             <!-- ESTOQUE MINIMO -->
             <div class="col-md-6">
                 <label class="form-label text-light">Estoque Mínimo</label>
-                <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoEstoqueMinimo">
+                <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoEstoqueMinimo" maxlength="10" max="9999999999">
                 <span asp-validation-for="ProdutoEstoqueMinimo" class="text-danger"></span>
             </div>
         </div>
@@ -123,12 +122,12 @@
 
                     <div class="mb-3">
                         <label>Nova Quantidade</label>
-                        <input type="number" class="form-control" name="NovaQuantidade" required>
+                        <input type="number" class="form-control" name="NovaQuantidade" required maxlength="10">
                     </div>
 
                     <div class="mb-3">
                         <label>Descrição da alteração</label>
-                        <textarea class="form-control" name="Descricao" rows="3" required></textarea>
+                        <textarea class="form-control" name="Descricao" rows="3" required maxlength="200"></textarea>
                     </div>
 
                 </div>
