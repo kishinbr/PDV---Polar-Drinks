@@ -33,7 +33,6 @@ namespace pim3semestre.Data
             .HasIndex(f => f.FornecedorCNPJ)
             .IsUnique();
 
-            // IGNORAR TOTAL (calculado)
             modelBuilder.Entity<CompraEstoqueModel>()
                 .Ignore(c => c.CompraValorTotal);
 
@@ -81,8 +80,6 @@ namespace pim3semestre.Data
                 .HasForeignKey(m => m.ItemVendaID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ================= PRECISÃO DECIMAL =================
-
             // PRODUTO
             modelBuilder.Entity<ProdutoModel>()
                 .Property(p => p.ProdutoPrecoVenda)
@@ -94,7 +91,7 @@ namespace pim3semestre.Data
 
             modelBuilder.Entity<ProdutoModel>()
                 .Property(p => p.ProdutoPromocao)
-                .HasPrecision(5, 2); // <--- novo: precision adequada para 0-100%
+                .HasPrecision(5, 2); 
 
             // ITEM COMPRA
             modelBuilder.Entity<ItemCompraModel>()

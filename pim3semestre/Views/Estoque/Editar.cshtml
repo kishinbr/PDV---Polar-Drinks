@@ -19,21 +19,18 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="ProdutoID" />
 
-        <!-- NOME -->
         <div class="mb-4">
             <label class="form-label text-light">Nome</label>
             <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoNome" maxlength="100">
             <span asp-validation-for="ProdutoNome" class="text-danger"></span>
         </div>
 
-        <!-- DESCRIÇÃO -->
         <div class="mb-4">
             <label class="form-label text-light">Descrição</label>
             <textarea class="form-control bg-white text-dark" asp-for="ProdutoDescricao" rows="3" maxlength="200"></textarea>
             <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
         </div>
 
-        <!-- LINHA: CODIGO + PREÇO CUSTO + PREÇO VENDA -->
         <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label text-light">Código de Barras</label>
@@ -73,7 +70,6 @@
                 </div>
             </div>
 
-            <!-- ESTOQUE MINIMO -->
             <div class="col-md-6">
                 <label class="form-label text-light">Estoque Mínimo</label>
                 <input type="number" class="form-control bg-white text-dark" asp-for="ProdutoEstoqueMinimo" maxlength="10" max="9999999999">
@@ -81,7 +77,6 @@
             </div>
         </div>
 
-        <!-- ATIVO -->
         <div class="mb-4">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" asp-for="ProdutoAtivo">
@@ -91,7 +86,6 @@
             </div>
         </div>
 
-        <!-- BOTÕES -->
         <div class="d-flex gap-3 mt-4">
             <button type="submit" class="btn btn-warning w-50">Salvar Alterações</button>
             <a class="btn btn-primary w-50" asp-action="Index">Voltar</a>

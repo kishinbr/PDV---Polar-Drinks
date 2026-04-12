@@ -13,6 +13,7 @@ namespace pim3semestre.Controllers
         {
             _db = db;
         }
+        // Ação para exibir a lista de vendas, com filtros opcionais por data
         public IActionResult Index(DateTime? dataInicio, DateTime? dataFim)
         {
             var vendasQuery = _db.Vendas
@@ -28,6 +29,7 @@ namespace pim3semestre.Controllers
             var vendas = vendasQuery.OrderByDescending(v => v.VendaData).ToList();
             return View(vendas);
         }
+        // Ação para exibir os detalhes de uma venda específica, incluindo os itens e produtos relacionados
         public IActionResult Detalhes(int id)
         {
             var venda = _db.Vendas
@@ -40,6 +42,7 @@ namespace pim3semestre.Controllers
 
             return View(venda);
         }
+        // Ação para exibir o formulário de cadastro de venda, incluindo a lista de produtos ativos para seleção
         public IActionResult Cadastrar()
         {
             var produtos = _db.Produtos
@@ -52,10 +55,10 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public IActionResult FinalizarVenda(VendaFinalModel venda)
         {
-            // ================= VALIDAÇÕES =================
+            // Validações básicas
             if (venda == null || venda.Itens.Count == 0)
             {
                 TempData["MensagemErro"] = "Adicione pelo menos um item à venda.";
@@ -73,11 +76,13 @@ namespace pim3semestre.Controllers
             }
 
             using var transaction = _db.Database.BeginTransaction();
+
+            //validações mais complexas e processamento da venda
             try
             {
                 decimal totalVenda = 0;
 
-                // ================= VALIDAR + CALCULAR COM DESCONTO =================
+               
                 foreach (var item in venda.Itens)
                 {
                     var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == item.ProdutoID);
@@ -108,21 +113,22 @@ namespace pim3semestre.Controllers
                         precoFinal = precoBase - (precoBase * (desconto / 100));
                     }
 
-                    // Atualiza item com valor correto (IGNORA o front)
+                    // Atualiza item com valor correto
                     item.ItemVendaPreco = precoFinal;
                     item.ItemVendaTotal = precoFinal * item.ItemVendaQtd;
 
                     totalVenda += item.ItemVendaTotal;
                 }
 
-                // ================= TOTAL FINAL =================
+                // Atualiza venda com valor total e data
                 venda.VendaValorTotal = totalVenda;
 
-                // ================= SALVAR VENDA =================
+                // salva venda no banco
                 _db.Vendas.Add(venda);
                 _db.SaveChanges();
 
-                // ================= BAIXAR ESTOQUE =================
+
+                //atualiza estoque e registra movimentação para cada item da venda
                 foreach (var item in venda.Itens)
                 {
                     var produto = _db.Produtos.First(p => p.ProdutoID == item.ProdutoID);
@@ -146,6 +152,7 @@ namespace pim3semestre.Controllers
                 TempData["MensagemSucesso"] = "Venda realizada com sucesso!";
                 return RedirectToAction("Cadastrar");
             }
+            // Em caso de qualquer erro, a transação é revertida e uma mensagem de erro é exibida
             catch (Exception ex)
             {
                 transaction.Rollback();

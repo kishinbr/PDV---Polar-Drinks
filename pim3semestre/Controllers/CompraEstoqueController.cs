@@ -9,24 +9,26 @@ namespace pim3semestre.Controllers
 {
     public class CompraEstoqueController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public CompraEstoqueController(ApplicationDbContext context)
+        //faz a injeção de dependência do contexto para acessar o banco de dados
+        private readonly ApplicationDbContext _db;
+        //construtor para receber o contexto via injeção de dependência
+        public CompraEstoqueController(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
+        //exibe a lista de compras pendentes e concluídas
         public IActionResult Index()
         {
             var vm = new CompraIndexViewModel
             {
-                Pendentes = _context.ComprasEstoque
+                Pendentes = _db.ComprasEstoque
                     .Include(c => c.Fornecedor)
                     .Where(c => c.CompraStatus == "Aguardando")
                     .OrderByDescending(c => c.CompraData)
                     .ToList(),
 
-                Concluidas = _context.ComprasEstoque
+                Concluidas = _db.ComprasEstoque
                     .Include(c => c.Fornecedor)
                     .Where(c => c.CompraStatus == "Concluído")
                     .OrderByDescending(c => c.CompraData)
@@ -35,44 +37,50 @@ namespace pim3semestre.Controllers
 
             return View(vm);
         }
-
+        //exibe o formulário para cadastrar uma nova compra
         public IActionResult Cadastrar()
         {
+            //cria um objeto da viewmodel para passar os dados necessários para a view
             var vm = new CompraCreateViewModel
             {
-                Fornecedores = _context.Fornecedores
+                //faz uma consulta ao banco de dados para obter a lista de fornecedores e produtos, e transforma em SelectListItem para exibir no dropdown
+                Fornecedores = _db.Fornecedores
                     .Select(f => new SelectListItem
                     {
                         Value = f.FornecedorID.ToString(),
                         Text = f.FornecedorNome
                     }).ToList(),
 
-                Produtos = _context.Produtos
+                Produtos = _db.Produtos
                     .Select(p => new SelectListItem
                     {
                         Value = p.ProdutoID.ToString(),
                         Text = p.ProdutoNome
                     }).ToList(),
-
+                
                 Itens = new List<ItemCompraCreateVM> { new ItemCompraCreateVM() }
             };
 
             return View(vm);
         }
 
+
         [HttpPost]
+        //recebe uma viewmodel como parâmetro, que contém os dados do formulário preenchido pelo usuário
         public IActionResult Cadastrar(CompraCreateViewModel vm)
         {
+            //verifica se o modelo é válido
             if (!ModelState.IsValid)
             {
-                vm.Fornecedores = _context.Fornecedores
+                //se não for, recarrega as listas de fornecedores e produtos para exibir novamente o formulário com os erros
+                vm.Fornecedores = _db.Fornecedores
                     .Select(f => new SelectListItem
                     {
                         Value = f.FornecedorID.ToString(),
                         Text = f.FornecedorNome
                     }).ToList();
 
-                vm.Produtos = _context.Produtos
+                vm.Produtos = _db.Produtos
                     .Select(p => new SelectListItem
                     {
                         Value = p.ProdutoID.ToString(),
@@ -82,6 +90,7 @@ namespace pim3semestre.Controllers
                 return View(vm);
             }
 
+            //cria um objeto de compra com os dados do formulário e a data atual, e inicializa a lista de itens vazia
             var compra = new CompraEstoqueModel
             {
                 FornecedorID = vm.FornecedorID.Value,
@@ -90,6 +99,7 @@ namespace pim3semestre.Controllers
                 Itens = new List<ItemCompraModel>()
             };
 
+            //percorre a lista de itens da viewmodel e adiciona à compra apenas os itens que têm produto selecionado, quantidade e preço válidos
             foreach (var item in vm.Itens)
             {
                 if (item.ProdutoID.HasValue && item.Quantidade > 0 && item.Preco > 0)
@@ -103,18 +113,19 @@ namespace pim3semestre.Controllers
                 }
             }
 
+            //verifica se a compra tem pelo menos um item válido, caso contrário exibe um erro e recarrega o formulário
             if (compra.Itens.Count == 0)
             {
                 ModelState.AddModelError("", "Adicione pelo menos um produto");
 
-                vm.Fornecedores = _context.Fornecedores
+                vm.Fornecedores = _db.Fornecedores
                     .Select(f => new SelectListItem
                     {
                         Value = f.FornecedorID.ToString(),
                         Text = f.FornecedorNome
                     }).ToList();
 
-                vm.Produtos = _context.Produtos
+                vm.Produtos = _db.Produtos
                     .Select(p => new SelectListItem
                     {
                         Value = p.ProdutoID.ToString(),
@@ -124,16 +135,18 @@ namespace pim3semestre.Controllers
                 return View(vm);
             }
 
-            _context.ComprasEstoque.Add(compra);
-            _context.SaveChanges();
+            //adiciona a compra ao contexto e salva as alterações no banco de dados
+            _db.ComprasEstoque.Add(compra);
+            _db.SaveChanges();
 
             TempData["MensagemSucesso"] = "Compra cadastrada com sucesso!";
             return RedirectToAction("Index");
         }
 
+        //exibe os detalhes de uma compra, incluindo os itens e o fornecedor, e um botão para confirmar a entrega se a compra estiver pendente
         public IActionResult Detalhes(int id, bool confirmar = false)
         {
-            var compra = _context.ComprasEstoque
+            var compra = _db.ComprasEstoque
                 .Include(c => c.Fornecedor)
                 .Include(c => c.Itens)
                     .ThenInclude(i => i.Produto)
@@ -152,21 +165,23 @@ namespace pim3semestre.Controllers
             return View(vm);
         }
 
+        //recebe o id da compra a ser confirmada, atualiza o estoque dos produtos e a data de entrega, e redireciona para os detalhes da compra com uma mensagem de sucesso
         public IActionResult ConfirmarEntrega(int id)
         {
-            var compra = _context.ComprasEstoque
+            var compra = _db.ComprasEstoque
                 .Include(c => c.Itens)
                 .FirstOrDefault(c => c.CompraID == id);
-
+            //verifica se a compra existe e se ainda não foi confirmada, caso contrário redireciona para a lista de compras
             if (compra == null)
                 return NotFound();
-
+            //se a compra já estiver concluída, não faz nada e redireciona para a lista de compras
             if (compra.CompraStatus == "Concluído")
                 return RedirectToAction("Index");
 
+            //percorre os itens da compra, atualiza a quantidade em estoque do produto correspondente, e registra uma movimentação de entrada no estoque
             foreach (var item in compra.Itens)
             {
-                var produto = _context.Produtos
+                var produto = _db.Produtos
                     .FirstOrDefault(p => p.ProdutoID == item.ProdutoID);
 
                 if (produto == null) continue;
@@ -181,21 +196,23 @@ namespace pim3semestre.Controllers
                     ItemCompraID = item.ItemCompraID,
                     MovimentacaoData = DateTime.Now
                 };
-
-                _context.MovimentacoesEstoque.Add(movimentacao);
+                //adiciona a movimentação ao contexto para salvar no banco de dados
+                _db.MovimentacoesEstoque.Add(movimentacao);
             }
-
+            //atualiza o status da compra para "Concluído" e a data de entrega para a data atual
             compra.CompraStatus = "Concluído";
             compra.CompraDataEntrega = DateTime.Now;
 
-            _context.SaveChanges();
+            //salva as alterações no banco de dados
+            _db.SaveChanges();
 
             TempData["MensagemSucesso"] = "Entrega confirmada e estoque atualizado!";
             return RedirectToAction("Index");
         }
+        //exibe a confirmação de exclusão de uma compra, mostrando os detalhes da compra e um botão para confirmar a exclusão
         public IActionResult Excluir(int id)
         {
-            var compra = _context.ComprasEstoque
+            var compra = _db.ComprasEstoque
                 .Include(c => c.Itens)
                 .ThenInclude(i => i.Produto)
                 .Include(c => c.Fornecedor)
@@ -214,19 +231,22 @@ namespace pim3semestre.Controllers
 
             return View(vm);
         }
+
+
+        //recebe o id da compra a ser excluída, remove a compra do contexto e salva as alterações no banco de dados
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ConfirmarExclusao(int id)
         {
-            var compra = _context.ComprasEstoque
+            var compra = _db.ComprasEstoque
                 .Include(c => c.Itens)
                 .FirstOrDefault(c => c.CompraID == id);
 
             if (compra == null)
                 return NotFound();
 
-            _context.ComprasEstoque.Remove(compra);
-            _context.SaveChanges();
+            _db.ComprasEstoque.Remove(compra);
+            _db.SaveChanges();
 
             TempData["MensagemSucesso"] = "Compra excluída com sucesso!";
             return RedirectToAction("Index");

@@ -7,36 +7,40 @@ namespace pim3semestre.Controllers
 {
     public class EstoqueController : Controller
     {
+        // Injeção do contexto para acessar o banco de dados
         readonly ApplicationDbContext _db;
 
         public EstoqueController(ApplicationDbContext db)
         {
             _db = db;
         }
-
+        // Ação para exibir a lista de produtos
         public IActionResult Index()
         {
             var produtos = _db.Produtos.ToList();
             return View(produtos);
         }
-
+        // Ação para exibir o formulário de cadastro de produto
         public IActionResult Cadastrar()
         {
             return View();
         }
 
+        // Ação para processar o formulário de cadastro de produto
         [HttpPost]
         public IActionResult Cadastrar(ProdutoModel produto)
         {
+            //verificar se o modelo é válido
             if (ModelState.IsValid)
             {
+                //caso seja válido, adicionar o produto ao banco de dados
                 _db.Produtos.Add(produto);
                 _db.SaveChanges();
 
                 TempData["MensagemSucesso"] = "Produto cadastrado com sucesso!";
                 return RedirectToAction("Index");
             }
-
+            //caso contrário, retornar para a view com os erros de validação
             return View(produto);
         }
 
@@ -55,17 +59,19 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Editar(ProdutoModel produto)
         {
+            //verificar se o modelo é válido
             if (!ModelState.IsValid)
             {
+                //caso contrário, retornar para a view com os erros de validação
                 var produtoOriginal = _db.Produtos
                     .FirstOrDefault(p => p.ProdutoID == produto.ProdutoID);
 
                 return View(produtoOriginal);
             }
 
+            //caso seja válido, atualizar o produto no banco de dados
             var produtoDb = _db.Produtos.FirstOrDefault(p => p.ProdutoID == produto.ProdutoID);
             if (produtoDb == null) return NotFound();
 
@@ -90,6 +96,7 @@ namespace pim3semestre.Controllers
         [HttpPost]
         public IActionResult EdicaoRapida(int ProdutoID, decimal? ProdutoPrecoVenda, decimal? ProdutoPromocao)
         {
+            // Verificar se os dados são válidos
             if (!ModelState.IsValid)
             {
                 TempData["MensagemErro"] = "Valores inválidos!";
@@ -116,6 +123,7 @@ namespace pim3semestre.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Atualizar os campos do produto
             produto.ProdutoPrecoVenda = ProdutoPrecoVenda.Value;
             produto.ProdutoPromocao = ProdutoPromocao ?? 0;
 
@@ -128,12 +136,15 @@ namespace pim3semestre.Controllers
         [HttpPost]
         public IActionResult AjustarEstoque(int ProdutoID, int NovaQuantidade, string Descricao)
         {
+            
             var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == ProdutoID);
             if (produto == null) return NotFound();
 
+            // Calcular a diferença entre a nova quantidade e a quantidade atual em estoque
             int quantidadeAntiga = produto.ProdutoQtdEstoque ?? 0;
             int diferenca = NovaQuantidade - quantidadeAntiga;
 
+            // Registrar a movimentação de estoque apenas se houver uma diferença
             if (diferenca != 0)
             {
                 var movimentacao = new MovimentacaoEstoqueModel
@@ -149,7 +160,7 @@ namespace pim3semestre.Controllers
 
                 _db.MovimentacoesEstoque.Add(movimentacao);
             }
-
+            // Atualizar a quantidade em estoque do produto
             produto.ProdutoQtdEstoque = NovaQuantidade;
 
             _db.SaveChanges();
@@ -158,14 +169,18 @@ namespace pim3semestre.Controllers
             return RedirectToAction("Editar", new { id = ProdutoID });
         }
 
+
+        // Ação para exibir as movimentações de estoque de um produto
         public IActionResult Movimentacoes(int? produtoId)
         {
+            // Obter a lista de produtos para exibir no dropdown
             var produtos = _db.Produtos
                 .Where(p => p.ProdutoAtivo)
                 .ToList();
-
+            // Passar a lista de produtos para a view
             ViewBag.Produtos = produtos;
 
+            // Se nenhum produto for selecionado, exibir uma lista vazia
             if (produtoId == null)
             {
                 return View(new List<MovimentacaoEstoqueModel>());
@@ -176,6 +191,7 @@ namespace pim3semestre.Controllers
             {
                 return View(new List<MovimentacaoEstoqueModel>());
             }
+            // Obter as movimentações de estoque do produto selecionado, ordenadas pela data mais recente
             var movimentacoes = _db.MovimentacoesEstoque
                 .Where(m => m.ProdutoID == produtoId)
                 .OrderByDescending(m => m.MovimentacaoData)

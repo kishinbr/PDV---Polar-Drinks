@@ -14,6 +14,7 @@ namespace pim3semestre.Controllers
             _db = db;
         }
 
+        //uma acao unica para calcular tudo e enviar para a view 
         public IActionResult Index()
         {
             var hoje = DateTime.Today;
@@ -29,9 +30,8 @@ namespace pim3semestre.Controllers
 
             var model = new DashboardViewModel();
 
-            // =========================
-            // 💰 FINANCEIRO
-            // =========================
+            // FINANCEIRO
+
             model.TotalHoje = vendas
                 .Where(v => v.VendaData.Date == hoje)
                 .Sum(v => v.VendaValorTotal);
@@ -48,15 +48,14 @@ namespace pim3semestre.Controllers
                 ? vendas.Average(v => v.VendaValorTotal)
                 : 0;
 
-            // =========================
-            // 📊 BASE
-            // =========================
+            // BASE
+
             var vendasHoje = vendas.Where(v => v.VendaData.Date == hoje).ToList();
             var vendasMes = vendas.Where(v => v.VendaData >= inicioMes).ToList();
 
-            // =========================
-            // 💰 LUCRO
-            // =========================
+
+            // LUCRO
+
             model.LucroHoje = vendasHoje.Sum(v =>
                 v.Itens.Sum(i =>
                     (i.ItemVendaPreco - (i.Produto.ProdutoPrecoCusto ?? 0)) * i.ItemVendaQtd
@@ -69,9 +68,9 @@ namespace pim3semestre.Controllers
                 )
             );
 
-            // =========================
-            // 📊 VENDAS
-            // =========================
+
+            // VENDAS
+
             model.VendasHoje = vendasHoje.Count;
             model.VendasMes = vendasMes.Count;
 
@@ -81,9 +80,9 @@ namespace pim3semestre.Controllers
                 .Select(g => g.Key.ToString())
                 .FirstOrDefault();
 
-            // =========================
-            // 💳 PAGAMENTOS (CARDS HOJE)
-            // =========================
+
+            // PAGAMENTOS PIZZA 
+
             model.QtdPix = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
             model.QtdCartao = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
             model.QtdDinheiro = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
@@ -92,9 +91,9 @@ namespace pim3semestre.Controllers
             model.TotalCartao = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão").Sum(v => v.VendaValorTotal);
             model.TotalDinheiro = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro").Sum(v => v.VendaValorTotal);
 
-            // =========================
-            // 💳 PAGAMENTOS (GRÁFICOS)
-            // =========================
+
+            // PAGAMENTOS GRÁFICOS
+
             Func<string, DateTime?, int> totalQtd = (tipo, dataInicio) =>
                 vendas.Count(v =>
                     (v.VendaTipoPagamento ?? "").ToLower() == tipo &&
@@ -123,13 +122,23 @@ namespace pim3semestre.Controllers
             model.CartaoTotal = totalQtd("cartão", null);
             model.DinheiroTotal = totalQtd("dinheiro", null);
 
-            // =========================
-            // 📦 ESTOQUE
-            // =========================
+
+            // ESTOQUE
+
             model.TotalProdutos = produtos.Count();
+
             model.SemEstoque = produtos.Count(p => (p.ProdutoQtdEstoque ?? 0) == 0);
             model.EstoqueBaixo = produtos.Count(p =>
                 (p.ProdutoQtdEstoque ?? 0) <= p.ProdutoEstoqueMinimo);
+            //model.SemEstoque = produtos.Count(p =>
+            //    p.ProdutoAtivo && (p.ProdutoQtdEstoque ?? 0) == 0
+            //);
+
+            //model.EstoqueBaixo = produtos.Count(p =>
+            //    p.ProdutoAtivo && (p.ProdutoQtdEstoque ?? 0) > 0 &&
+            //    (p.ProdutoQtdEstoque ?? 0) <= p.ProdutoEstoqueMinimo
+            //);
+
 
             model.ProdutoMaisVendido = vendas
                 .SelectMany(v => v.Itens)
@@ -138,18 +147,17 @@ namespace pim3semestre.Controllers
                 .Select(g => g.Key)
                 .FirstOrDefault();
 
-            // =========================
-            // 📈 EXTRAS
-            // =========================
+
+            // EXTRAS
             model.ItensVendidosHoje = vendasHoje
                 .SelectMany(v => v.Itens)
                 .Sum(i => i.ItemVendaQtd);
 
             model.FaturamentoHoje = model.TotalHoje;
 
-            // =========================
-            // 🔮 ML
-            // =========================
+
+            // MACHINE LEARNING SIMPLES (MÉDIA DOS ÚLTIMOS 7 DIAS)
+
             var ultimos7Dias = vendas.Where(v => v.VendaData >= hoje.AddDays(-7)).ToList();
 
             model.PrevisaoAmanha = ultimos7Dias.Any()
@@ -165,15 +173,15 @@ namespace pim3semestre.Controllers
                 .Select(g => g.Key)
                 .FirstOrDefault();
 
-            // =========================
-            // 📈 VENDAS (GRÁFICOS)
-            // =========================
+
+            // VENDAS (GRÁFICOS)
+
 
             // HOJE (por hora)
             model.VendasHojeLista = vendasHoje
                 .GroupBy(v => v.VendaData.Hour)
                 .OrderBy(g => g.Key)
-                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(g => g.Count()) 
                 .Select(x => (decimal)x)
                 .ToList();
 
@@ -182,7 +190,7 @@ namespace pim3semestre.Controllers
                 .Where(v => v.VendaData >= hoje.AddDays(-7))
                 .GroupBy(v => v.VendaData.Date)
                 .OrderBy(g => g.Key)
-                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(g => g.Count()) 
                 .Select(x => (decimal)x)
                 .ToList();
 
@@ -191,7 +199,7 @@ namespace pim3semestre.Controllers
                 .Where(v => v.VendaData >= hoje.AddDays(-30))
                 .GroupBy(v => v.VendaData.Date)
                 .OrderBy(g => g.Key)
-                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(g => g.Count()) 
                 .Select(x => (decimal)x)
                 .ToList();
 
@@ -200,7 +208,7 @@ namespace pim3semestre.Controllers
                 .Where(v => v.VendaData.Year == hoje.Year)
                 .GroupBy(v => v.VendaData.Month)
                 .OrderBy(g => g.Key)
-                .Select(g => g.Count()) // 🔥 quantidade de vendas
+                .Select(g => g.Count())
                 .Select(x => (decimal)x)
                 .ToList();
 

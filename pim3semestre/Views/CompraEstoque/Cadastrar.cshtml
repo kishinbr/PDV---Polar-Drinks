@@ -70,7 +70,7 @@
 @section Scripts {
 <script>
     let index = @Model.Itens.Count;
-
+        // atualiza o total sempre que um campo de quantidade ou preço for alterado
     function atualizarTotal() {
         let total = 0;
 
@@ -85,7 +85,7 @@
 
         $("#totalPreco").text("Total: R$ " + total.toFixed(2));
     }
-
+        // adiciona nova linha com campos para produto, quantidade e preço
     $("#addItem").click(function () {
         let options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
 
@@ -142,26 +142,23 @@
         atualizarTotal();
         index++;
     });
-
+        //remove a linha do item e atualiza o total quando o botão de remover for clicado
     $(document).on("click", ".btn-remover", function () {
         $(this).closest("tr").remove();
         atualizarTotal();
     });
-
+        // atualiza o total sempre que um campo de quantidade ou preço for alterado
     $(document).on("input", 'input[name$=".Quantidade"], input[name$=".Preco"]', function () {
         atualizarTotal();
     });
 
-    // =========================
-    // 🔒 QUANTIDADE: só números
-    // =========================
+        //limita a entrada de caracteres para apenas números nos campos de quantidade
+  
     $(document).on("input", 'input[name$=".Quantidade"]', function () {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 
-    // =========================
-    // 💰 PREÇO: formatação
-    // =========================
+        //limita a entrada de caracteres para apenas números e vírgula nos campos de preço, e formata para ter no máximo 2 casas decimais
     $(document).on("input", 'input[name$=".Preco"]', function () {
         let value = this.value;
 
@@ -181,6 +178,7 @@
         this.value = value;
     });
 
+        // antes de enviar o formulário, garante que os campos de quantidade e preço estejam preenchidos com valores válidos
     $("form").on("submit", function () {
 
         $('input[name$=".Preco"]').each(function () {

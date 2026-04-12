@@ -12,14 +12,12 @@
 
         <input type="hidden" asp-for="FornecedorID" />
 
-        <!-- NOME -->
         <div class="mb-4">
             <label class="form-label text-light">Nome</label>
             <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNome" maxlength="50">
             <span asp-validation-for="FornecedorNome" class="text-danger"></span>
         </div>
 
-        <!-- CNPJ -->
         <div class="mb-4">
             <label class="form-label text-light">CNPJ</label>
             <input type="text"
@@ -30,7 +28,6 @@
             <span asp-validation-for="FornecedorCNPJ" class="text-danger"></span>
         </div>
 
-        <!-- TELEFONE E EMAIL -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <label class="form-label text-light">Telefone</label>
@@ -49,7 +46,6 @@
             </div>
         </div>
 
-        <!-- CEP + BOTÃO + ESTADO + CIDADE -->
         <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label text-light">CEP</label>
@@ -78,7 +74,6 @@
             </div>
         </div>
 
-        <!-- LOGRADOURO + BAIRRO + NUMERO -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <label class="form-label text-light">Logradouro</label>
@@ -96,7 +91,6 @@
                 <span asp-validation-for="FornecedorNum" class="text-danger"></span>
             </div>
         </div>
-        <!-- STATUS -->
         <div class="mb-4">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" asp-for="FornecedorAtivo">
@@ -106,7 +100,6 @@
                 </div>
             </div>
 
-        <!-- BOTÕES -->
         <div class="d-flex gap-3 mt-4">
             <button type="submit" class="btn btn-success w-50">Salvar</button>
             <a class="btn btn-primary w-50" asp-action="Index">Voltar</a>

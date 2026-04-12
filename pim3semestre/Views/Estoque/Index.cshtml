@@ -71,7 +71,6 @@
                             }
                         </td>
 
-                        <!-- PROMOÇÃO -->
                         <td class="text-center">
                             @if (produto.ProdutoPromocao > 0)
                             {
@@ -83,7 +82,6 @@
                             }
                         </td>
 
-                        <!-- STATUS -->
                         <td class="text-center">
                             @if (produto.ProdutoAtivo)
                             {
@@ -120,7 +118,7 @@
 
 </div>
 
-<!-- Modal de Edição Rápida -->
+<!-- Edição Rápida -->
 <div class="modal fade" id="edicaoRapidaModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-light">
@@ -153,6 +151,7 @@
 
 @section Scripts {
     <script>
+        //configurações para edição rápida
         document.addEventListener("DOMContentLoaded", function() {
             var modal = document.getElementById('edicaoRapidaModal');
             var btnConfirmar = document.getElementById('btnConfirmarEdicao');
@@ -172,6 +171,7 @@
                 document.getElementById('formEdicaoRapida').submit();
             });
 
+            //função para bloquear a entrada de pontos 
             function bloquearPonto(id) {
                 var input = document.getElementById(id);
 

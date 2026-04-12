@@ -128,9 +128,7 @@
 
     </div>
 
-    <!-- ===================== -->
     <!-- LINHA INFERIOR -->
-    <!-- ===================== -->
     <div class="row g-3 mb-4">
 
         <!-- ESTOQUE -->
@@ -196,9 +194,7 @@
 
 <script>
 
-    // =====================
-    // 📊 DADOS
-    // =====================
+    //lista de pagamentos para cada período, já no formato [pix, cartao, dinheiro]
     const pagamentos = {
     hoje: [@Model.PixHoje, @Model.CartaoHoje, @Model.DinheiroHoje],
     semana: [@Model.PixSemana, @Model.CartaoSemana, @Model.DinheiroSemana],
@@ -214,9 +210,7 @@
     ano: @Html.Raw(Json.Serialize(Model.VendasAno))
     };
 
-    // =====================
-    // 🥧 GRÁFICO PIZZA
-    // =====================
+    //grafico de pizza para formas de pagamento
     let graficoPagamentos = new Chart(document.getElementById('graficoPagamentos'), {
     type: 'pie',
     data: {
@@ -240,7 +234,7 @@
     graficoPagamentos.data.datasets[0].data = dados;
     graficoPagamentos.update();
 
-    // 🔥 soma usando a própria const pagamentos
+
     const totalQtd = dados.reduce((acc, val) => acc + val, 0);
 
     // atualiza label
@@ -248,9 +242,7 @@
     `Qtd vendas: ${totalQtd}`;
     }
 
-    // =====================
-    // 📈 GRÁFICO LINHA
-    // =====================
+    //grafico de barras para vendas ao longo do tempo
     let graficoVendas = new Chart(document.getElementById('graficoVendas'), {
     type: 'bar',
     data: {
@@ -267,16 +259,11 @@
 
     let labels = [];
 
-    // =====================
-    // 🕒 HOJE (horas)
-    // =====================
+
     if (tipo === "hoje") {
     labels = vendas.hoje.map((_, i) => `${i}h`);
     }
 
-    // =====================
-    // 📅 SEMANA (7 dias)
-    // =====================
     else if (tipo === "semana") {
 
     const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -289,16 +276,10 @@
     });
     }
 
-    // =====================
-    // 📆 MÊS (dias do mês)
-    // =====================
     else if (tipo === "mes") {
     labels = vendas.mes.map((_, i) => `${i + 1}`);
     }
 
-    // =====================
-    // 📊 ANO (12 meses reais)
-    // =====================
     else if (tipo === "ano") {
 
     const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
@@ -316,10 +297,8 @@
     return `${mes}/${ano}`;
     });
     }
-
-    // =====================
-    // 🔄 ATUALIZA GRÁFICO
-    // =====================
+    
+    // atualiza gráfico
     graficoVendas.data.labels = labels;
     graficoVendas.data.datasets[0].data = vendas[tipo];
     graficoVendas.update();
@@ -330,9 +309,7 @@
 
     }
 
-    // =====================
-    // 🚀 INICIALIZAÇÃO
-    // =====================
+    // inicializa os gráficos com os dados de hoje
     atualizarVendas("semana");
     atualizarPagamentos("hoje");
 

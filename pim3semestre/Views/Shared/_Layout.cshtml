@@ -22,11 +22,10 @@
         <div> <img src="/img/polaria.png" width="32" height="32">Polar Drinks</div>
     </div>
 
-    <!-- SIDEBAR DESKTOP -->
     <div class="sidebar">
         <div class="brand"><img src="/img/polaria.png" width="32" height="32"> Polar Drinks</div>
 
-        <!-- GESTÃO -->
+
         <div class="menu-section">GESTÃO</div>
 
         <a asp-controller="Home" asp-action="Index">
@@ -37,7 +36,6 @@
             <i class="bi bi-graph-up"></i> Dashboard
         </a>
 
-        <!-- ESTOQUE -->
         <div class="menu-section">ESTOQUE</div>
 
         <a asp-controller="Estoque" asp-action="Index">
@@ -49,8 +47,6 @@
         </a>
 
         
-
-        <!-- VENDAS -->
         <div class="menu-section">VENDAS</div>
 
         <a asp-controller="Venda" asp-action="Cadastrar">
@@ -61,7 +57,6 @@
             <i class="bi bi-receipt"></i> Histórico Vendas
         </a>
 
-        <!-- FORNECEDORES -->
         <div class="menu-section">FORNECEDORES</div>
 
         <a asp-controller="Fornecedor" asp-action="Index">
@@ -72,7 +67,7 @@
         </a>
     </div>
 
-   
+    <!-- menu hamburguer -->
     <div class="offcanvas offcanvas-start text-light"
      tabindex="-1"
      id="menuLateral"
@@ -85,7 +80,7 @@
 
     <div class="offcanvas-body p-3">
 
-        <!-- GESTÃO -->
+        
         <div class="menu-section">GESTÃO</div>
 
         <a class="menu-item" href="/Home/Index">
@@ -95,8 +90,7 @@
         <a class="menu-item" href="/Dashboard/Index">
             <i class="bi bi-graph-up"></i> Dashboard
         </a>
-
-        <!-- ESTOQUE -->
+       
         <div class="menu-section">ESTOQUE</div>
 
         <a class="menu-item" href="/Estoque/Index">
@@ -107,9 +101,6 @@
             <i class="bi bi-arrow-left-right"></i> Movimentações
         </a>
 
-        
-
-        <!-- VENDAS -->
         <div class="menu-section">VENDAS</div>
 
         <a class="menu-item" href="/Venda/Cadastrar">
@@ -120,7 +111,6 @@
             <i class="bi bi-receipt"></i> Histórico
         </a>
 
-        <!-- FORNECEDORES -->
         <div class="menu-section">FORNECEDORES</div>
 
         <a class="menu-item" href="/Fornecedor/Index">
@@ -133,7 +123,7 @@
     </div>
 </div>
 
-    <!-- CONTEÚDO -->
+    <!-- onde as views sao renderizadas -->
     <div class="content">
         @RenderBody()
     </div>

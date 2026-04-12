@@ -15,7 +15,7 @@ namespace pim3semestre.Controllers
             _db = db;
         }
 
-
+        //ação para exibir a lista de fornecedores
         public IActionResult Index()
         {
             IEnumerable<FornecedorModel> fornecedores = _db.Fornecedores;
@@ -24,6 +24,7 @@ namespace pim3semestre.Controllers
         }
 
 
+        //ação para exibir o formulário de edição de fornecedor
         [HttpGet]
         public IActionResult Editar(int? id)
         {
@@ -43,21 +44,25 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Editar(FornecedorModel fornecedor)
         {
+            // Validação dos dados do formulário
             if (!ModelState.IsValid)
             {
+                // Se os dados forem inválidos, exibe a mensagem de erro e retorna para a view de edição
                 TempData["MensagemErro"] = "Erro ao editar fornecedor.";
                 return View(fornecedor);
             }
-
+            // Verificar se o fornecedor existe no banco de dados
             var fornecedorDb = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == fornecedor.FornecedorID);
 
+            // Se o fornecedor não for encontrado, exibe a mensagem de erro e retorna para a view de edição
             if (fornecedorDb == null)
             {
-                return NotFound();
+                TempData["MensagemErro"] = "Fornecedor não encontrado.";
+                return View();
             }
+
 
             // Atualizando campos
             fornecedorDb.FornecedorNome = fornecedor.FornecedorNome;
@@ -78,12 +83,13 @@ namespace pim3semestre.Controllers
             return RedirectToAction("Index");
         }
 
-
+        //ação para exibir o formulário de cadastro de fornecedor
         public IActionResult Cadastrar()
         {
             return View();
         }
 
+        //ação para processar o formulário de cadastro de fornecedor
         [HttpPost]
         public IActionResult Cadastrar(FornecedorModel fornecedor)
         {
@@ -93,6 +99,7 @@ namespace pim3semestre.Controllers
                 return View(fornecedor);
             }
 
+            // Verificar se o CNPJ já existe no banco de dados
             bool cnpjExiste = _db.Fornecedores
                 .Any(x => x.FornecedorCNPJ == fornecedor.FornecedorCNPJ);
 

@@ -50,7 +50,6 @@
                         <td>@fornecedor.FornecedorCidade</td>
                         <td>@fornecedor.FornecedorEstado</td>
 
-                        <!-- STATUS -->
                         <td class="text-center">
                             @if (fornecedor.FornecedorAtivo)
                             {
@@ -63,7 +62,6 @@
                         </td>
 
                         <td class="text-center">
-                            <!-- EDITAR -->
                             <a class="btn btn-warning btn-sm mx-1"
                                asp-action="Editar"
                                asp-route-id="@fornecedor.FornecedorID"

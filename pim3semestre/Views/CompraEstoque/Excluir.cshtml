@@ -10,7 +10,6 @@
         Excluir Reabastecimento #@Model.Compra.CompraID
     </h2>
 
-    <!-- INFORMAÇÕES -->
     <div class="text-light mb-3">
         <strong>Data:</strong> @Model.Compra.CompraData.ToString("dd/MM/yyyy") <br />
         <strong>Fornecedor:</strong> @Model.Compra.Fornecedor?.FornecedorNome <br />
@@ -19,7 +18,6 @@
     </div>
 
 
-    <!-- TABELA -->
     <table class="table table-light table-hover">
         <thead>
             <tr>
@@ -47,7 +45,6 @@
         <h4>Total: @Model.Compra.CompraValorTotal.ToString("C")</h4>
     </div>
 
-    <!-- BOTÕES -->
     <div class="d-flex gap-2 mt-3 justify-content-between">
 
         <a asp-action="Index" class="btn btn-primary">
