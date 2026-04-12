@@ -29,6 +29,10 @@ namespace pim3semestre.Data
                 .WithMany(f => f.Compras)
                 .HasForeignKey(c => c.FornecedorID);
 
+            modelBuilder.Entity<FornecedorModel>()
+            .HasIndex(f => f.FornecedorCNPJ)
+            .IsUnique();
+
             // IGNORAR TOTAL (calculado)
             modelBuilder.Entity<CompraEstoqueModel>()
                 .Ignore(c => c.CompraValorTotal);

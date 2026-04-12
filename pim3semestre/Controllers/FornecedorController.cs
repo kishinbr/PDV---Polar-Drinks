@@ -78,40 +78,6 @@ namespace pim3semestre.Controllers
             return RedirectToAction("Index");
         }
 
-        //[HttpGet]
-        //public IActionResult Excluir(int? id)
-        //{
-        //    if (id == null || id == 0)
-        //    {
-        //        return NotFound();
-        //    }
-        //    FornecedorModel? fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
-
-        //    if (fornecedor == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(fornecedor);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Excluir(int id)
-        //{
-        //    var fornecedor = _db.Fornecedores.FirstOrDefault(x => x.FornecedorID == id);
-
-        //    if (fornecedor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _db.Fornecedores.Remove(fornecedor);
-        //    _db.SaveChanges();
-
-        //    TempData["MensagemSucesso"] = "Fornecedor excluído com sucesso!";
-        //    return RedirectToAction("Index");
-        //}
-
 
         public IActionResult Cadastrar()
         {
@@ -121,18 +87,26 @@ namespace pim3semestre.Controllers
         [HttpPost]
         public IActionResult Cadastrar(FornecedorModel fornecedor)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _db.Fornecedores.Add(fornecedor);
-                _db.SaveChanges();
-
-                TempData["MensagemSucesso"] = "Fornecedor Cadastrado com sucesso!";
-
-                return RedirectToAction("Index");
+                TempData["MensagemErro"] = "Preencha todos os campos corretamente.";
+                return View(fornecedor);
             }
-            TempData["MensagemErro"] = "Ocorreu algum erro ao Cadastrar";
 
-            return View();
+            bool cnpjExiste = _db.Fornecedores
+                .Any(x => x.FornecedorCNPJ == fornecedor.FornecedorCNPJ);
+
+            if (cnpjExiste)
+            {
+                ModelState.AddModelError("FornecedorCNPJ", "Este CNPJ já está cadastrado.");
+                return View(fornecedor);
+            }
+
+            _db.Fornecedores.Add(fornecedor);
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Fornecedor cadastrado com sucesso!";
+            return RedirectToAction("Index");
         }
     }
 }

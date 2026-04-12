@@ -8,7 +8,7 @@ namespace pim3semestre.Models
         public int FornecedorID { get; set; }
 
         [Required(ErrorMessage = "O nome do fornecedor é obrigatório")]
-        [StringLength(150)]
+        [StringLength(50)]
         public string? FornecedorNome { get; set; }
 
         [Required(ErrorMessage = "O CNPJ é obrigatório")]
@@ -21,7 +21,7 @@ namespace pim3semestre.Models
         public string? FornecedorTelefone { get; set; }
 
         [Required(ErrorMessage = "O emaiol é obrigatório")]
-        [StringLength(150)]
+        [StringLength(50)]
         [EmailAddress(ErrorMessage = "Email inválido")]
         public string? FornecedorEmail { get; set; }
 
@@ -42,7 +42,7 @@ namespace pim3semestre.Models
         public string? FornecedorBairro { get; set; }
 
         [Required(ErrorMessage = "O logradouro é obrigatório")]
-        [StringLength(150)]
+        [StringLength(100)]
         public string? FornecedorLogradouro { get; set; }
 
         [Required(ErrorMessage = "O número é obrigatório")]

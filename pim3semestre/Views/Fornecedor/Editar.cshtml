@@ -15,7 +15,7 @@
         <!-- NOME -->
         <div class="mb-4">
             <label class="form-label text-light">Nome</label>
-            <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNome">
+            <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNome" maxlength="50">
             <span asp-validation-for="FornecedorNome" class="text-danger"></span>
         </div>
 
@@ -44,7 +44,7 @@
 
             <div class="col-md-6">
                 <label class="form-label text-light">E-mail</label>
-                <input type="email" class="form-control bg-white text-dark" asp-for="FornecedorEmail">
+                <input type="email" class="form-control bg-white text-dark" asp-for="FornecedorEmail" maxlength="50">
                 <span asp-validation-for="FornecedorEmail" class="text-danger"></span>
             </div>
         </div>
@@ -92,7 +92,7 @@
 
             <div class="col-md-2">
                 <label class="form-label text-light">Número</label>
-                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNum">
+                <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNum" maxlength="10">
                 <span asp-validation-for="FornecedorNum" class="text-danger"></span>
             </div>
         </div>
