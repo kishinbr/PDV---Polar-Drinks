@@ -9,7 +9,24 @@
         <h2 class="text-light">Novo Reabastecimento</h2>
     </div>
 
-    <form method="post">
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert bg-success text-light" role="alert">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light" role="alert">
+            @TempData["MensagemErro"]
+        </div>
+    }
+
+    <div id="erroTabela" class="alert bg-danger text-light d-none" role="alert">
+        Adicione pelo menos um produto antes de salvar.
+    </div>
+
+    <form method="post" id="formCompra">
         <div class="mb-4">
             <label class="form-label text-light">Fornecedor</label>
             <select class="form-select bg-light text-dark" asp-for="FornecedorID" asp-items="Model.Fornecedores">
@@ -42,7 +59,7 @@
                             <span asp-validation-for="Itens[@i].Quantidade" class="text-danger"></span>
                         </td>
                         <td>
-                            <input class="form-control" asp-for="Itens[@i].Preco" />
+                            <input class="form-control preco-input" asp-for="Itens[@i].Preco" />
                             <span asp-validation-for="Itens[@i].Preco" class="text-danger"></span>
                         </td>
                         <td class="text-center">
@@ -57,8 +74,7 @@
             <button type="button" id="addItem" class="btn btn-primary">
                 + Adicionar Produto
             </button>
-
-            <span class="fw-bold text-light" id="totalPreco">Total: R$ 0.00</span>
+            <span class="fw-bold text-light" id="totalPreco">Total: R$ 0,00</span>
         </div>
 
         <div class="d-flex gap-3">
@@ -67,140 +83,168 @@
         </div>
     </form>
 </div>
+
 @section Scripts {
-<script>
-    let index = @Model.Itens.Count;
-        // atualiza o total sempre que um campo de quantidade ou preço for alterado
-    function atualizarTotal() {
-        let total = 0;
+    <script>
+        let index = @Model.Itens.Count;
 
-        $("#tabelaItens tbody tr").each(function () {
-            let qtd = parseFloat($(this).find('input[name$=".Quantidade"]').val());
-            let preco = parseFloat($(this).find('input[name$=".Preco"]').val().replace(',', '.'));
+        const options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
 
-            if (!isNaN(qtd) && !isNaN(preco)) {
-                total += qtd * preco;
-            }
-        });
+        // ==================== RENUMERAR ÍNDICES ====================
+        // garante sequência contínua [0],[1],[2]... antes de submeter
+        function renumerarIndices() {
+            $("#tabelaItens tbody tr").each(function (i) {
+                $(this).find("select").attr("name", `Itens[${i}].ProdutoID`);
+                $(this).find("input[name$='.Quantidade']").attr("name", `Itens[${i}].Quantidade`);
+                $(this).find("input[name$='.Preco'], input.preco-input").attr("name", `Itens[${i}].Preco`);
 
-        $("#totalPreco").text("Total: R$ " + total.toFixed(2));
-    }
-        // adiciona nova linha com campos para produto, quantidade e preço
-    $("#addItem").click(function () {
-        let options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
+                // atualiza os spans de validação também
+                $(this).find("span[data-valmsg-for]").each(function() {
+                    let field = $(this).attr("data-valmsg-for");
+                    let newField = field.replace(/Itens\[\d+\]/, `Itens[${i}]`);
+                    $(this).attr("data-valmsg-for", newField);
+                });
+            });
 
-        let newRow = $(`
-            <tr>
-                <td>
-                    <select name="Itens[${index}].ProdutoID" class="form-select" 
-                            data-val="true" 
-                            data-val-required="Selecione um produto">
-                        <option value="">Selecione</option>
-                        ${options}
-                    </select>
-                    <span class="text-danger field-validation-valid"
-                          data-valmsg-for="Itens[${index}].ProdutoID"
-                          data-valmsg-replace="true"></span>
-                </td>
-
-                <td>
-                    <input type="number" name="Itens[${index}].Quantidade" class="form-control"
-                           value=""
-                           data-val="true"
-                           data-val-required="Informe a quantidade"
-                           data-val-range="Quantidade inválida"
-                           data-val-range-min="1"
-                           data-val-range-max="2147483647" />
-                    <span class="text-danger field-validation-valid"
-                          data-valmsg-for="Itens[${index}].Quantidade"
-                          data-valmsg-replace="true"></span>
-                </td>
-
-                <td>
-                    <input type="text" name="Itens[${index}].Preco" class="form-control"
-                           value=""
-                           data-val="true"
-                           data-val-required="Informe o preço"
-                           data-val-number="Preço deve ser um número"
-                           data-val-range="Preço inválido"
-                           data-val-range-min="0.01"
-                           data-val-range-max="999999.99" />
-                    <span class="text-danger field-validation-valid"
-                          data-valmsg-for="Itens[${index}].Preco"
-                          data-valmsg-replace="true"></span>
-                </td>
-
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-remover">X</button>
-                </td>
-            </tr>
-        `);
-
-        $("#tabelaItens tbody").append(newRow);
-        $.validator.unobtrusive.parse(newRow);
-
-        atualizarTotal();
-        index++;
-    });
-        //remove a linha do item e atualiza o total quando o botão de remover for clicado
-    $(document).on("click", ".btn-remover", function () {
-        $(this).closest("tr").remove();
-        atualizarTotal();
-    });
-        // atualiza o total sempre que um campo de quantidade ou preço for alterado
-    $(document).on("input", 'input[name$=".Quantidade"], input[name$=".Preco"]', function () {
-        atualizarTotal();
-    });
-
-        //limita a entrada de caracteres para apenas números nos campos de quantidade
-  
-    $(document).on("input", 'input[name$=".Quantidade"]', function () {
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-
-        //limita a entrada de caracteres para apenas números e vírgula nos campos de preço, e formata para ter no máximo 2 casas decimais
-    $(document).on("input", 'input[name$=".Preco"]', function () {
-        let value = this.value;
-
-        value = value.replace(/[^0-9,]/g, '');
-
-        let parts = value.split(',');
-        if (parts.length > 2) {
-            value = parts[0] + ',' + parts[1];
+            // atualiza o index para o próximo item
+            index = $("#tabelaItens tbody tr").length;
         }
 
-        if (value.includes(',')) {
-            let [intPart, decPart] = value.split(',');
-            decPart = decPart.substring(0, 2);
-            value = intPart + ',' + decPart;
+        // ==================== TOTAL ====================
+        function atualizarTotal() {
+            let total = 0;
+            $("#tabelaItens tbody tr").each(function () {
+                let qtd = parseFloat($(this).find('input[name$=".Quantidade"]').val());
+                let preco = parseFloat($(this).find('input[name$=".Preco"]').val().replace(',', '.'));
+                if (!isNaN(qtd) && !isNaN(preco)) {
+                    total += qtd * preco;
+                }
+            });
+            $("#totalPreco").text("Total: R$ " + total.toFixed(2).replace('.', ','));
         }
 
-        this.value = value;
-    });
+        // ==================== ADICIONAR LINHA ====================
+        $("#addItem").click(function () {
+            let newRow = $(`
+                <tr>
+                    <td>
+                        <select name="Itens[${index}].ProdutoID" class="form-select"
+                                data-val="true"
+                                data-val-required="Selecione um produto">
+                            <option value="">Selecione</option>
+                            ${options}
+                        </select>
+                        <span class="text-danger field-validation-valid"
+                              data-valmsg-for="Itens[${index}].ProdutoID"
+                              data-valmsg-replace="true"></span>
+                    </td>
+                    <td>
+                        <input type="number" name="Itens[${index}].Quantidade" class="form-control"
+                               value="0" min="0"
+                               data-val="true"
+                               data-val-required="Informe a quantidade"
+                               data-val-range="Quantidade inválida"
+                               data-val-range-min="0"
+                               data-val-range-max="2147483647" />
+                        <span class="text-danger field-validation-valid"
+                              data-valmsg-for="Itens[${index}].Quantidade"
+                              data-valmsg-replace="true"></span>
+                    </td>
+                    <td>
+                        <input type="text" name="Itens[${index}].Preco" class="form-control preco-input"
+                               value="0,00"
+                               data-val="true"
+                               data-val-required="Informe o preço"
+                               data-val-number="Preço deve ser um número"
+                               data-val-range="Preço inválido"
+                               data-val-range-min="0.00"
+                               data-val-range-max="999999.99" />
+                        <span class="text-danger field-validation-valid"
+                              data-valmsg-for="Itens[${index}].Preco"
+                              data-valmsg-replace="true"></span>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-remover">X</button>
+                    </td>
+                </tr>
+            `);
 
-        // antes de enviar o formulário, garante que os campos de quantidade e preço estejam preenchidos com valores válidos
-    $("form").on("submit", function () {
+            $("#tabelaItens tbody").append(newRow);
 
-        $('input[name$=".Preco"]').each(function () {
-            if (this.value.trim() === "") {
-                this.value = "0,00";
-            }
+            // parse DEPOIS do append com o form inteiro
+            $.validator.unobtrusive.parse("#formCompra");
+
+            atualizarTotal();
+            index++;
         });
 
-        $('input[name$=".Quantidade"]').each(function () {
-            let value = this.value.trim();
-
-            if (value === "" || isNaN(value)) {
-                this.value = "0";
-            }
+        // ==================== REMOVER LINHA ====================
+        $(document).on("click", ".btn-remover", function () {
+            $(this).closest("tr").remove();
+            renumerarIndices();
+            atualizarTotal();
         });
 
-    });
+        // ==================== INPUT QUANTIDADE ====================
+        $(document).on("input", 'input[name$=".Quantidade"]', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            atualizarTotal();
+        });
 
-    $(document).ready(function () {
-        atualizarTotal();
-    });
+        // ==================== INPUT PREÇO ====================
+        $(document).on("input", 'input.preco-input', function () {
+            let value = this.value.replace(/[^0-9,]/g, '');
+            let parts = value.split(',');
+            if (parts.length > 2) value = parts[0] + ',' + parts[1];
+            if (value.includes(',')) {
+                let [intPart, decPart] = value.split(',');
+                value = intPart + ',' + decPart.substring(0, 2);
+            }
+            this.value = value;
+            atualizarTotal();
+        });
 
-</script>
+        // ==================== SUBMIT ====================
+        $("#formCompra").on("submit", function (e) {
+
+
+            let temItens = $("#tabelaItens tbody tr").length > 0;
+
+            if (!temItens) {
+                e.preventDefault();
+
+                // força reaparecer sempre
+                $("#erroTabela")
+                    .removeClass("d-none")
+                    .hide()
+                    .fadeIn();
+
+                window.scrollTo(0, 0);
+                return false;
+            }
+
+            // esconde corretamente quando tiver item
+            $("#erroTabela").addClass("d-none");
+
+            renumerarIndices();
+
+            $('input.preco-input').each(function () {
+                this.value = this.value.replace(',', '.');
+                if (this.value.trim() === '' || isNaN(this.value)) {
+                    this.value = '0';
+                }
+            });
+
+            $('input[name$=".Quantidade"]').each(function () {
+                if (this.value.trim() === '' || isNaN(this.value)) {
+                    this.value = '0';
+                }
+            });
+        });
+
+        // ==================== INIT ====================
+        $(document).ready(function () {
+            atualizarTotal();
+        });
+    </script>
 }
-
