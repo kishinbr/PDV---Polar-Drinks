@@ -74,7 +74,7 @@ namespace pim3semestre.Controllers
                         Text = p.ProdutoNome
                     }).ToList(),
 
-                Itens = new List<ItemCompraCreateVM> { new ItemCompraCreateVM() }
+                Itens = new List<ItemCompraCreateVM>()
             };
 
             return View(vm);
