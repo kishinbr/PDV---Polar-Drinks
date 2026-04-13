@@ -156,7 +156,7 @@ namespace pim3semestre.Controllers
                     MovimentacaoQtd = diferenca,
 
                     MovimentacaoData = DateTime.Now,
-                    MovimentacaoTipo = "Edicao",
+                    MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Edicao,
                     MovimentacaoDescricao = Descricao
                 };
 

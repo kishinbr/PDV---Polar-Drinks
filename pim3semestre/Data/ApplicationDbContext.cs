@@ -13,7 +13,7 @@ namespace pim3semestre.Data
         public DbSet<FornecedorModel> Fornecedores { get; set; }
         public DbSet<CompraEstoqueModel> ComprasEstoque { get; set; }
         public DbSet<ItemCompraModel> ItensCompra { get; set; }
-        public DbSet<VendaFinalModel> Vendas { get; set; }
+        public DbSet<VendaModel> Vendas { get; set; }
         public DbSet<ItemVendaModel> ItensVenda { get; set; }
         public DbSet<MovimentacaoEstoqueModel> MovimentacoesEstoque { get; set; }
 
@@ -112,7 +112,7 @@ namespace pim3semestre.Data
                 .HasPrecision(18, 2);
 
             // VENDA FINAL
-            modelBuilder.Entity<VendaFinalModel>()
+            modelBuilder.Entity<VendaModel>()
                 .Property(v => v.VendaValorTotal)
                 .HasPrecision(18, 2);
         }

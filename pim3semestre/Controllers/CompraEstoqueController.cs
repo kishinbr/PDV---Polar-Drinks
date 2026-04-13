@@ -193,7 +193,7 @@ namespace pim3semestre.Controllers
 
                 var movimentacao = new MovimentacaoEstoqueModel
                 {
-                    MovimentacaoTipo = "Entrada",
+                    MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Entrada,
                     MovimentacaoQtd = item.ItemCompraQtd,
                     ProdutoID = produto.ProdutoID,
                     ItemCompraID = item.ItemCompraID,

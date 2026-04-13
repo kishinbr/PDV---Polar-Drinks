@@ -14,6 +14,7 @@ body {
     background: #181818;
     color: white;
     padding: 20px 15px;
+    overflow-y: auto;
 }
 
     .sidebar .brand {
@@ -25,7 +26,6 @@ body {
         gap: 10px;
     }
 
-    /* LINKS PADRÃO (SIDEBAR + OFFCANVAS) */
     .sidebar a,
     .menu-item {
         display: flex;
@@ -47,7 +47,6 @@ body {
             color: white;
         }
 
-        /* ITEM ATIVO */
         .menu-item.active,
         .sidebar a.active {
             background: #303030;
@@ -59,7 +58,6 @@ body {
             font-size: 18px;
         }
 
-/* SEÇÕES DO MENU */
 .menu-section {
     font-size: 11px;
     color: #6b7280;
@@ -72,6 +70,7 @@ body {
 /* CONTENT */
 .content {
     margin-left: 260px;
+    min-height: 100vh;
 }
 
 /* TOP BAR MOBILE */
@@ -82,6 +81,9 @@ body {
     color: white;
     align-items: center;
     justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 /* RESPONSIVO */

@@ -18,6 +18,6 @@ namespace pim3semestre.Models
         public ProdutoModel? Produto { get; set; }
 
         public int VendaID { get; set; }
-        public VendaFinalModel? Venda { get; set; }
+        public VendaModel? Venda { get; set; }
     }
 }

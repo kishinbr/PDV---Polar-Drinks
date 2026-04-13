@@ -3,7 +3,7 @@
 namespace pim3semestre.Models
 {
    
-    public class VendaFinalModel
+    public class VendaModel
     {
         [Key]
         public int VendaID { get; set; }

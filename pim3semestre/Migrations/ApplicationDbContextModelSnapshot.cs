@@ -276,7 +276,7 @@ namespace pim3semestre.Migrations
                     b.ToTable("Produtos");
                 });
 
-            modelBuilder.Entity("pim3semestre.Models.VendaFinalModel", b =>
+            modelBuilder.Entity("pim3semestre.Models.VendaModel", b =>
                 {
                     b.Property<int>("VendaID")
                         .ValueGeneratedOnAdd()
@@ -337,7 +337,7 @@ namespace pim3semestre.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("pim3semestre.Models.VendaFinalModel", "Venda")
+                    b.HasOne("pim3semestre.Models.VendaModel", "Venda")
                         .WithMany("Itens")
                         .HasForeignKey("VendaID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -383,7 +383,7 @@ namespace pim3semestre.Migrations
                     b.Navigation("Compras");
                 });
 
-            modelBuilder.Entity("pim3semestre.Models.VendaFinalModel", b =>
+            modelBuilder.Entity("pim3semestre.Models.VendaModel", b =>
                 {
                     b.Navigation("Itens");
                 });

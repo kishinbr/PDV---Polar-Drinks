@@ -57,37 +57,37 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-
-        public IActionResult FinalizarVenda(VendaFinalModel venda)
+        public IActionResult FinalizarVenda(VendaModel venda)
         {
-            // Validações básicas
             if (venda == null || venda.Itens.Count == 0)
             {
                 TempData["MensagemErro"] = "Adicione pelo menos um item à venda.";
-                var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
-                ViewBag.Produtos = produtos;
+                ViewBag.Produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
                 return View("Cadastrar", venda);
             }
 
             if (string.IsNullOrEmpty(venda.VendaTipoPagamento))
             {
                 TempData["MensagemErro"] = "Selecione um tipo de pagamento.";
-                var produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
-                ViewBag.Produtos = produtos;
+                ViewBag.Produtos = _db.Produtos.Where(p => p.ProdutoAtivo).ToList();
                 return View("Cadastrar", venda);
             }
 
             using var transaction = _db.Database.BeginTransaction();
 
-            //validações mais complexas e processamento da venda
             try
             {
+                // busca todos os produtos necessários de uma vez só
+                var ids = venda.Itens.Select(i => i.ProdutoID).ToList();
+                var produtos = _db.Produtos
+                    .Where(p => ids.Contains(p.ProdutoID))
+                    .ToList();
+
                 decimal totalVenda = 0;
 
-               
                 foreach (var item in venda.Itens)
                 {
-                    var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == item.ProdutoID);
+                    var produto = produtos.FirstOrDefault(p => p.ProdutoID == item.ProdutoID);
 
                     if (produto == null)
                     {
@@ -107,40 +107,31 @@ namespace pim3semestre.Controllers
 
                     decimal precoBase = produto.ProdutoPrecoVenda ?? 0;
                     decimal desconto = produto.ProdutoPromocao;
+                    decimal precoFinal = desconto > 0
+                        ? precoBase - (precoBase * (desconto / 100))
+                        : precoBase;
 
-                    decimal precoFinal = precoBase;
-
-                    if (desconto > 0)
-                    {
-                        precoFinal = precoBase - (precoBase * (desconto / 100));
-                    }
-
-                    // Atualiza item com valor correto
                     item.ItemVendaPreco = precoFinal;
                     item.ItemVendaTotal = precoFinal * item.ItemVendaQtd;
-
                     totalVenda += item.ItemVendaTotal;
                 }
 
-                // Atualiza venda com valor total e data
                 venda.VendaValorTotal = totalVenda;
 
-                // salva venda no banco
                 _db.Vendas.Add(venda);
                 _db.SaveChanges();
 
-
-                //atualiza estoque e registra movimentação para cada item da venda
+                // atualiza estoque e registra movimentações usando a lista já carregada
                 foreach (var item in venda.Itens)
                 {
-                    var produto = _db.Produtos.First(p => p.ProdutoID == item.ProdutoID);
+                    var produto = produtos.First(p => p.ProdutoID == item.ProdutoID);
                     produto.ProdutoQtdEstoque -= item.ItemVendaQtd;
 
                     var movimentacao = new MovimentacaoEstoqueModel
                     {
                         ProdutoID = produto.ProdutoID,
                         MovimentacaoQtd = item.ItemVendaQtd,
-                        MovimentacaoTipo = "Saida",
+                        MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Saida,
                         MovimentacaoData = DateTime.Now,
                         ItemVendaID = item.ItemVendaID
                     };
@@ -154,7 +145,6 @@ namespace pim3semestre.Controllers
                 TempData["MensagemSucesso"] = "Venda realizada com sucesso!";
                 return RedirectToAction("Cadastrar");
             }
-            // Em caso de qualquer erro, a transação é revertida e uma mensagem de erro é exibida
             catch (Exception ex)
             {
                 transaction.Rollback();

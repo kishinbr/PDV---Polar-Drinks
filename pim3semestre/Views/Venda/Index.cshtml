@@ -1,4 +1,4 @@
-﻿@model IEnumerable<pim3semestre.Models.VendaFinalModel>
+﻿@model IEnumerable<pim3semestre.Models.VendaModel>
 @{
     ViewData["Title"] = "Vendas Realizadas";
 }
@@ -65,7 +65,8 @@
                         {
                             <span class="badge bg-primary">Cartão</span>
                         }
-                        <td class="text-center">
+                    </td>
+                    <td class="text-center">
                         <a class="btn btn-primary btn-sm"
                                asp-action="Detalhes"
                                asp-route-id="@venda.VendaID">

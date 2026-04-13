@@ -20,7 +20,7 @@ namespace pim3semestre.Models
         [Required(ErrorMessage = "O Telefone é obrigatório")]
         public string? FornecedorTelefone { get; set; }
 
-        [Required(ErrorMessage = "O emaiol é obrigatório")]
+        [Required(ErrorMessage = "O email é obrigatório")]
         [StringLength(50)]
         [EmailAddress(ErrorMessage = "Email inválido")]
         public string? FornecedorEmail { get; set; }
