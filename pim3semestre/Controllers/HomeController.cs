@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using pim3semestre.Filters;
 using pim3semestre.Models;
 using System.Diagnostics;
 
 namespace pim3semestre.Controllers
 {
+    [AuthFilter]
     public class HomeController : Controller
     {
         public IActionResult Index()

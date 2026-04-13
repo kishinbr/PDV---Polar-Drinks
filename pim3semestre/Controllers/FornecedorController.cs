@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using pim3semestre.Data;
+using pim3semestre.Filters;
 using pim3semestre.Models;
 
 namespace pim3semestre.Controllers
 {
+    [AuthFilter]
     public class FornecedorController : Controller
     {
         //atibuto para acessar o banco de dados , por leitura somente

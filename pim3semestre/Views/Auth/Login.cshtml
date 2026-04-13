@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_LayoutLogin";
+}
+<div class="container mt-5" style="max-width:400px;">
+
+    <h3 class="mb-4 text-center">Login</h3>
+
+    <form method="post">
+        <input name="usuario" class="form-control mb-3" placeholder="Usuário" />
+        <input name="senha" type="password" class="form-control mb-3" placeholder="Senha" />
+
+        <button class="btn btn-dark w-100">Entrar</button>
+    </form>
+
+    @if (ViewBag.Erro != null)
+    {
+        <div class="alert alert-danger mt-3">
+            @ViewBag.Erro
+        </div>
+    }
+
+</div>

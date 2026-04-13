@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pim3semestre.Data;
+using pim3semestre.Filters;
 using pim3semestre.Models;
 
 namespace pim3semestre.Controllers
 {
+    [AuthFilter]
     public class DashboardController : Controller
     {
         readonly ApplicationDbContext _db;
@@ -17,6 +19,7 @@ namespace pim3semestre.Controllers
         //uma acao unica para calcular tudo e enviar para a view 
         public IActionResult Index()
         {
+
             var hoje = DateTime.Today;
             var inicioMes = new DateTime(hoje.Year, hoje.Month, 1);
             var inicioAno = new DateTime(hoje.Year, 1, 1);

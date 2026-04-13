@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pim3semestre.Data;
+using pim3semestre.Filters;
 using pim3semestre.Models;
 
 namespace pim3semestre.Controllers
 {
+    [AuthFilter]
     public class EstoqueController : Controller
     {
         // Injeção do contexto para acessar o banco de dados

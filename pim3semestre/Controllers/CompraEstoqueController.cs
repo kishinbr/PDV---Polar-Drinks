@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pim3semestre.Data;
+using pim3semestre.Filters;
 using pim3semestre.Models;
 using pim3semestre.ViewModels;
 
 namespace pim3semestre.Controllers
 {
+    [AuthFilter]
     public class CompraEstoqueController : Controller
     {
         //faz a injeção de dependência do contexto para acessar o banco de dados
@@ -20,6 +22,7 @@ namespace pim3semestre.Controllers
         //exibe a lista de compras pendentes e concluídas
         public IActionResult Index()
         {
+
             var vm = new CompraIndexViewModel
             {
                 Pendentes = _db.ComprasEstoque
