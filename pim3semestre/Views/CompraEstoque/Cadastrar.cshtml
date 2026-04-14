@@ -78,7 +78,7 @@
         </div>
 
         <div class="d-flex gap-3">
-            <button type="submit" class="btn btn-success w-50">Salvar</button>
+            <button type="submit" class="btn btn-success w-50" id="btnSalvar" disabled>Salvar</button>
             <a asp-action="Index" class="btn btn-primary w-50">Voltar</a>
         </div>
     </form>
@@ -90,27 +90,26 @@
 
         const options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
 
-        // ==================== RENUMERAR ÍNDICES ====================
-        // garante sequência contínua [0],[1],[2]... antes de submeter
         function renumerarIndices() {
             $("#tabelaItens tbody tr").each(function (i) {
                 $(this).find("select").attr("name", `Itens[${i}].ProdutoID`);
                 $(this).find("input[name$='.Quantidade']").attr("name", `Itens[${i}].Quantidade`);
                 $(this).find("input[name$='.Preco'], input.preco-input").attr("name", `Itens[${i}].Preco`);
 
-                // atualiza os spans de validação também
-                $(this).find("span[data-valmsg-for]").each(function() {
+                $(this).find("span[data-valmsg-for]").each(function () {
                     let field = $(this).attr("data-valmsg-for");
                     let newField = field.replace(/Itens\[\d+\]/, `Itens[${i}]`);
                     $(this).attr("data-valmsg-for", newField);
                 });
             });
 
-            // atualiza o index para o próximo item
             index = $("#tabelaItens tbody tr").length;
         }
 
-        // ==================== TOTAL ====================
+        function atualizarBotaoSalvar() {
+            $("#btnSalvar").prop("disabled", $("#tabelaItens tbody tr").length === 0);
+        }
+
         function atualizarTotal() {
             let total = 0;
             $("#tabelaItens tbody tr").each(function () {
@@ -123,7 +122,6 @@
             $("#totalPreco").text("Total: R$ " + total.toFixed(2).replace('.', ','));
         }
 
-        // ==================== ADICIONAR LINHA ====================
         $("#addItem").click(function () {
             let newRow = $(`
                 <tr>
@@ -170,30 +168,30 @@
             `);
 
             $("#tabelaItens tbody").append(newRow);
-
-            // parse DEPOIS do append com o form inteiro
-            $.validator.unobtrusive.parse("#formCompra");
-
             atualizarTotal();
             index++;
+            atualizarBotaoSalvar();
         });
 
-        // ==================== REMOVER LINHA ====================
         $(document).on("click", ".btn-remover", function () {
             $(this).closest("tr").remove();
             renumerarIndices();
             atualizarTotal();
+            atualizarBotaoSalvar();
         });
 
-        // ==================== INPUT QUANTIDADE ====================
         $(document).on("input", 'input[name$=".Quantidade"]', function () {
             this.value = this.value.replace(/[^0-9]/g, '');
             atualizarTotal();
         });
 
-        // ==================== INPUT PREÇO ====================
         $(document).on("input", 'input.preco-input', function () {
             let value = this.value.replace(/[^0-9,]/g, '');
+
+            if (value.startsWith('0') && value.length > 1 && value[1] !== ',') {
+                value = value.replace(/^0+/, '');
+            }
+
             let parts = value.split(',');
             if (parts.length > 2) value = parts[0] + ',' + parts[1];
             if (value.includes(',')) {
@@ -204,28 +202,17 @@
             atualizarTotal();
         });
 
-        // ==================== SUBMIT ====================
         $("#formCompra").on("submit", function (e) {
-
-
             let temItens = $("#tabelaItens tbody tr").length > 0;
 
             if (!temItens) {
                 e.preventDefault();
-
-                // força reaparecer sempre
-                $("#erroTabela")
-                    .removeClass("d-none")
-                    .hide()
-                    .fadeIn();
-
+                $("#erroTabela").removeClass("d-none").hide().fadeIn();
                 window.scrollTo(0, 0);
                 return false;
             }
 
-            // esconde corretamente quando tiver item
             $("#erroTabela").addClass("d-none");
-
             renumerarIndices();
 
             $('input.preco-input').each(function () {
@@ -242,9 +229,9 @@
             });
         });
 
-        // ==================== INIT ====================
         $(document).ready(function () {
             atualizarTotal();
+            atualizarBotaoSalvar();
         });
     </script>
 }
