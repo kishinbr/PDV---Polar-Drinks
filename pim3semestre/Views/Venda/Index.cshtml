@@ -9,6 +9,13 @@
         @TempData["MensagemSucesso"]
     </div>
 }
+else if (TempData["MensagemErro"] != null)
+{
+    <div class="alert bg-danger text-light">
+        @TempData["MensagemErro"]
+    </div>
+}
+
 
 <div class="container p-4 rounded-4">
 

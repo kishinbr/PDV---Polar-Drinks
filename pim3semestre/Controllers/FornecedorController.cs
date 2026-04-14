@@ -97,7 +97,7 @@ namespace pim3semestre.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["MensagemErro"] = "Preencha todos os campos corretamente.";
+                TempData["MensagemErro"] = "Erro ao cadastrar fornecedor.";
                 return View(fornecedor);
             }
 

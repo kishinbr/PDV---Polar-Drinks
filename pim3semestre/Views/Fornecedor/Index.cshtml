@@ -16,10 +16,17 @@
 
     @if (TempData["MensagemSucesso"] != null)
     {
-        <div class="alert bg-success text-light" role="alert">
+        <div class="alert bg-success text-light">
             @TempData["MensagemSucesso"]
         </div>
     }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light">
+            @TempData["MensagemErro"]
+        </div>
+    }
+
 
     <table id="Fornecedores" class="table table-light table-hover mb-auto">
         <thead>

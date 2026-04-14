@@ -11,6 +11,13 @@
             @TempData["MensagemSucesso"]
         </div>
     }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light">
+            @TempData["MensagemErro"]
+        </div>
+    }
+
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Reabastecimento</h2>
