@@ -6,9 +6,19 @@
 
     const qtdInput = document.getElementById("quantidade");
     qtdInput.addEventListener("input", () => {
-        if (qtdInput.value < 0) {
-            qtdInput.value = "";
+        let value = qtdInput.value;
+
+        value = value.replace(/[^0-9]/g, '');
+
+        if (value.length > 1) {
+            value = value.replace(/^0+/, '');
         }
+
+        value = value.substring(0, 4);
+
+        qtdInput.value = value;
+
+        calcularTotal();
     });
 
     const valorUnitario = document.getElementById("valorUnitario");
@@ -26,16 +36,19 @@
 
     // ==================== FUNÇÕES AUXILIARES ====================
     function formatarMoeda(valor) {
-        return "R$ " + parseFloat(valor).toFixed(2).replace(".", ",");
+        return "R$ " + parseFloat(valor).toFixed(2);
+    }
+
+    // Converte o texto de uma célula de moeda ("R$ 1500.00") para float
+    function parseMoeda(texto) {
+        return parseFloat(texto.replace("R$", "").trim()) || 0;
     }
 
     function calcularPrecoComDesconto(p) {
         let preco = p.produtoPrecoVenda;
-
         if (p.produtoPromocao > 0) {
             preco = preco - (preco * (p.produtoPromocao / 100));
         }
-
         return preco;
     }
 
@@ -63,43 +76,29 @@
             item.classList.add("list-group-item", "list-group-item-action");
 
             const precoOriginal = parseFloat(p.produtoPrecoVenda || 0);
-
             const precoFinal = p.produtoPromocao > 0
                 ? precoOriginal - (precoOriginal * (p.produtoPromocao / 100))
                 : precoOriginal;
 
             item.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; white-space:nowrap; gap:10px;">
-
-                    <!-- ESQUERDA -->
                     <div style="overflow:hidden; text-overflow:ellipsis;">
                         ${p.produtoNome} [${p.produtoCodBarra}]
                     </div>
-
-                    <!-- CENTRO (ESTOQUE) -->
                     <div class="text-muted">
                         QTD ${p.produtoQtdEstoque}
                     </div>
-
-                    <!-- DIREITA (PREÇO) -->
                     <div class="text-end">
                         ${p.produtoPromocao > 0
-                                ? `
-                                <small class="text-muted" style="text-decoration:line-through;">
-                                    R$ ${parseFloat(p.produtoPrecoVenda).toFixed(2)}
-                                </small>
-                                <strong class="text-success ms-1">
-                                    R$ ${(p.produtoPrecoVenda - (p.produtoPrecoVenda * (p.produtoPromocao / 100))).toFixed(2)}
-                                </strong>
-                              `
-                                : `
-                                <strong>
-                                    R$ ${parseFloat(p.produtoPrecoVenda).toFixed(2)}
-                                </strong>
-                              `
-                            }
+                    ? `<small class="text-muted" style="text-decoration:line-through;">
+                                   R$ ${precoOriginal.toFixed(2)}
+                               </small>
+                               <strong class="text-success ms-1">
+                                   R$ ${precoFinal.toFixed(2)}
+                               </strong>`
+                    : `<strong>R$ ${precoOriginal.toFixed(2)}</strong>`
+                }
                     </div>
-
                 </div>
             `;
 
@@ -113,13 +112,10 @@
         buscaInput.value = p.produtoNome;
         lista.innerHTML = "";
 
-        let preco = calcularPrecoComDesconto(p);
-
-        valorUnitario.value = formatarMoeda(preco);
-
-        // salva preço com desconto
+        const preco = calcularPrecoComDesconto(p);
         produtoSelecionado.precoCalculado = preco;
 
+        valorUnitario.value = formatarMoeda(preco);
         calcularTotal();
     }
 
@@ -145,10 +141,8 @@
     // ==================== CÁLCULO DE TOTAL ====================
     function calcularTotal() {
         const qtd = parseFloat(qtdInput.value) || 0;
-
-        const preco = produtoSelecionado
-            ? (produtoSelecionado.precoCalculado || produtoSelecionado.produtoPrecoVenda)
-            : 0;
+        const precoTexto = valorUnitario.value.replace("R$", "").trim();
+        const preco = parseFloat(precoTexto) || 0;
 
         valorTotal.value = formatarMoeda(qtd * preco);
     }
@@ -172,7 +166,6 @@
             msgAdicionar.style.opacity = 1;
             msgAdicionar.style.display = "block";
             msgAdicionar.style.transition = "opacity 0.5s";
-
             setTimeout(() => {
                 msgAdicionar.style.opacity = 0;
                 setTimeout(() => {
@@ -208,30 +201,35 @@
             return;
         }
 
-        const preco = produtoSelecionado.precoCalculado || produtoSelecionado.produtoPrecoVenda;
+
+        const precoTexto = valorUnitario.value.replace("R$", "").trim();
+        const preco = parseFloat(precoTexto) || 0;
+
         const total = qtd * preco;
 
         const linha = document.createElement("tr");
         linha.setAttribute("data-id", produtoSelecionado.produtoID);
+        // Armazena o total como atributo para facilitar remoção sem depender de parse de texto
+        linha.setAttribute("data-total", total);
         linha.innerHTML = `
-        <td>${produtoSelecionado.produtoNome}</td>
-        <td class="text-end">${qtd}</td>
-        <td class="text-end">${formatarMoeda(preco)}</td>
-        <td class="text-end">${formatarMoeda(total)}</td>
-        <td class="text-center">
-            <button type="button" class="btn btn-danger btn-sm btn-remover">
-                <i class="bi bi-trash"></i>
-            </button>
-        </td>
+            <td>${produtoSelecionado.produtoNome}</td>
+            <td class="text-end">${qtd}</td>
+            <td class="text-end">${formatarMoeda(preco)}</td>
+            <td class="text-end">${formatarMoeda(total)}</td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm btn-remover">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
         `;
         tabela.appendChild(linha);
 
         const index = tabela.children.length - 1;
         itensHidden.insertAdjacentHTML('beforeend', `
-        <input type="hidden" name="Itens[${index}].ProdutoID" value="${produtoSelecionado.produtoID}" />
-        <input type="hidden" name="Itens[${index}].ItemVendaQtd" value="${qtd}" />
-        <input type="hidden" name="Itens[${index}].ItemVendaPreco" value="${preco}" />
-        <input type="hidden" name="Itens[${index}].ItemVendaTotal" value="${total}" />
+            <input type="hidden" name="Itens[${index}].ProdutoID"       value="${produtoSelecionado.produtoID}" />
+            <input type="hidden" name="Itens[${index}].ItemVendaQtd"    value="${qtd}" />
+            <input type="hidden" name="Itens[${index}].ItemVendaPreco"  value="${preco}" />
+            <input type="hidden" name="Itens[${index}].ItemVendaTotal"  value="${total}" />
         `);
 
         totalVenda += total;
@@ -254,14 +252,17 @@
         const row = btn.closest("tr");
         const index = Array.from(tabela.children).indexOf(row);
 
-        const total = parseFloat(row.children[3].innerText.replace("R$", "").replace(/\./g, "").replace(",", "."));
+        // Lê o total direto do atributo data-total para evitar erros de parse de texto
+        const total = parseFloat(row.getAttribute("data-total")) || 0;
+
         totalVenda -= total;
+        // Garante que nunca fique negativo por imprecisão de float
+        if (totalVenda < 0) totalVenda = 0;
         totalVendaLabel.innerText = formatarMoeda(totalVenda);
 
         row.remove();
 
-        const inputs = itensHidden.querySelectorAll(`[name^="Itens[${index}]"]`);
-        inputs.forEach(i => i.remove());
+        itensHidden.querySelectorAll(`[name^="Itens[${index}]"]`).forEach(i => i.remove());
 
         atualizarBotaoConfirmar();
     });

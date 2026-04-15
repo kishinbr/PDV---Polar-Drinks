@@ -19,10 +19,6 @@
         </div>
     }
 
-    @* <div id="mensagemErro" class="alert bg-danger @(TempData["MensagemErro"] == null ? "d-none" : "")">
-        @TempData["MensagemErro"]
-    </div> *@
-
     <h2 class="text-light text-center mb-3">Vendas</h2>
 
     <form asp-action="FinalizarVenda" method="post" id="formVenda"
@@ -46,17 +42,17 @@
 
                 <div class="mb-2">
                     <label class="form-label text-light">Quantidade</label>
-                    <input type="number" id="quantidade" class="form-control" value="0">
+                    <input type="text" id="quantidade" class="form-control" value="0" maxlength="4">
                 </div>
 
                 <div class="mb-2">
                     <label class="form-label text-light">Valor Unitário</label>
-                    <input type="text" id="valorUnitario" class="form-control" readonly>
+                    <input type="text" id="valorUnitario" class="form-control bg-secondary text-white" readonly>
                 </div>
 
                 <div class="mb-2">
                     <label class="form-label text-light">Total</label>
-                    <input type="text" id="valorTotal" class="form-control" readonly>
+                    <input type="text" id="valorTotal" class="form-control bg-secondary text-white" readonly>
                 </div>
 
                 <!-- BOTÃO MAIOR -->
@@ -94,7 +90,7 @@
                 <div class="mt-auto d-flex justify-content-center" style="margin-bottom:10px;">
                     <h2 class="text-light m-0 text-center"
                         style="font-size:34px; font-weight:700;">
-                        Total: <span id="totalVenda">R$ 0,00</span>
+                        Venda Total: <span id="totalVenda">R$ 0.00</span>
                     </h2>
                 </div>
 
