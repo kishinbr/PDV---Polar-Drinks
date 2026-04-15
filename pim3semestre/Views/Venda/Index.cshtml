@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<pim3semestre.Models.VendaModel>
 @{
-    ViewData["Title"] = "Vendas Realizadas";
+    ViewData["Title"] = "Histórico de Vendas";
 }
 
 @if (TempData["MensagemSucesso"] != null)
@@ -17,10 +17,10 @@ else if (TempData["MensagemErro"] != null)
 }
 
 
-<div class="container p-4 rounded-4">
+<div class="container p-4 rounded-4 ">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Vendas Realizadas</h2>
+    <div class="d-flex justify-content-between align-items-center mb-5 bg-dark text-light p-4 rounded-4 mt-2">
+        <h1 class="m-0">Histórico de Vendas</h1>
         <a asp-action="Cadastrar" class="btn btn-success">+ Nova Venda</a>
     </div>
 

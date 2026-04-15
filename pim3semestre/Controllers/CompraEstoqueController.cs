@@ -18,7 +18,7 @@ namespace pim3semestre.Controllers
             _db = db;
         }
 
-        // método auxiliar para não repetir o carregamento das listas
+        // metodo para recarregar as listas de fornecedores e produtos 
         private void RecarregarListas(CompraCreateViewModel vm)
         {
             vm.Fornecedores = _db.Fornecedores
@@ -35,7 +35,7 @@ namespace pim3semestre.Controllers
                     Text = p.ProdutoNome
                 }).ToList();
         }
-
+        //index para listar as compras, separando por status (pendentes e concluidas)
         public IActionResult Index()
         {
             var vm = new CompraIndexViewModel
@@ -55,7 +55,7 @@ namespace pim3semestre.Controllers
 
             return View(vm);
         }
-
+        
         public IActionResult Cadastrar()
         {
             var vm = new CompraCreateViewModel
@@ -79,7 +79,7 @@ namespace pim3semestre.Controllers
 
             return View(vm);
         }
-
+        // metodo para cadastrar a compra, validando os dados e adicionando os itens
         [HttpPost]
         public IActionResult Cadastrar(CompraCreateViewModel vm)
         {
@@ -123,7 +123,7 @@ namespace pim3semestre.Controllers
             TempData["MensagemSucesso"] = "Compra cadastrada com sucesso!";
             return RedirectToAction("Index");
         }
-
+        // detalhes da compra, mostrando os itens e o fornecedor, e se pode confirmar a entrega ou excluir
         public IActionResult Detalhes(int id, bool confirmar = false)
         {
             var compra = _db.ComprasEstoque
@@ -157,7 +157,6 @@ namespace pim3semestre.Controllers
             if (compra.CompraStatus == "Concluído")
                 return RedirectToAction("Index");
 
-            // carrega todos os produtos necessários de uma vez (evita N+1)
             var ids = compra.Itens.Select(i => i.ProdutoID).ToList();
             var produtos = _db.Produtos
                 .Where(p => ids.Contains(p.ProdutoID))

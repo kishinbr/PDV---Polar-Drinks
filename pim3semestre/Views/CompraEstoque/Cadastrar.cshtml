@@ -11,18 +11,14 @@
 
     @if (TempData["MensagemSucesso"] != null)
     {
-        <div class="alert bg-success text-light" role="alert">
-            @TempData["MensagemSucesso"]
-        </div>
+        <div class="alert bg-success text-light">@TempData["MensagemSucesso"]</div>
     }
     else if (TempData["MensagemErro"] != null)
     {
-        <div class="alert bg-danger text-light" role="alert">
-            @TempData["MensagemErro"]
-        </div>
+        <div class="alert bg-danger text-light">@TempData["MensagemErro"]</div>
     }
 
-    <div id="erroTabela" class="alert bg-danger text-light d-none" role="alert">
+    <div id="erroTabela" class="alert bg-danger text-light d-none">
         Adicione pelo menos um produto antes de salvar.
     </div>
 
@@ -55,11 +51,11 @@
                             <span asp-validation-for="Itens[@i].ProdutoID" class="text-danger"></span>
                         </td>
                         <td>
-                            <input class="form-control" asp-for="Itens[@i].Quantidade" />
+                            <input class="form-control" asp-for="Itens[@i].Quantidade" type="text" />
                             <span asp-validation-for="Itens[@i].Quantidade" class="text-danger"></span>
                         </td>
                         <td>
-                            <input class="form-control preco-input" asp-for="Itens[@i].Preco" />
+                            <input class="form-control preco-input" asp-for="Itens[@i].Preco" type="text"/>
                             <span asp-validation-for="Itens[@i].Preco" class="text-danger"></span>
                         </td>
                         <td class="text-center">
@@ -74,7 +70,7 @@
             <button type="button" id="addItem" class="btn btn-primary">
                 + Adicionar Produto
             </button>
-            <span class="fw-bold text-light" id="totalPreco">Total: R$ 0,00</span>
+            <span class="fw-bold text-light" id="totalPreco">Total: R$ 0.00</span>
         </div>
 
         <div class="d-flex gap-3">
@@ -86,24 +82,18 @@
 
 @section Scripts {
     <script>
-        let index = @Model.Itens.Count;
-
         const options = `@Html.Raw(string.Join("", Model.Produtos.Select(p => $"<option value='{p.Value}'>{p.Text}</option>")))`;
+
+        function proximoIndice() {
+            return $("#tabelaItens tbody tr").length;
+        }
 
         function renumerarIndices() {
             $("#tabelaItens tbody tr").each(function (i) {
                 $(this).find("select").attr("name", `Itens[${i}].ProdutoID`);
                 $(this).find("input[name$='.Quantidade']").attr("name", `Itens[${i}].Quantidade`);
-                $(this).find("input[name$='.Preco'], input.preco-input").attr("name", `Itens[${i}].Preco`);
-
-                $(this).find("span[data-valmsg-for]").each(function () {
-                    let field = $(this).attr("data-valmsg-for");
-                    let newField = field.replace(/Itens\[\d+\]/, `Itens[${i}]`);
-                    $(this).attr("data-valmsg-for", newField);
-                });
+                $(this).find("input[name$='.Preco']").attr("name", `Itens[${i}].Preco`);
             });
-
-            index = $("#tabelaItens tbody tr").length;
         }
 
         function atualizarBotaoSalvar() {
@@ -112,54 +102,36 @@
 
         function atualizarTotal() {
             let total = 0;
+
             $("#tabelaItens tbody tr").each(function () {
                 let qtd = parseFloat($(this).find('input[name$=".Quantidade"]').val());
-                let preco = parseFloat($(this).find('input[name$=".Preco"]').val().replace(',', '.'));
+                let preco = parseFloat($(this).find('input[name$=".Preco"]').val());
+
                 if (!isNaN(qtd) && !isNaN(preco)) {
                     total += qtd * preco;
                 }
             });
-            $("#totalPreco").text("Total: R$ " + total.toFixed(2).replace('.', ','));
+
+            $("#totalPreco").text("Total: R$ " + total.toFixed(2));
         }
 
         $("#addItem").click(function () {
+
+            let index = proximoIndice();
+
             let newRow = $(`
                 <tr>
                     <td>
-                        <select name="Itens[${index}].ProdutoID" class="form-select"
-                                data-val="true"
-                                data-val-required="Selecione um produto">
+                        <select name="Itens[${index}].ProdutoID" class="form-select">
                             <option value="">Selecione</option>
                             ${options}
                         </select>
-                        <span class="text-danger field-validation-valid"
-                              data-valmsg-for="Itens[${index}].ProdutoID"
-                              data-valmsg-replace="true"></span>
                     </td>
                     <td>
-                        <input type="number" name="Itens[${index}].Quantidade" class="form-control"
-                               value="0" min="0"
-                               data-val="true"
-                               data-val-required="Informe a quantidade"
-                               data-val-range="Quantidade inválida"
-                               data-val-range-min="0"
-                               data-val-range-max="2147483647" />
-                        <span class="text-danger field-validation-valid"
-                              data-valmsg-for="Itens[${index}].Quantidade"
-                              data-valmsg-replace="true"></span>
+                        <input type="text" name="Itens[${index}].Quantidade" class="form-control" value="0" />
                     </td>
                     <td>
-                        <input type="text" name="Itens[${index}].Preco" class="form-control preco-input"
-                               value="0,00"
-                               data-val="true"
-                               data-val-required="Informe o preço"
-                               data-val-number="Preço deve ser um número"
-                               data-val-range="Preço inválido"
-                               data-val-range-min="0.00"
-                               data-val-range-max="999999.99" />
-                        <span class="text-danger field-validation-valid"
-                              data-valmsg-for="Itens[${index}].Preco"
-                              data-valmsg-replace="true"></span>
+                        <input type="text" name="Itens[${index}].Preco" class="form-control preco-input" value="0.00" />
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-remover">X</button>
@@ -168,8 +140,9 @@
             `);
 
             $("#tabelaItens tbody").append(newRow);
+
+            renumerarIndices();
             atualizarTotal();
-            index++;
             atualizarBotaoSalvar();
         });
 
@@ -181,23 +154,64 @@
         });
 
         $(document).on("input", 'input[name$=".Quantidade"]', function () {
-            this.value = this.value.replace(/[^0-9]/g, '');
-            atualizarTotal();
-        });
+            let value = this.value;
 
-        $(document).on("input", 'input.preco-input', function () {
-            let value = this.value.replace(/[^0-9,]/g, '');
+            value = value.replace(/[^0-9]/g, '');
 
-            if (value.startsWith('0') && value.length > 1 && value[1] !== ',') {
+            if (value.length > 1) {
                 value = value.replace(/^0+/, '');
             }
 
-            let parts = value.split(',');
-            if (parts.length > 2) value = parts[0] + ',' + parts[1];
-            if (value.includes(',')) {
-                let [intPart, decPart] = value.split(',');
-                value = intPart + ',' + decPart.substring(0, 2);
+            if (value.length > 4) {
+                value = value.substring(0, 4);
             }
+
+            if (value !== '') {
+                let numero = parseInt(value);
+
+                if (numero > 9999) {
+                    value = '9999';
+                }
+            }
+
+            this.value = value;
+            atualizarTotal();
+        });
+
+                $(document).on("input", 'input.preco-input', function () {
+            let value = this.value;
+
+            value = value.replace(/[^0-9.]/g, '');
+
+            let parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts[1];
+            }
+
+            let [intPart, decPart] = value.split('.');
+
+            if (intPart && intPart.length > 1) {
+                intPart = intPart.replace(/^0+/, '');
+            }
+
+            if (intPart) {
+                intPart = intPart.substring(0, 5);
+            }
+
+            if (decPart !== undefined) {
+                decPart = decPart.substring(0, 2);
+                value = intPart + '.' + decPart;
+            } else {
+                value = intPart;
+            }
+
+            if (value !== '' && !isNaN(value)) {
+                let numero = parseFloat(value);
+                if (numero > 99999.99) {
+                    value = '99999.99';
+                }
+            }
+
             this.value = value;
             atualizarTotal();
         });
@@ -216,10 +230,9 @@
             renumerarIndices();
 
             $('input.preco-input').each(function () {
-                this.value = this.value.replace(',', '.');
                 if (this.value.trim() === '' || isNaN(this.value)) {
-                    this.value = '0';
-                }
+                this.value = '0.00';
+            }
             });
 
             $('input[name$=".Quantidade"]').each(function () {
