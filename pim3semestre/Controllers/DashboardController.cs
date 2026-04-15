@@ -96,8 +96,9 @@ namespace pim3semestre.Controllers
             model.DinheiroTotal = todasVendas.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
 
             // ESTOQUE
-            model.SemEstoque = produtos.Count(p => (p.ProdutoQtdEstoque ?? 0) == 0);
-            model.EstoqueBaixo = produtos.Count(p => (p.ProdutoQtdEstoque ?? 0) <= p.ProdutoEstoqueMinimo);
+            model.SemEstoque = produtos.Count(p => p.ProdutoAtivo && (p.ProdutoQtdEstoque ?? 0) == 0);
+
+            model.EstoqueBaixo = produtos.Count(p =>p.ProdutoAtivo && (p.ProdutoQtdEstoque ?? 0) <= p.ProdutoEstoqueMinimo);
 
             // PRODUTOS
             model.ProdutoMaisVendido = todasVendas
