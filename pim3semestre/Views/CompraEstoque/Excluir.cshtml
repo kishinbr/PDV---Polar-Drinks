@@ -3,18 +3,19 @@
 @{
     ViewData["Title"] = "Excluir Reabastecimento";
 }
-
-<div class="container bg-dark p-4 rounded-4">
+ 
+<div class="container bg-dark p-4 rounded-4 p-5 mt-5">
 
     <h2 class="text-danger mb-4">
         Excluir Reabastecimento #@Model.Compra.CompraID
     </h2>
 
+
     <div class="text-light mb-3">
         <strong>Data:</strong> @Model.Compra.CompraData.ToString("dd/MM/yyyy") <br />
         <strong>Fornecedor:</strong> @Model.Compra.Fornecedor?.FornecedorNome <br />
         <strong>Status:</strong> @Model.Compra.CompraStatus <br />
-        <strong>Data Entrega:</strong> @Model.Compra.CompraDataEntrega?.ToString("dd/MM/yyyy") <br />
+        <strong>Data de Entrega:</strong> Não Entregue <br />
     </div>
 
 
@@ -55,7 +56,7 @@
             <input type="hidden" name="id" value="@Model.Compra.CompraID" />
 
             <button type="submit" class="btn btn-danger">
-                <i class="bi bi-trash"></i> Confirmar Exclusão
+                 Confirmar Exclusão
             </button>
         </form>
 

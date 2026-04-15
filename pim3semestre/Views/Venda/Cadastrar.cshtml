@@ -3,7 +3,7 @@
     ViewData["Title"] = "Vendas";
 }
 
-<div class="container bg-dark p-4 rounded-4 mt-3">
+<div class="container bg-dark p-4 rounded-4 mt-4 mb-4 shadow-lg">
 
     @if (TempData["MensagemSucesso"] != null)
     {
@@ -52,7 +52,7 @@
                 </div>
 
                 <button type="button" id="btnAdicionar"
-                        class="btn btn-success w-100 mt-2"
+                        class="btn btn-success w-100 mt-2 border border-black border-3"
                         style="height:60px; font-size:18px;">
                     Adicionar Item
                 </button>
@@ -80,9 +80,9 @@
             </div>
 
             <!-- TOTAL FIXO -->
-            <div class="bg-black p-3 rounded-3 text-center mt-auto">
+            <div class="bg-black p-3 rounded-3 text-center mt-auto border border-light border-3">
                 <h3 class="text-light m-0">
-                    Total: <span id="totalVenda">R$ 0.00</span>
+                   Valor Total: <span id="totalVenda">R$ 0.00</span>
                 </h3>
             </div>
 
@@ -109,7 +109,7 @@
 
             <!-- BOTÃO CONFIRMAR -->
             <div class="mt-3">
-                <button id="btnConfirmar" type="submit" class="btn btn-success w-100" disabled>
+                <button id="btnConfirmar" type="submit" class="btn btn-success w-100 border border-black border-3" disabled>
                     Confirmar Venda
                 </button>
             </div>

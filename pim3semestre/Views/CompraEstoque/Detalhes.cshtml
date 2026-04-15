@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Detalhes";
 }
-<div class="container bg-dark p-4 rounded-4">
+<div class="container bg-dark p-4 rounded-4 p-5 mt-5">
 
     <h2 class="text-light mb-4">
         Detalhes da Compra #@Model.Compra.CompraID
@@ -12,7 +12,7 @@
         <strong>Data:</strong> @Model.Compra.CompraData.ToString("dd/MM/yyyy") <br />
         <strong>Fornecedor:</strong> @Model.Compra.Fornecedor?.FornecedorNome <br />
         <strong>Status:</strong> @Model.Compra.CompraStatus <br />
-        <strong>Data Entrega:</strong> @Model.Compra.CompraDataEntrega?.ToString("dd/MM/yyyy") <br />
+        <strong>Data de Entrega:</strong> @(Model.Compra.CompraDataEntrega?.ToString("dd/MM/yyyy") ?? "Não Entregue") <br />
     </div>
 
     <table class="table table-light table-hover">

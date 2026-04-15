@@ -3,10 +3,22 @@
     ViewData["Title"] = "Editar Fornecedor";
 }
 
-<div class="container bg-dark p-5 rounded-5 mt-5">
+<div class="container bg-dark rounded-5 p-5 mt-5">
     <div class="mb-3 text-center">
         <h1 class="text-light">Editar Fornecedor</h1>
     </div>
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert bg-success text-light">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light">
+            @TempData["MensagemErro"]
+        </div>
+    }
 
     <form method="post" asp-action="Editar">
 

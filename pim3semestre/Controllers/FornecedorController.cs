@@ -95,13 +95,6 @@ namespace pim3semestre.Controllers
         [HttpPost]
         public IActionResult Cadastrar(FornecedorModel fornecedor)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["MensagemErro"] = "Erro ao cadastrar fornecedor.";
-                return View(fornecedor);
-            }
-
-            // Verificar se o CNPJ já existe no banco de dados
             bool cnpjExiste = _db.Fornecedores
                 .Any(x => x.FornecedorCNPJ == fornecedor.FornecedorCNPJ);
 
@@ -110,6 +103,14 @@ namespace pim3semestre.Controllers
                 ModelState.AddModelError("FornecedorCNPJ", "Este CNPJ já está cadastrado.");
                 return View(fornecedor);
             }
+            if (!ModelState.IsValid)
+            {
+                TempData["MensagemErro"] = "Erro ao cadastrar fornecedor.";
+                return View(fornecedor);
+            }
+
+            // Verificar se o CNPJ já existe no banco de dados
+            
 
             _db.Fornecedores.Add(fornecedor);
             _db.SaveChanges();

@@ -32,18 +32,28 @@ namespace pim3semestre.Controllers
         [HttpPost]
         public IActionResult Cadastrar(ProdutoModel produto)
         {
-            //verificar se o modelo é válido
-            if (ModelState.IsValid)
-            {
-                //caso seja válido, adicionar o produto ao banco de dados
-                _db.Produtos.Add(produto);
-                _db.SaveChanges();
 
-                TempData["MensagemSucesso"] = "Produto cadastrado com sucesso!";
-                return RedirectToAction("Index");
+            bool codigoExiste = _db.Produtos
+                .Any(x => x.ProdutoCodBarra == produto.ProdutoCodBarra);
+
+            if (codigoExiste)
+            {
+                ModelState.AddModelError("ProdutoCodBarra", "Este código de barras já está cadastrado.");
             }
-            //caso contrário, retornar para a view com os erros de validação
-            return View(produto);
+
+
+            if (!ModelState.IsValid)
+            {
+                TempData["MensagemErro"] = "Erro ao cadastrar produto.";
+                return View(produto);
+            }
+
+
+            _db.Produtos.Add(produto);
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Produto cadastrado com sucesso!";
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

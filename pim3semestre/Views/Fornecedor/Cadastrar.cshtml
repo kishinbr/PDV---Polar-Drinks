@@ -7,12 +7,24 @@
     <div class="mb-3 text-center">
         <h1 class="text-light">Cadastrar Fornecedor</h1>
     </div>
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert bg-success text-light">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light">
+            @TempData["MensagemErro"]
+        </div>
+    }
 
-    <form method="post" asp-controller="Fornecedor" asp-action="Cadastrar" autocomplete="nope">
+    <form method="post" asp-controller="Fornecedor" asp-action="Cadastrar" autocomplete="off">
 
         <div class="mb-4">
             <label class="form-label text-light">Nome</label>
-            <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNome" maxlength="50">
+            <input type="text" class="form-control bg-white text-dark" asp-for="FornecedorNome" maxlength="80" autocomplete="off">
             <span asp-validation-for="FornecedorNome" class="text-danger"></span>
         </div>
 
@@ -43,7 +55,7 @@
 
             <div class="col-md-6">
                 <label class="form-label text-light">E-mail</label>
-                <input type="email" class="form-control bg-white text-dark" asp-for="FornecedorEmail" maxlength="50">
+                <input type="email" class="form-control bg-white text-dark" asp-for="FornecedorEmail" maxlength="80">
                 <span asp-validation-for="FornecedorEmail" class="text-danger"></span>
             </div>
         </div>
