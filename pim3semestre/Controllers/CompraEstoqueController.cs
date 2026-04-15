@@ -212,7 +212,7 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public IActionResult ConfirmarExclusao(int id)
         {
             var compra = _db.ComprasEstoque
