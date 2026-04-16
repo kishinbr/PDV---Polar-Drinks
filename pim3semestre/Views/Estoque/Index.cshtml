@@ -3,6 +3,7 @@
 }
 
 @model IEnumerable<ProdutoModel>
+@using System.Globalization
 
 <div class="container p-4 rounded-4">
 
@@ -51,12 +52,14 @@
 
                         <td>@produto.ProdutoDescricao</td>
 
+                        
+
                         <td class="text-end">
-                            @produto.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("C")
+                            @("R" + produto.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("C"))
                         </td>
 
                         <td class="text-end">
-                            @produto.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("C")
+                            @("R" + produto.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("C"))
                         </td>
 
                         <td class="text-end">

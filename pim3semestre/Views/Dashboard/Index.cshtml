@@ -1,8 +1,8 @@
 ﻿@model pim3semestre.Models.DashboardViewModel
-
+@using System.Globalization
 <div class="container-fluid mt-2">
 
-    <h3 class="fw-bold mb-4">📊 Dashboard</h3>
+    <h3 class="fw-bold mb-4">Dashboard</h3>
 
     <div class="row g-3 mb-4 ">
 
@@ -13,30 +13,30 @@
             <div class="row g-3">
 
                 <div class="col-md-6">
-                    <div class="card bg-dark text-white p-3 shadow rounded-4">
+                    <div class="card bg-dark-subtle text-dark p-3 shadow rounded-4">
                         <small>Total Hoje</small>
-                        <h4>@Model.TotalHoje.ToString("C")</h4>
+                        <h4> @("R" + Model.TotalHoje.ToString("C"))</h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="card bg-dark text-white p-3 shadow rounded-4">
+                    <div class="card bg-dark-subtle text-dark p-3 shadow rounded-4">
                         <small>Total Mês</small>
-                        <h4>@Model.TotalMes.ToString("C")</h4>
+                        <h4> @("R" + Model.TotalMes.ToString("C"))</h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="card bg-dark-subtle  p-3 shadow rounded-4">
                         <small>Lucro Hoje</small>
-                        <h4>@Model.LucroHoje.ToString("C")</h4>
+                        <h4> @("R" + Model.LucroHoje.ToString("C"))</h4>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="card bg-dark-subtle p-3 shadow rounded-4">
                         <small>Lucro Mês</small>
-                        <h4>@Model.LucroMes.ToString("C")</h4>
+                        <h4> @("R" + Model.LucroMes.ToString("C"))</h4>
                     </div>
                 </div>
 
@@ -76,7 +76,7 @@
                     <div class="card bg-success text-white p-3 shadow rounded-4 h-100">
                         <small><img src="/img/pix.png" width="16" class="me-1">Pix</small>
                         <div>@Model.QtdPix vendas</div>
-                        <h5>@Model.TotalPix.ToString("C")</h5>
+                        <h5> @("R" + Model.TotalPix.ToString("C"))</h5>
                     </div>
                 </div>
 
@@ -84,7 +84,9 @@
                     <div class="card bg-primary text-white p-3 shadow rounded-4 h-100">
                         <small>💳 Cartão</small>
                         <div>@Model.QtdCartao vendas</div>
-                        <h5>@Model.TotalCartao.ToString("C")</h5>
+                        <h5>
+                            @("R" + Model.PrevisaoAmanha.ToString("C"))
+                        </h5>
                     </div>
                 </div>
 
@@ -92,7 +94,7 @@
                     <div class="card bg-warning text-white p-3 shadow rounded-4 h-100">
                         <small>💵 Dinheiro</small>
                         <div>@Model.QtdDinheiro vendas</div>
-                        <h5>@Model.TotalDinheiro.ToString("C")</h5>
+                        <h5> @("R" + Model.TotalDinheiro.ToString("C"))</h5>
                     </div>
                 </div>
 
@@ -134,7 +136,7 @@
         <!-- ESTOQUE -->
         <div class="col-md-4">
             <div class="card shadow rounded-4 h-100 p-3">
-                <h6 class="mb-3">📦 Estoque</h6>
+                <h6 class="mb-3">Estoque</h6>
 
                 <div class="d-flex justify-content-between align-items-center mb-3 p-2 rounded bg-warning">
                     <div>
@@ -158,14 +160,14 @@
         <!-- PRODUTOS -->
         <div class="col-md-4">
             <div class="card shadow rounded-4 h-100 p-3">
-                <h6 class="mb-3">🏆 Produtos</h6>
+                <h6 class="mb-3">Produtos</h6>
 
-                <div class="mb-3 p-2 rounded bg-dark text-white">
+                <div class="mb-3 p-2 rounded bg-success-subtle text-dark">
                     <small>Mais Vendido</small>
                     <h5 class="mb-0">@Model.ProdutoMaisVendido</h5>
                 </div>
 
-                <div class="p-2 rounded bg-dark-subtle">
+                <div class="p-2 rounded bg-success-subtle text-dark">
                     <small>Mais Lucrativo</small>
                     <h5 class="mb-0">@Model.ProdutoMaisLucrativo</h5>
                 </div>
@@ -176,11 +178,13 @@
         <!-- ANÁLISE -->
         <div class="col-md-4">
             <div class="card shadow rounded-4 h-100 p-3 d-flex flex-column justify-content-center">
-                <h6 class="mb-3">📈 Análise</h6>
+                <h6 class="mb-3">Análise</h6>
 
                 <div class="text-center">
                     <small>Previsão de vendas amanhã</small>
-                    <h3 class="mt-2">@Model.PrevisaoAmanha.ToString("C")</h3>
+                    <h3 class="mt-2">
+                        @("R" + Model.PrevisaoAmanha.ToString("C"))
+                    </h3>
                 </div>
 
             </div>

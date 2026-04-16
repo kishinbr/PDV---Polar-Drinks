@@ -58,7 +58,7 @@ else if (TempData["MensagemErro"] != null)
                     <td data-order="@venda.VendaData.ToString("yyyy-MM-dd")">
                         @venda.VendaData.ToString("dd/MM/yyyy HH:mm")
                     </td>
-                    <td>@venda.VendaValorTotal.ToString("C")</td>
+                    <td>@("R" + venda.VendaValorTotal.ToString("C"))</td>
                     <td>
                         @if (venda.VendaTipoPagamento == "Pix")
                         {
