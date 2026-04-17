@@ -43,6 +43,7 @@
 
         // PREVISÃO
         public decimal PrevisaoAmanha { get; set; }
+        public List<string> Top3ProdutosAlta { get; set; } = new();
 
         // GRÁFICOS
         public List<decimal> VendasHojeLista { get; set; } = new();

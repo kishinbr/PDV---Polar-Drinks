@@ -117,9 +117,110 @@ namespace pim3semestre.Controllers
                 .FirstOrDefault();
 
             // PREVISÃO
-            model.PrevisaoAmanha = vendas7Dias.Any()
-                ? vendas7Dias.Average(v => v.VendaValorTotal)
-                : 0;
+                var vendasPorDia = vendas7Dias
+                .GroupBy(v => v.VendaData.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => g.Sum(v => v.VendaValorTotal))
+                .ToList();
+
+                //n = número de dias com vendas , max 7
+                int n = vendasPorDia.Count;
+                
+                //n deve ser maior que 1 , pois para fazer uma reta de regressão linear , precisamos de pelo menos 2 pontos
+                if (n > 1)
+                {
+                    //criando as variáveis para calcular a reta de regressão linear (y = ax + b)
+                    double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+
+                    //para cada dia de venda , calculamos os valores de x e y para a reta de regressão linear
+                    for (int i = 0; i < n; i++)
+                    {
+                        //x é o número do dia (1, 2, 3, ..., n) e y é o valor total das vendas desse dia
+                        double x = i + 1; 
+                        double y = (double)vendasPorDia[i];
+
+                        //somatorias de x, y, xy e x^2 para calcular os coeficientes da reta de regressão linear
+                        sumX += x;
+                        sumY += y;
+                        sumXY += x * y;
+                        sumX2 += x * x;
+                    }
+
+                    //calculo dos coeficientes a e b da reta de regressão linear (y = ax + b)
+                    double a = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                    double b = (sumY - a * sumX) / n;
+
+                    //previsão para o próximo dia (n + 1) usando a reta de regressão linear
+                    double previsao = a * (n + 1) + b;
+
+                    //garantindo que a previsão não seja negativa
+                    model.PrevisaoAmanha = (decimal)Math.Max(previsao, 0);
+
+                }
+                //se não houver vendas suficientes para calcular a previsão, definimos como 0
+                else
+                {
+                    model.PrevisaoAmanha = 0;
+
+                }
+
+                var vendasPorProduto = _db.Vendas
+                .Include(v => v.Itens)
+                    .ThenInclude(i => i.Produto)
+                .ToList()
+                .SelectMany(v => v.Itens)
+                .Where(i => i.Produto != null)
+                .GroupBy(i => i.ProdutoID)
+                .Select(g => new
+                {
+                    ProdutoNome = g.First().Produto.ProdutoNome,
+                    Dados = g.Select(x => new
+                    {
+                        Data = x.Venda.VendaData.Date,
+                        Quantidade = x.ItemVendaQtd
+                    })
+                })
+                .ToList();
+
+                var tendencias = new List<(string Nome, double Slope)>();
+
+                foreach (var p in vendasPorProduto)
+                {
+                    var dadosPorDia = p.Dados
+                        .GroupBy(x => x.Data)
+                        .OrderBy(x => x.Key)
+                        .Select(g => g.Sum(x => x.Quantidade))
+                        .ToList();
+
+                    int quantidadeDias = dadosPorDia.Count;
+
+                    if (quantidadeDias < 2)
+                        continue;
+
+                    double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+
+                    for (int i = 0; i < quantidadeDias; i++)
+                    {
+                        double x = i + 1;
+                        double y = (double)dadosPorDia[i];
+
+                        sumX += x;
+                        sumY += y;
+                        sumXY += x * y;
+                        sumX2 += x * x;
+                    }
+
+                    double slope = (quantidadeDias * sumXY - sumX * sumY) /
+                                   (quantidadeDias * sumX2 - sumX * sumX);
+
+                    tendencias.Add((p.ProdutoNome, slope));
+                }
+
+                model.Top3ProdutosAlta = tendencias
+                    .OrderByDescending(t => t.Slope)
+                    .Take(3)
+                    .Select(t => t.Nome)
+                    .ToList();
 
             // GRÁFICOS
             model.VendasHojeLista = vendasHoje

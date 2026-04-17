@@ -134,7 +134,7 @@
     <div class="row g-3 mb-4">
 
         <!-- ESTOQUE -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow rounded-4 h-100 p-3">
                 <h6 class="mb-3">Estoque</h6>
 
@@ -143,7 +143,6 @@
                         <small>Estoque Baixo</small>
                         <h5 class="mb-0">@Model.EstoqueBaixo</h5>
                     </div>
-                    
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center p-2 rounded bg-danger text-white">
@@ -151,14 +150,13 @@
                         <small>Sem Estoque</small>
                         <h5 class="mb-0">@Model.SemEstoque</h5>
                     </div>
-                    
                 </div>
 
             </div>
         </div>
 
         <!-- PRODUTOS -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow rounded-4 h-100 p-3">
                 <h6 class="mb-3">Produtos</h6>
 
@@ -175,16 +173,63 @@
             </div>
         </div>
 
+        <!-- TOP 3 PRODUTOS EM ALTA (NOVO) -->
+        <div class="col-md-3">
+            <div class="card shadow rounded-4 h-100 p-3">
+                <h6 class="mb-3">Top 3 em Alta </h6>
+
+                @if (Model.Top3ProdutosAlta.Any())
+                {
+                    <!-- TOP 1 OURO -->
+                    <div class="mb-2 p-2 rounded text-dark text-center bg-warning-subtle">
+                        <small>#1</small>
+                        <h6 class="mb-0">@Model.Top3ProdutosAlta[0]</h6>
+                    </div>
+
+                    <!-- TOP 2 PRATA + TOP 3 BRONZE -->
+                    <div class="d-flex gap-2">
+
+                        @if (Model.Top3ProdutosAlta.Count > 1)
+                        {
+                            <div class="flex-fill p-2 rounded text-dark text-center bg-light">
+                                <small>#2</small>
+                                <h6 class="mb-0">@Model.Top3ProdutosAlta[1]</h6>
+                            </div>
+                        }
+
+                        @if (Model.Top3ProdutosAlta.Count > 2)
+                        {
+                            <div class="flex-fill p-2 rounded text-dark text-center"
+                                 style="background: linear-gradient(135deg, #CD7F32, #B87333);">
+                                <small>#3</small>
+                                <h6 class="mb-0">@Model.Top3ProdutosAlta[2]</h6>
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <small class="text-muted">Sem dados suficientes</small>
+                }
+
+            </div>
+        </div>
+
         <!-- ANÁLISE -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow rounded-4 h-100 p-3 d-flex flex-column justify-content-center">
+
                 <h6 class="mb-3">Análise</h6>
 
-                <div class="text-center">
-                    <small>Previsão de vendas amanhã</small>
-                    <h3 class="mt-2">
+                <div class="flex-fill d-flex flex-column justify-content-center align-items-center text-center bg-dark-subtle">
+
+                    <small class="text-muted">Previsão de vendas amanhã</small>
+
+                    <h3 class="mt-2 fw-bold">
                         @("R" + Model.PrevisaoAmanha.ToString("C"))
                     </h3>
+
                 </div>
 
             </div>
