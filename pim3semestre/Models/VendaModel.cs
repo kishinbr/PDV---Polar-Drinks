@@ -14,6 +14,8 @@ namespace pim3semestre.Models
 
         public DateTime VendaData { get; set; } = DateTime.Now;
 
+        public bool VendaCancelada { get; set; }
+
         public List<ItemVendaModel> Itens { get; set; } = new List<ItemVendaModel>();
     }
     

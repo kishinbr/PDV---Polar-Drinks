@@ -3,21 +3,19 @@
     ViewData["Title"] = "Histórico de Vendas";
 }
 
-@if (TempData["MensagemSucesso"] != null)
-{
-    <div class="alert bg-success text-light">
-        @TempData["MensagemSucesso"]
-    </div>
-}
-else if (TempData["MensagemErro"] != null)
-{
-    <div class="alert bg-danger text-light">
-        @TempData["MensagemErro"]
-    </div>
-}
-
-
 <div class="container p-4 rounded-4 ">
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert bg-success text-light">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light">
+            @TempData["MensagemErro"]
+        </div>
+    }
 
     <div class="d-flex justify-content-between align-items-center mb-5 bg-dark text-light p-4 rounded-4 mt-2">
         <h1 class="m-0">Histórico de Vendas</h1>
@@ -47,6 +45,7 @@ else if (TempData["MensagemErro"] != null)
                 <th>Data / Hora</th>
                 <th>Valor Total</th>
                 <th>Tipo Pagamento</th>
+                <th>Status</th>
                 <th class="text-center">Detalhes</th>
             </tr>
         </thead>
@@ -73,12 +72,36 @@ else if (TempData["MensagemErro"] != null)
                             <span class="badge bg-primary">Cartão</span>
                         }
                     </td>
+                    <td>
+                        @if (venda.VendaCancelada)
+                        {
+                            <span class="badge bg-danger">Cancelada</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Concluída</span>
+                        }
                     <td class="text-center">
                         <a class="btn btn-primary btn-sm"
                                asp-action="Detalhes"
                                asp-route-id="@venda.VendaID">
                             <i class="bi bi-file-earmark-text-fill"></i>
                         </a>
+
+                            @{
+                                var podeCancelar = DateTime.Now <= venda.VendaData.AddHours(24);
+                            }
+                           
+
+                            @if (!venda.VendaCancelada && podeCancelar)
+                            {
+                                <a class="btn btn-danger btn-sm"
+                                       asp-action="Cancelar"
+                                       asp-route-id="@venda.VendaID">
+                                    <i class="bi bi-x-circle"></i>
+                                </a>
+                            }
+                         
                     </td>
                 </tr>
             }

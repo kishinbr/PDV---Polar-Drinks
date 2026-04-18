@@ -153,5 +153,68 @@ namespace pim3semestre.Controllers
                 return View("Cadastrar", venda);
             }
         }
+        public IActionResult Cancelar(int id)
+        {
+            var venda = _db.Vendas
+                .Include(v => v.Itens)
+                .ThenInclude(i => i.Produto)
+                .FirstOrDefault(v => v.VendaID == id);
+
+            if (venda == null)
+                return NotFound();
+
+            return View(venda);
+        }
+        public IActionResult CancelarVenda(int id)
+        {
+            var venda = _db.Vendas
+                .Include(v => v.Itens)
+                .ThenInclude(i => i.Produto)
+                .FirstOrDefault(v => v.VendaID == id);
+
+            if (venda == null)
+                return NotFound();
+
+            if (DateTime.Now > venda.VendaData.AddHours(24))
+            {
+                TempData["MensagemErro"] = "Não é possível cancelar a venda após 24 horas.";
+                return RedirectToAction("Index");
+            }
+
+            if (venda.VendaCancelada)
+            {
+                TempData["MensagemErro"] = "Venda já está cancelada.";
+                return RedirectToAction("Index");
+            }
+
+            var produtos = _db.Produtos
+                .Where(p => venda.Itens.Select(i => i.ProdutoID).Contains(p.ProdutoID))
+                .ToList();
+
+            foreach (var item in venda.Itens)
+            {
+                var produto = produtos.First(p => p.ProdutoID == item.ProdutoID);
+
+                // 
+                produto.ProdutoQtdEstoque += item.ItemVendaQtd;
+
+                // 
+                _db.MovimentacoesEstoque.Add(new MovimentacaoEstoqueModel
+                {
+                    ProdutoID = produto.ProdutoID,
+                    MovimentacaoQtd = item.ItemVendaQtd,
+                    MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Cancelamento,
+                    MovimentacaoData = DateTime.Now,
+                    ItemVendaID = item.ItemVendaID
+                });
+            }
+
+            venda.VendaCancelada = true;
+
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Venda cancelada com sucesso!";
+            return RedirectToAction("Index");
+        }
     }
 }

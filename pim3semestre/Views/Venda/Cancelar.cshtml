@@ -1,32 +1,22 @@
-﻿
-@model pim3semestre.Models.VendaModel
+﻿@model pim3semestre.Models.VendaModel
 @{
-    ViewData["Title"] = "Histórico de Vendas";
+    ViewData["Title"] = "Cancelar Venda";
 }
-
 
 <div class="container bg-dark p-4 rounded-4 mt-5">
 
 
-   
-    <h2 class="text-light mb-4">Detalhes da Venda #@Model.VendaID</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light m-0">Detalhes da Venda #@Model.VendaID</h2>
 
-    @if (Model.VendaCancelada)
-    {
-        <div class="text-danger text-center bg-danger-subtle fw-bold mb-3">
-            <i class="bi bi-x-circle"></i> VENDA CANCELADA
-        </div>
-    }
-
-    
+ 
+    </div>
 
     <div class="text-light mb-3">
         <strong>Data:</strong> @Model.VendaData.ToString("dd/MM/yyyy") <br />
         <strong>Hora:</strong> @Model.VendaData.ToString("HH:mm") <br />
         <strong>Pagamento:</strong> @Model.VendaTipoPagamento <br />
     </div>
-    
-
 
     <table class="table table-light">
         <thead>
@@ -44,13 +34,29 @@
                     <td>@item.Produto?.ProdutoNome</td>
                     <td>@item.ItemVendaQtd</td>
                     <td>@item.ItemVendaPreco.ToString("C")</td>
-                    <td class ="text-end">@item.ItemVendaTotal.ToString("C")</td>
+                    <td class="text-end">@item.ItemVendaTotal.ToString("C")</td>
                 </tr>
             }
         </tbody>
     </table>
-    <div class="text-end text-light mt-3"> <h4>Total:   @Model.VendaValorTotal.ToString("C")</h4> </div>
-    <a asp-action="Index" class="btn btn-primary">Voltar</a>
 
+    <div class="text-end text-light mt-3">
+        <h4>Total: @Model.VendaValorTotal.ToString("C")</h4>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-action="Index" class="btn btn-primary">
+            Voltar
+        </a>
+
+        @if (!Model.VendaCancelada)
+        {
+            <a asp-action="CancelarVenda"
+                   asp-route-id="@Model.VendaID"
+                   class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Cancelar Venda
+            </a>
+        }
+    </div>
 
 </div>

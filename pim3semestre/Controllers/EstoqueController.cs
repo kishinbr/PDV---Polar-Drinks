@@ -74,6 +74,14 @@ namespace pim3semestre.Controllers
         public IActionResult Editar(ProdutoModel produto)
         {
             //verificar se o modelo é válido
+            bool codigoExiste = _db.Produtos
+            .Any(x => x.ProdutoCodBarra == produto.ProdutoCodBarra
+                   && x.ProdutoID != produto.ProdutoID);
+
+            if (codigoExiste)
+            {
+                ModelState.AddModelError("ProdutoCodBarra", "Este código de barras já está cadastrado.");
+            }
             if (!ModelState.IsValid)
             {
                 //caso contrário, retornar para a view com os erros de validação

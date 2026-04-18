@@ -12,11 +12,11 @@ namespace pim3semestre.Models
         public string? FornecedorNome { get; set; }
 
         [Required(ErrorMessage = "O CNPJ é obrigatório")]
-        [StringLength(18, ErrorMessage = "O CNPJ deve ter no máximo 18 caracteres")]
+        [StringLength(18, MinimumLength = 18, ErrorMessage = "CNPJ deve ter 18 caracteres")]
         public string? FornecedorCNPJ { get; set; }
 
 
-        [StringLength(15, ErrorMessage = "O telefone deve ter no máximo 15 caracteres")]
+        [StringLength(15, MinimumLength = 15, ErrorMessage = "O telefone deve ter 15 caracteres")]
         [Required(ErrorMessage = "O Telefone é obrigatório")]
         public string? FornecedorTelefone { get; set; }
 

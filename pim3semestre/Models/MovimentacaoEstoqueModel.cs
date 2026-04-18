@@ -9,6 +9,7 @@ namespace pim3semestre.Models
             public const string Entrada = "Entrada";
             public const string Saida = "Saida";
             public const string Edicao = "Edicao";
+            public const string Cancelamento = "Cancelamento";
         }
 
         [Key]

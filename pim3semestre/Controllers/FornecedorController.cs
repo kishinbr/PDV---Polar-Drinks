@@ -49,6 +49,14 @@ namespace pim3semestre.Controllers
         public IActionResult Editar(FornecedorModel fornecedor)
         {
             // Validação dos dados do formulário
+            bool cnpjExiste = _db.Fornecedores
+            .Any(x => x.FornecedorCNPJ == fornecedor.FornecedorCNPJ
+                   && x.FornecedorID != fornecedor.FornecedorID);
+            if (cnpjExiste)
+            {
+                ModelState.AddModelError("FornecedorCNPJ", "Este CNPJ já está cadastrado.");
+                return View(fornecedor);
+            }
             if (!ModelState.IsValid)
             {
                 // Se os dados forem inválidos, exibe a mensagem de erro e retorna para a view de edição

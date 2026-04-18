@@ -35,6 +35,7 @@
                    class="form-control bg-white text-dark"
                    asp-for="FornecedorCNPJ"
                    maxlength="18"
+                   minlength="18"
                    placeholder="00.000.000/0000-00"
                    autocomplete="off">
             <span asp-validation-for="FornecedorCNPJ" class="text-danger"></span>
@@ -48,6 +49,7 @@
                        class="form-control bg-white text-dark"
                        asp-for="FornecedorTelefone"
                        maxlength="15"
+                       minlength="15"
                        placeholder="(00) 00000-0000"
                        autocomplete="off">
                 <span asp-validation-for="FornecedorTelefone" class="text-danger"></span>
