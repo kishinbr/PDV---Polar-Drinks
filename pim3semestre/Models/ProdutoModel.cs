@@ -27,7 +27,7 @@ namespace pim3semestre.Models
         public decimal ProdutoPromocao { get; set; } = 0; 
 
         [Required(ErrorMessage = "O código de barras é obrigatório")]
-        [StringLength(20)]
+        [StringLength(20, MinimumLength = 20, ErrorMessage = "O código de barras deve ter 20 caracteres")]
         public string? ProdutoCodBarra { get; set; }
 
         [Required(ErrorMessage = "A quantidade é obrigatória")]
