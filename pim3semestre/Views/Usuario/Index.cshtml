@@ -1,0 +1,110 @@
+﻿@model IEnumerable<pim3semestre.Models.UsuarioModel>
+@{
+    ViewData["Title"] = "Usuários";
+}
+
+<div class="container bg-dark p-5 rounded-5 mt-3">
+
+    <div class="text-center mb-4">
+        <h2 class="text-light">Usuários</h2>
+    </div>
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert bg-success text-light" role="alert">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+    else if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert bg-danger text-light" role="alert">
+            @TempData["MensagemErro"]
+        </div>
+    }
+
+    <div class="mb-3 text-end">
+        <a asp-action="Cadastrar" class="btn btn-primary">+ Novo Usuário</a>
+    </div>
+
+    <table id="tabelaUsuarios" class="table table-light table-hover rounded-3 overflow-hidden">
+        <thead class="table-dark">
+            <tr>
+                <th>Nome</th>
+                <th>Usuário</th>
+                <th>Perfil</th>
+                <th>Criado em</th>
+                <th>Status</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td class="align-middle">@u.UsuarioNome</td>
+                    <td class="align-middle">@u.UsuarioLogin</td>
+
+                    <td class="align-middle">
+                        @if (u.UsuarioPerfil == "Admin")
+                        {
+                            <span class="badge bg-primary">Admin</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Funcionário</span>
+                        }
+                    </td>
+
+                    <td class="align-middle">
+                        @u.UsuarioCriadoEm.ToString("dd/MM/yyyy HH:mm")
+                    </td>
+
+                    <td class="align-middle">
+                        @if (u.UsuarioAtivo)
+                        {
+                            <span class="badge bg-success">Ativo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inativo</span>
+                        }
+                    </td>
+
+                    <td class="text-center align-middle">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a asp-action="AlterarSenha" asp-route-id="@u.UsuarioID"
+                                   class="btn btn-sm btn-warning">
+                                Alterar Senha
+                            </a>
+
+                            <form asp-action="AlternarAtivo" asp-route-id="@u.UsuarioID"
+                                  method="post" class="d-inline">
+                                <button type="submit"
+                                        class="btn btn-sm @(u.UsuarioAtivo ? "btn-danger" : "btn-success")">
+                                    @(u.UsuarioAtivo ? "Desativar" : "Ativar")
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#tabelaUsuarios').DataTable({
+            responsive: true,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+            },
+
+            columnDefs: [
+                { orderable: false, targets: [5] }, // Ações
+                { className: "text-start", targets: [0, 1, 2, 3, 4] },
+                { className: "text-center", targets: [5] }
+            ]
+        });
+    });
+</script>

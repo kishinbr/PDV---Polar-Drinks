@@ -15,6 +15,7 @@ namespace pim3semestre.Controllers
         {
             _db = db;
         }
+        [AdminFilter]
         // Ação para exibir a lista de vendas, com filtros opcionais por data
         public IActionResult Index(DateTime? dataInicio, DateTime? dataFim)
         {
@@ -32,6 +33,7 @@ namespace pim3semestre.Controllers
             return View(vendas);
         }
         // Ação para exibir os detalhes de uma venda específica, incluindo os itens e produtos relacionados
+        [AdminFilter]
         public IActionResult Detalhes(int id)
         {
             var venda = _db.Vendas
@@ -44,6 +46,7 @@ namespace pim3semestre.Controllers
 
             return View(venda);
         }
+
         // Ação para exibir o formulário de cadastro de venda, incluindo a lista de produtos ativos para seleção
         public IActionResult Cadastrar()
         {
@@ -153,6 +156,7 @@ namespace pim3semestre.Controllers
                 return View("Cadastrar", venda);
             }
         }
+        [AdminFilter]
         public IActionResult Cancelar(int id)
         {
             var venda = _db.Vendas
@@ -165,6 +169,7 @@ namespace pim3semestre.Controllers
 
             return View(venda);
         }
+        [AdminFilter]
         public IActionResult CancelarVenda(int id)
         {
             var venda = _db.Vendas

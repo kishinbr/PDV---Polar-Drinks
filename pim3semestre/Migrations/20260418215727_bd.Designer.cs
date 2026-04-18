@@ -12,8 +12,8 @@ using pim3semestre.Data;
 namespace pim3semestre.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260418172328_cancelarcompra")]
-    partial class cancelarcompra
+    [Migration("20260418215727_bd")]
+    partial class bd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,13 +209,15 @@ namespace pim3semestre.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MovimentacaoDescricao")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("MovimentacaoQtd")
                         .HasColumnType("int");
 
                     b.Property<string>("MovimentacaoTipo")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<int>("ProdutoID")
                         .HasColumnType("int");
@@ -279,6 +281,46 @@ namespace pim3semestre.Migrations
                     b.ToTable("Produtos");
                 });
 
+            modelBuilder.Entity("pim3semestre.Models.UsuarioModel", b =>
+                {
+                    b.Property<int>("UsuarioID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioID"));
+
+                    b.Property<bool>("UsuarioAtivo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UsuarioCriadoEm")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UsuarioLogin")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UsuarioNome")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UsuarioPerfil")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioSenhaHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UsuarioID");
+
+                    b.HasIndex("UsuarioLogin")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
+                });
+
             modelBuilder.Entity("pim3semestre.Models.VendaModel", b =>
                 {
                     b.Property<int>("VendaID")
@@ -294,7 +336,9 @@ namespace pim3semestre.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VendaTipoPagamento")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<decimal>("VendaValorTotal")
                         .HasPrecision(18, 2)

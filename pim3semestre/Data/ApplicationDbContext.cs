@@ -16,6 +16,7 @@ namespace pim3semestre.Data
         public DbSet<VendaModel> Vendas { get; set; }
         public DbSet<ItemVendaModel> ItensVenda { get; set; }
         public DbSet<MovimentacaoEstoqueModel> MovimentacoesEstoque { get; set; }
+        public DbSet<UsuarioModel> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,8 +31,8 @@ namespace pim3semestre.Data
                 .HasForeignKey(c => c.FornecedorID);
 
             modelBuilder.Entity<FornecedorModel>()
-            .HasIndex(f => f.FornecedorCNPJ)
-            .IsUnique();
+                .HasIndex(f => f.FornecedorCNPJ)
+                .IsUnique();
 
             modelBuilder.Entity<CompraEstoqueModel>()
                 .Ignore(c => c.CompraValorTotal);
@@ -91,7 +92,7 @@ namespace pim3semestre.Data
 
             modelBuilder.Entity<ProdutoModel>()
                 .Property(p => p.ProdutoPromocao)
-                .HasPrecision(5, 2); 
+                .HasPrecision(5, 2);
 
             // ITEM COMPRA
             modelBuilder.Entity<ItemCompraModel>()
@@ -115,6 +116,11 @@ namespace pim3semestre.Data
             modelBuilder.Entity<VendaModel>()
                 .Property(v => v.VendaValorTotal)
                 .HasPrecision(18, 2);
+
+            // USUARIO — login único
+            modelBuilder.Entity<UsuarioModel>()
+                .HasIndex(u => u.UsuarioLogin)
+                .IsUnique();
         }
     }
 }

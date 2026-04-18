@@ -32,9 +32,6 @@
             <i class="bi bi-house-fill"></i> Home
         </a>
 
-        <a asp-controller="Dashboard" asp-action="Index">
-            <i class="bi bi-graph-up"></i> Dashboard
-        </a>
 
         <div class="menu-section">ESTOQUE</div>
 
@@ -42,9 +39,6 @@
             <i class="bi bi-box-seam"></i> Produtos
         </a>
 
-        <a asp-controller="Estoque" asp-action="Movimentacoes">
-            <i class="bi bi-arrow-left-right"></i> Movimentações
-        </a>
 
         
         <div class="menu-section">VENDAS</div>
@@ -53,28 +47,21 @@
             <i class="bi bi-cart-check"></i> Vendas
         </a>
 
-        <a asp-controller="Venda" asp-action="Index">
-            <i class="bi bi-receipt"></i> Histórico
-        </a>
+
 
         <div class="menu-section">FORNECEDORES</div>
 
         <a asp-controller="Fornecedor" asp-action="Index">
             <i class="bi bi-truck"></i> Fornecedor
         </a>
-        <a asp-controller="CompraEstoque" asp-action="Index">
-            <i class="bi bi-bag-plus"></i> Reabastecer
-        </a>
+
         <div class="menu-section">ACESSIBILIDADE</div>
 
         <a href="javascript:void(0)" onclick="toggleLibras()" id="btnLibras">
             <i class="bi bi-universal-access"></i> Ativar LIBRAS
         </a>
-        <div class="menu-section">Acesso</div>
+        <div class="menu-section">SAIR</div>
 
-        <a asp-controller="Usuario" asp-action="Index">
-            <i class="bi bi-people-fill"></i> Usuários
-        </a>
 
         <a asp-controller="Auth" asp-action="Deslogar">
             <i class="bi bi-box-arrow-right"></i> Deslogar
@@ -101,9 +88,6 @@
             <i class="bi bi-house-fill"></i> Home
         </a>
 
-        <a class="menu-item" href="/Dashboard/Index">
-            <i class="bi bi-graph-up"></i> Dashboard
-        </a>
        
         <div class="menu-section">ESTOQUE</div>
 
@@ -111,9 +95,6 @@
             <i class="bi bi-box-seam"></i> Produtos
         </a>
 
-        <a class="menu-item" href="/Estoque/Movimentacoes">
-            <i class="bi bi-arrow-left-right"></i> Movimentações
-        </a>
 
         <div class="menu-section">VENDAS</div>
 
@@ -121,33 +102,22 @@
             <i class="bi bi-cart-check"></i> Vendas
         </a>
 
-        <a class="menu-item" href="/Venda/Index">
-            <i class="bi bi-receipt"></i> Histórico
-        </a>
-
         <div class="menu-section">FORNECEDORES</div>
 
         <a class="menu-item" href="/Fornecedor/Index">
             <i class="bi bi-truck"></i> Fornecedor
         </a>
-        <a class="menu-item" href="/CompraEstoque/Index">
-            <i class="bi bi-bag-plus"></i> Reabastecer
-        </a>
+   
         <div class="menu-section">ACESSIBILIDADE</div>
 
         <a class="menu-item" href="javascript:void(0)" onclick="toggleLibras()" id="btnLibrasMobile">
             <i class="bi bi-universal-access"></i> Ativar LIBRAS
         </a>
-
-        <div class="menu-section">Acesso</div>
-            
-            <a class="menu-item" href="/Usuario/Index">
-             <i class="bi bi-people-fill"></i> Usuários
-            </a>
+        <div class="menu-section">SAIR</div>
 
             <a class="menu-item" href="/Auth/Deslogar">
             <i class="bi bi-box-arrow-right"></i> Deslogar
-            </a>
+        </a>
 
     </div>
 </div>

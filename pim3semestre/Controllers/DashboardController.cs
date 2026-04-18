@@ -7,6 +7,7 @@ using pim3semestre.Models;
 namespace pim3semestre.Controllers
 {
     [AuthFilter]
+    [AdminFilter]
     public class DashboardController : Controller
     {
         readonly ApplicationDbContext _db;

@@ -56,9 +56,9 @@ $(document).ready(function () {
         paging: true,
 
         columnDefs: [
-            { orderable: false, targets: [8] }, // desabilita ordenação na coluna Ações
+            //{ orderable: false, targets: [8] }, // desabilita ordenação na coluna Ações
             { className: "text-start", targets: [1, 2, 3,4] },
-            { className: "text-center", targets: [8] } // centraliza os botões de Ações
+            //{ className: "text-center", targets: [8] } // centraliza os botões de Ações
         ],
 
         language: {

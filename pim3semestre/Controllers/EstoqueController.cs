@@ -22,6 +22,7 @@ namespace pim3semestre.Controllers
             var produtos = _db.Produtos.ToList();
             return View(produtos);
         }
+        [AdminFilter]
         // Ação para exibir o formulário de cadastro de produto
         public IActionResult Cadastrar()
         {
@@ -30,6 +31,7 @@ namespace pim3semestre.Controllers
 
         // Ação para processar o formulário de cadastro de produto
         [HttpPost]
+        [AdminFilter]
         public IActionResult Cadastrar(ProdutoModel produto)
         {
 
@@ -57,6 +59,7 @@ namespace pim3semestre.Controllers
         }
 
         [HttpGet]
+        [AdminFilter]
         public IActionResult Editar(int? id)
         {
             if (id == null || id == 0)
@@ -71,6 +74,7 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
+        [AdminFilter]
         public IActionResult Editar(ProdutoModel produto)
         {
             //verificar se o modelo é válido
@@ -114,6 +118,7 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
+        [AdminFilter]
         public IActionResult EdicaoRapida(int ProdutoID, decimal? ProdutoPrecoVenda, decimal? ProdutoPromocao)
         {
             // Verificar se os dados são válidos
@@ -154,6 +159,7 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
+        [AdminFilter]
         public IActionResult AjustarEstoque(int ProdutoID, int NovaQuantidade, string Descricao)
         {
             
@@ -191,6 +197,7 @@ namespace pim3semestre.Controllers
 
 
         // Ação para exibir as movimentações de estoque de um produto
+        [AdminFilter]
         public IActionResult Movimentacoes(int? produtoId)
         {
             // Obter a lista de produtos para exibir no dropdown

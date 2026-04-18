@@ -28,6 +28,7 @@ namespace pim3semestre.Controllers
 
         //ação para exibir o formulário de edição de fornecedor
         [HttpGet]
+        [AdminFilter]
         public IActionResult Editar(int? id)
         {
             if (id == null || id == 0)
@@ -46,6 +47,7 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
+        [AdminFilter]
         public IActionResult Editar(FornecedorModel fornecedor)
         {
             // Validação dos dados do formulário
@@ -94,6 +96,7 @@ namespace pim3semestre.Controllers
         }
 
         //ação para exibir o formulário de cadastro de fornecedor
+        [AdminFilter]
         public IActionResult Cadastrar()
         {
             return View();
@@ -101,6 +104,7 @@ namespace pim3semestre.Controllers
 
         //ação para processar o formulário de cadastro de fornecedor
         [HttpPost]
+        [AdminFilter]
         public IActionResult Cadastrar(FornecedorModel fornecedor)
         {
             bool cnpjExiste = _db.Fornecedores

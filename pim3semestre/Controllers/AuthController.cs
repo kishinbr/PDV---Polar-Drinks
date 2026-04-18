@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using pim3semestre.Data;
 using pim3semestre.Filters;
 
 namespace pim3semestre.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IConfiguration _config;
+        private readonly ApplicationDbContext _db;
 
-        public AuthController(IConfiguration config)
+        public AuthController(ApplicationDbContext db)
         {
-            _config = config;
+            _db = db;
         }
 
         public IActionResult Login()
@@ -20,13 +21,14 @@ namespace pim3semestre.Controllers
         [HttpPost]
         public IActionResult Login(string usuario, string senha)
         {
-            var usuarioConfig = _config["Auth:Usuario"];
-            var senhaConfig = _config["Auth:Senha"];
+            var user = _db.Usuarios
+                .FirstOrDefault(u => u.UsuarioLogin == usuario && u.UsuarioAtivo);
 
-            if (usuario == usuarioConfig && senha == senhaConfig)
+            if (user != null && BCrypt.Net.BCrypt.Verify(senha, user.UsuarioSenhaHash))
             {
                 HttpContext.Session.SetString("Logado", "true");
-                HttpContext.Session.SetString("Usuario", usuario);
+                HttpContext.Session.SetString("Usuario", user.UsuarioLogin);
+                HttpContext.Session.SetString("Perfil", user.UsuarioPerfil);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -45,6 +47,11 @@ namespace pim3semestre.Controllers
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
+        }
+
+        public IActionResult AcessoNegado()
+        {
+            return View();
         }
     }
 }

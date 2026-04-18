@@ -9,6 +9,7 @@ using pim3semestre.ViewModels;
 namespace pim3semestre.Controllers
 {
     [AuthFilter]
+    [AdminFilter]
     public class CompraEstoqueController : Controller
     {
         private readonly ApplicationDbContext _db;

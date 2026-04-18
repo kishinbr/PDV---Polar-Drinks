@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using pim3semestre.Data;
+using pim3semestre.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 
@@ -20,6 +21,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 var app = builder.Build();
+
+// ===== SEED: cria o admin padrão se não existir nenhum usuário =====
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+
+        if (!db.Usuarios.Any())
+        {
+            db.Usuarios.Add(new UsuarioModel
+            {
+                UsuarioNome = "Admin",
+                UsuarioLogin = "admin",
+                UsuarioSenhaHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                UsuarioPerfil = "Admin",   
+                UsuarioAtivo = true,
+                UsuarioCriadoEm = DateTime.Now
+            });
+            db.SaveChanges();
+    }
+    }
+// ===================================================================
 
 if (!app.Environment.IsDevelopment())
 {
