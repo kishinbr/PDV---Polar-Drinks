@@ -41,7 +41,7 @@ namespace pim3semestre.Controllers
 
             var vendas7Dias = _db.Vendas
                 .Include(v => v.Itens).ThenInclude(i => i.Produto)
-                .Where(v => v.VendaData >= inicio7Dias)
+                .Where(v => v.VendaData.Date >= hoje.AddDays(-6))
                 .ToList();
 
             var vendas30Dias = _db.Vendas
@@ -229,22 +229,40 @@ namespace pim3semestre.Controllers
                 .Select(g => (decimal)g.Count())
                 .ToList();
 
-            model.VendasSemana = vendas7Dias
+            var ultimos7Dias = Enumerable.Range(0, 7)
+            .Select(i => hoje.AddDays(-i))
+            .OrderBy(d => d)
+            .ToList();
+
+            var vendasAgrupadas = vendas7Dias
                 .GroupBy(v => v.VendaData.Date)
-                .OrderBy(g => g.Key)
-                .Select(g => (decimal)g.Count())
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            model.VendasSemana = ultimos7Dias
+                .Select(dia => (decimal)(vendasAgrupadas.ContainsKey(dia) ? vendasAgrupadas[dia] : 0))
                 .ToList();
 
-            model.VendasMesGrafico = vendas30Dias
-                .GroupBy(v => v.VendaData.Date)
-                .OrderBy(g => g.Key)
-                .Select(g => (decimal)g.Count())
+            var ultimos30Dias = Enumerable.Range(0, 30)
+                .Select(i => hoje.AddDays(-i))
+                .OrderBy(d => d)
                 .ToList();
 
-            model.VendasAno = vendasAno
+            var vendasAgrupadasMes = vendas30Dias
+                .GroupBy(v => v.VendaData.Date)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            model.VendasMesGrafico = ultimos30Dias
+                .Select(dia => (decimal)(vendasAgrupadasMes.ContainsKey(dia) ? vendasAgrupadasMes[dia] : 0))
+                .ToList();
+
+            var mesesAno = Enumerable.Range(1, 12).ToList();
+
+            var vendasAgrupadasAno = vendasAno
                 .GroupBy(v => v.VendaData.Month)
-                .OrderBy(g => g.Key)
-                .Select(g => (decimal)g.Count())
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            model.VendasAno = mesesAno
+                .Select(mes => (decimal)(vendasAgrupadasAno.ContainsKey(mes) ? vendasAgrupadasAno[mes] : 0))
                 .ToList();
 
             return View(model);

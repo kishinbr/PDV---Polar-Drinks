@@ -214,6 +214,9 @@ namespace pim3semestre.Controllers
             // Obter as movimentações de estoque do produto selecionado, ordenadas pela data mais recente
             var movimentacoes = _db.MovimentacoesEstoque
                 .Where(m => m.ProdutoID == produtoId)
+                .Include(m => m.ItemVenda)
+                    .ThenInclude(iv => iv.Venda)
+                .Include(m => m.ItemCompra)
                 .OrderByDescending(m => m.MovimentacaoData)
                 .ToList();
 

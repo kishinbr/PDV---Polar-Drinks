@@ -52,10 +52,11 @@
     <table id="tabelaMovimentacoes" class="table table-success table-hover">
         <thead>
             <tr>
-                <th>Data</th>
-                <th class="text-center">Tipo</th>
-                <th class="text-center">Quantidade</th>
-                <th>Descrição</th>
+                <th style="width: 15%;">Data</th>
+                <th class="text-center" style="width: 10%;">Tipo</th>
+                <th class="text-center" style="width: 10%;">Quantidade</th>
+                <th class="text-center" style="width: 10%;">ID</th>
+                <th style="width: 20%;" >Descrição</th>
             </tr>
         </thead>
 
@@ -74,11 +75,11 @@
                             }
                             else if (mov.MovimentacaoTipo == "Saida")
                             {
-                                <span class="badge bg-danger">Venda</span>
+                                <span class="badge bg-primary">Venda</span>
                             }
                             else if (mov.MovimentacaoTipo == "Cancelamento")
                             {
-                                <span class="badge bg-warning text-dark">Cancelamento</span>
+                                <span class="badge bg-danger text-light">Cancelamento</span>
                             }
                             else
                             {
@@ -111,8 +112,31 @@
                                 }
                             }
                         </td>
+                        <td>
+                            @if (mov.ItemVenda != null)
+                            {
+                                <span class="badge bg-primary">
+                                     #@mov.ItemVenda.VendaID
+                                </span>
+                            }
+                            else if (mov.ItemCompra != null)
+                            {
+                                <span class="badge bg-success">
+                                    #@mov.ItemCompra.ItemCompraID
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
 
-                        <td>@mov.MovimentacaoDescricao</td>
+                        
+                            <td title="@mov.MovimentacaoDescricao">
+                                @(mov.MovimentacaoDescricao != null && mov.MovimentacaoDescricao.Length > 20
+                                    ? mov.MovimentacaoDescricao.Substring(0, 20) + "..."
+                                    : mov.MovimentacaoDescricao)
+                            </td>
                     </tr>
                 }
             }
@@ -178,9 +202,9 @@
                 autoWidth: false,
 
                 columnDefs: [
-                    { orderable: false, targets: [3] },
+                    { orderable: false, targets: [] },
                     // { className: "text-end", targets: [2] },
-                    { className: "text-center", targets: [1,2] }
+                    { className: "text-center", targets: [1,2,3] }
                 ],
 
                 order: [],

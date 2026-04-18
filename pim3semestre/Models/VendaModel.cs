@@ -10,7 +10,9 @@ namespace pim3semestre.Models
 
         public decimal VendaValorTotal { get; set; }
 
-        public string? VendaTipoPagamento { get; set; } 
+        [Required]
+        [StringLength(30)]
+        public string VendaTipoPagamento { get; set; }
 
         public DateTime VendaData { get; set; } = DateTime.Now;
 

@@ -14,11 +14,13 @@ namespace pim3semestre.Models
 
         [Key]
         public int MovimentacaoID { get; set; }
-
+        
+        [StringLength(30)]
         public string? MovimentacaoTipo { get; set; }
 
         public int MovimentacaoQtd { get; set; }
 
+        [StringLength(50)]
         public string? MovimentacaoDescricao { get; set; }
 
         public DateTime MovimentacaoData { get; set; } = DateTime.Now;

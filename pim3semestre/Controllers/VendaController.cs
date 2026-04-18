@@ -121,7 +121,7 @@ namespace pim3semestre.Controllers
                 _db.Vendas.Add(venda);
                 _db.SaveChanges();
 
-                // atualiza estoque e registra movimentações usando a lista já carregada
+                
                 foreach (var item in venda.Itens)
                 {
                     var produto = produtos.First(p => p.ProdutoID == item.ProdutoID);

@@ -50,7 +50,11 @@
                     <tr>
                         <td>@produto.ProdutoNome</td>
 
-                        <td>@produto.ProdutoDescricao</td>
+                        <td title="@produto.ProdutoDescricao">
+                            @(produto.ProdutoDescricao != null && produto.ProdutoDescricao.Length > 20
+                                ? produto.ProdutoDescricao.Substring(0, 20) + "..."
+                                : produto.ProdutoDescricao)
+                        </td>
 
                         
 
