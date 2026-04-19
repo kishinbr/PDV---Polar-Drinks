@@ -9,13 +9,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ================== PAGAMENTOS ==================
     graficoPagamentos = new Chart(document.getElementById('graficoPagamentos'), {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: ['Pix', 'Cartão', 'Dinheiro'],
+            //labels: ['Pix', 'Cartão', 'Dinheiro'],
             datasets: [{
                 data: pagamentos.hoje,
-                backgroundColor: ['#198754', '#0D6EFD', '#f59e0b']
+                backgroundColor: ['#00BDAE', 'mediumpurple', '#f59e0b'],
+                borderWidth: 2,
+                borderColor: '#13161d' // separa as fatias no tema escuro
             }]
+        },
+        options: {
+            cutout: '65%', // furo no meio
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#fff',
+                        padding: 10
+                    }
+                }
+            }
         }
     });
 
@@ -28,7 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const total = dados.reduce((a, b) => a + b, 0);
         document.getElementById("qtdPagamentosLabel").innerText =
-            `Qtd vendas: ${total}`;
+            `Total de vendas: ${total}`;
+
+        document.getElementById("lblPix").innerText = dados[0];
+        document.getElementById("lblCartao").innerText = dados[1];
+        document.getElementById("lblDinheiro").innerText = dados[2];
     };
 
     // ================== VENDAS ==================
@@ -102,14 +120,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         else if (tipo === "ano") {
-            const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-            const hoje = new Date();
-
-            labels = dados.map((_, i) => {
-                let data = new Date();
-                data.setMonth(hoje.getMonth() - (dados.length - 1 - i));
-                return meses[data.getMonth()];
-            });
+            const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+                "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+            labels = dados.map((_, i) => meses[i]);
         }
 
         graficoVendas.data.labels = labels;
@@ -118,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const total = dados.reduce((a, b) => a + b, 0);
         document.getElementById("totalVendasLabel").innerText =
-            `Qtd vendas: ${total}`;
+            `Total de vendas: ${total}`;
     };
 
     // inicialização

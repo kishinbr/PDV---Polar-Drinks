@@ -24,28 +24,28 @@
                 <div class="row g-3">
 
                     <div class="col-md-6">
-                        <div class="card border rounded-3 h-100 p-3" style="background:#13161d;">
+                        <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d; ">
                             <div class="mb-2 bg-primary" style="height:2px;"></div>
                             <div class="text-light mb-1">Total Hoje</div>
                             <div class="fw-semibold text-primary" style="font-size:1.35rem;">R$ @Model.TotalHoje.ToString("N2")</div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card border rounded-3 h-100 p-3" style="background:#13161d;">
+                        <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d;">
                             <div class="mb-2" style="height:2px; background:#a78bfa;"></div>
                             <div class="text-light mb-1">Total Mês</div>
                             <div class="fw-semibold " style="font-size:1.35rem; color:#a78bfa">R$ @Model.TotalMes.ToString("N2")</div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card border rounded-3 h-100 p-3" style="background:#13161d;">
+                        <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d;">
                             <div class="mb-2 bg-success" style="height:2px;"></div>
                             <div class="text-light mb-1">Lucro Hoje</div>
                             <div class="fw-semibold text-success" style="font-size:1.35rem;">R$ @Model.LucroHoje.ToString("N2")</div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card border rounded-3 h-100 p-3" style="background:#13161d;">
+                        <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d;">
                             <div class="mb-2 bg-warning" style="height:2px;"></div>
                             <div class="text-light mb-1">Lucro Mês</div>
                             <div class="fw-semibold text-warning" style="font-size:1.35rem;">R$ @Model.LucroMes.ToString("N2")</div>
@@ -56,16 +56,17 @@
                 </div>
 
                 <!-- GRÁFICO VENDAS -->
-                <div class="card shadow border rounded-4 p-3 flex-fil text-light" style="background:#13161d;">
+                <div class="card shadow border-5 rounded-4 p-3 flex-fil text-light" style="background:#13161d;">
 
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
                         <h6 class="mb-0">Vendas</h6>
 
-                        <span class="badge bg-light text-dark border" id="totalVendasLabel">
-                            Qtd vendas: 0
-                        </span>
+                        
 
                         <div class="btn-group btn-group-sm flex-wrap">
+                            <span class="btn btn-outline-primary" id="totalVendasLabel">
+                                Quantidade vendas: 0
+                            </span>
                             <button class="btn btn-outline-primary" onclick="atualizarVendas('hoje')">Hoje</button>
                             <button class="btn btn-outline-primary" onclick="atualizarVendas('semana')">7d</button>
                             <button class="btn btn-outline-primary" onclick="atualizarVendas('mes')">30d</button>
@@ -87,17 +88,17 @@
 
                     <!-- PIX -->
                     <div class="col-12 col-xl-4">
-                        <div class="card border p-3 shadow rounded-4 h-100"
-                             style="background:#13161d; border:1px solid rgba(255,255,255,0.07);">
+                        <div class="card border-5 p-3 shadow rounded-4 h-100"
+                             style="background:#13161d;">
 
-                            <small class="text-light d-flex align-items-center gap-1">
+                            <small class=" d-flex align-items-center gap-1" style="color:#00BDAE;">
                                 <img src="/img/pix.png" width="16">
                                 Pix
                             </small>
 
                             <div class="text-light">@Model.QtdPix vendas</div>
 
-                            <h5 style="color:#34d399;">
+                            <h5 style="color:#00BDAE;">
                                 @("R" + Model.TotalPix.ToString("C"))
                             </h5>
 
@@ -106,10 +107,10 @@
 
                     <!-- CARTÃO -->
                     <div class="col-12 col-xl-4">
-                        <div class="card border p-3 shadow rounded-4 h-100"
-                             style="background:#13161d; border:1px solid rgba(255,255,255,0.07);">
+                        <div class="card border-5 p-3 shadow rounded-4 h-100"
+                             style="background:#13161d;">
 
-                            <small class="text-light">💳 Cartão</small>
+                            <small style="color:#4f8ef7;"><i class="bi bi-credit-card" style="color:purple;"></i> Cartão</small>
 
                             <div class="text-light">@Model.QtdCartao vendas</div>
 
@@ -122,10 +123,10 @@
 
                     <!-- DINHEIRO -->
                     <div class="col-12 col-xl-4">
-                        <div class="card border p-3 shadow rounded-4 h-100"
-                             style="background:#13161d; border:1px solid rgba(255,255,255,0.07);">
+                        <div class="card border-5 p-3 shadow rounded-4 h-100"
+                             style="background:#13161d;">
 
-                            <small class="text-light">💵 Dinheiro</small>
+                            <small style="color:#f59e0b;"><i class="bi bi-cash" style="color:#f59e0b;"></i> Dinheiro</small>
 
                             <div class="text-light">@Model.QtdDinheiro vendas</div>
 
@@ -139,41 +140,75 @@
                 </div>
 
                 <!-- GRÁFICO PAGAMENTOS -->
-                <div class="card border rounded-4 p-3 flex-fill"
-                     style="background:#13161d; border:1px solid rgba(255,255,255,0.07);">
+                <div class="card border-5 rounded-4 p-3 flex-fill"
+                     style="background:#13161d;">
 
                     <!-- HEADER -->
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
 
-                        <h6 class="mb-0 text-light">Formas de Pagamento</h6>
-
-                        <span class="badge bg-success" id="qtdPagamentosLabel">
-                            Qtd vendas: 0
-                        </span>
+                        <h6 class="mb-0 text-light">Pagamento</h6>
 
                         <div class="btn-group btn-group-sm flex-wrap">
-                            <button class="btn btn-outline-success"
-                                    onclick="atualizarPagamentos('hoje')">
-                                Hoje
-                            </button>
-                            <button class="btn btn-outline-success"
-                                    onclick="atualizarPagamentos('semana')">
-                                7d
-                            </button>
-                            <button class="btn btn-outline-success"
-                                    onclick="atualizarPagamentos('mes')">
-                                30d
-                            </button>
-                            <button class="btn btn-outline-success"
-                                    onclick="atualizarPagamentos('total')">
-                                Total
-                            </button>
+                            <span class="btn btn-outline-success" id="qtdPagamentosLabel">
+                                Total de vendas: 0
+                            </span>
+
+                            <button class="btn btn-outline-success" onclick="atualizarPagamentos('hoje')">Hoje</button>
+                            <button class="btn btn-outline-success" onclick="atualizarPagamentos('semana')">7d</button>
+                            <button class="btn btn-outline-success" onclick="atualizarPagamentos('mes')">30d</button>
+                            <button class="btn btn-outline-success" onclick="atualizarPagamentos('total')">Total</button>
+                        </div>
+                    </div>
+
+                    <!-- ✅ LABELS (FORA DO HEADER) -->
+                    <div class="row g-2 mt-2">
+
+                        <!-- PIX -->
+                        <div class="col-12 col-md-4">
+                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 flex-nowrap"
+                                 style="background:#1a1e28;">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <span style="width:12px;height:12px;background:#00BDAE;flex-shrink:0;"></span>
+                                    <span class="text-light text-nowrap" style="font-size:.75rem;">Pix</span>
+                                </div>
+
+                                <span class="text-light fw-semibold" id="lblPix">0</span>
+                            </div>
+                        </div>
+
+                        <!-- CARTÃO -->
+                        <div class="col-12 col-md-4">
+                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 flex-nowrap"
+                                 style="background:#1a1e28;">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <span style="width:12px;height:12px;background:#4f8ef7;flex-shrink:0;"></span>
+                                    <span class="text-light text-nowrap" style="font-size:.75rem;">Cartão</span>
+                                </div>
+
+                                <span class="text-light fw-semibold" id="lblCartao">0</span>
+                            </div>
+                        </div>
+
+                        <!-- DINHEIRO -->
+                        <div class="col-12 col-md-4">
+                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 flex-nowrap"
+                                 style="background:#1a1e28;">
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <span style="width:12px;height:12px;background:#f59e0b;flex-shrink:0;"></span>
+                                    <span class="text-light text-nowrap" style="font-size:.75rem;">Dinheiro</span>
+                                </div>
+
+                                <span class="text-light fw-semibold" id="lblDinheiro">0</span>
+                            </div>
                         </div>
 
                     </div>
 
                     <!-- GRÁFICO -->
-                    <div class="d-flex justify-content-center align-items-center flex-fill">
+                    <div class="d-flex justify-content-center align-items-center flex-fill mt-3">
                         <canvas id="graficoPagamentos"
                                 style="max-width:280px; max-height:280px;"></canvas>
                     </div>
@@ -189,7 +224,7 @@
 
             <!-- Estoque -->
             <div class="col-6 col-md-3">
-                <div class="card border rounded-3 h-100 p-3" style="background:#13161d;">
+                <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d;">
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <i class="bi bi-box-seam" style="color:#f59e0b;"></i>
                         <span class="text-light">Estoque</span>
@@ -219,13 +254,13 @@
 
             <!-- Destaques -->
             <div class="col-6 col-md-3">
-                <div class="card border rounded-3 h-100 p-3"
+                <div class="card border-5 rounded-3 h-100 p-3"
                      style="background:#13161d;">
 
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <i class="bi bi-bag-check" style="color:#34d399; font-size:14px;"></i>
                         <span class="text-light">
-                            Destaques
+                            Produtos
                         </span>
                     </div>
 
@@ -261,10 +296,10 @@
 
             <!-- Top 3 -->
             <div class="col-6 col-md-3">
-                <div class="card border rounded-3 h-100 p-3" style="background:#13161d;">
+                <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d;">
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <i class="bi bi-fire" style="color:#f87171;"></i>
-                        <span class="text-light">Top 3 em Alta</span>
+                        <span class="text-light">Em Alta</span>
                     </div>
 
                     @if (Model.Top3ProdutosAlta != null && Model.Top3ProdutosAlta.Any())
@@ -273,7 +308,7 @@
                         for (int i = 0; i < Model.Top3ProdutosAlta.Count && i < 3; i++)
                         {
                             <div class="d-flex align-items-center gap-2 rounded-3 mb-2 p-2"
-                                 style="background:#1a1e28; border:1px solid rgba(255,255,255,0.07);">
+                                 style="background:#1a1e28;">
                                 <span style="font-size:.7rem; width:20px; color:@cores[i]; flex-shrink:0;">#@(i + 1)</span>
                                 <span class="text-light flex-fill text-truncate" style="font-size:.8rem;">@Model.Top3ProdutosAlta[i]</span>
                                 <i class="bi bi-arrow-up-short" style="color:#34d399; font-size:14px;"></i>
@@ -289,12 +324,12 @@
 
             <!-- Previsão -->
             <div class="col-6 col-md-3">
-                <div class="card border rounded-3 h-100 p-3 d-flex flex-column"
+                <div class="card border-5 rounded-3 h-100 p-3 d-flex flex-column"
                      style="background:#13161d;">
 
                     <div class="d-flex align-items-center gap-2 mb-3">
                         <i class="bi bi-graph-up-arrow" style="color:#a78bfa;"></i>
-                        <span class="text-light">Previsão Amanhã</span>
+                        <span class="text-light">Previsão de Vendas de Amanhã</span>
                     </div>
 
                     <div class="border rounded-3 flex-fill d-flex justify-content-center align-items-center p-3"

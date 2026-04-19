@@ -29,6 +29,7 @@ namespace pim3semestre.Controllers
                 HttpContext.Session.SetString("Logado", "true");
                 HttpContext.Session.SetString("Usuario", user.UsuarioLogin);
                 HttpContext.Session.SetString("Perfil", user.UsuarioPerfil);
+                HttpContext.Session.SetString("Nome", user.UsuarioNome);
                 return RedirectToAction("Index", "Home");
             }
 

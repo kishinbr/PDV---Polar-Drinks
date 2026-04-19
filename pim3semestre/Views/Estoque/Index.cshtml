@@ -31,14 +31,14 @@
         </div>
     }
 
-    <table id="Produtos" class="table table-secondary table-hover mb-auto">
+    <table id="Produtos" class="table table-success table-hover mb-auto">
         <thead>
             <tr>
                 <th style="width: 15%;">Nome</th>
                 <th style="width: 15%;">Descrição</th>
                 <th style="width: 10%;" class="text-end">Preço Custo</th>
                 <th style="width: 10%;" class="text-end">Preço Venda</th>
-                <th style="width: 8%;" class="text-end">Qtd</th>
+                <th style="width: 10%;" class="text-end">Qtd</th>
                 <th style="width: 5%;" class="text-center">Promoção</th>
                 <th style="width: 10%;" class="text-center">Status</th>
                 @if (Context.Session.GetString("Perfil") == "Admin")
@@ -109,21 +109,27 @@
                         @if (Context.Session.GetString("Perfil") == "Admin")
                         {
                         <td class="text-center">
-                            <a class="btn btn-warning btn-sm mx-1"
-                                   asp-controller="Estoque"
-                                   asp-action="Editar"
-                                   asp-route-id="@produto.ProdutoID">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
+                                <a class="btn btn-warning btn-sm mx-1"
+                                       asp-controller="Estoque"
+                                       asp-action="Editar"
+                                       asp-route-id="@produto.ProdutoID"
+                                       data-bs-toggle="tooltip"
+                                       title="Edição completa">
 
-                            <a class="btn btn-info btn-sm mx-1 btn-edicao-rapida"
-                                   data-bs-toggle="modal"
-                                   data-bs-target="#edicaoRapidaModal"
-                                   data-id="@produto.ProdutoID"
-                                   data-preco="@produto.ProdutoPrecoVenda"
-                                   data-promocao="@produto.ProdutoPromocao">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <a class="btn btn-info btn-sm mx-1 btn-edicao-rapida"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#edicaoRapidaModal"
+                                       data-id="@produto.ProdutoID"
+                                       data-preco="@produto.ProdutoPrecoVenda"
+                                       data-promocao="@produto.ProdutoPromocao"
+                                       
+                                       title="Edição rápida">
+
+                                    <i class="bi bi-feather"></i>
+                                </a>
                         </td>
                         }
                     </tr>

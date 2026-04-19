@@ -19,12 +19,20 @@
         <button class="btn btn-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
             <i class="bi bi-list"></i>
         </button>
-        <div> <img src="/img/polaria.png" width="32" height="32">Polar Drinks</div>
+        <div>
+            <img src="/img/polaria.png" width="32" height="32"> Polar Drinks
+        </div>
     </div>
 
     <div class="sidebar">
-        <div class="brand"><img src="/img/polaria.png" width="32" height="32"> Polar Drinks</div>
+        <div class="brand">
+            <img src="/img/polaria.png" width="32" height="32"> Polar Drinks 
+            <span style="font-size:.7rem; color:#6b7280; margin-top:2px;">
+            @Context.Session.GetString("Nome")
+            </span>
 
+         </div>
+        
 
         <div class="menu-section">GESTÃO</div>
 

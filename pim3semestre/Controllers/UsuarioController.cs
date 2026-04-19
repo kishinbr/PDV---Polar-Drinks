@@ -86,8 +86,16 @@ namespace pim3semestre.Controllers
             if (usuario == null)
                 return NotFound();
 
+
+            var usuarioLogado = HttpContext.Session.GetString("Usuario");
+            if (usuario.UsuarioLogin == usuarioLogado && usuario.UsuarioAtivo)
+            {
+                TempData["MensagemErro"] = "Você não pode desativar sua própria conta.";
+                return RedirectToAction("Index");
+            }
+
             if (usuario.UsuarioAtivo && usuario.UsuarioPerfil == "Admin"
-            && _db.Usuarios.Count(u => u.UsuarioAtivo && u.UsuarioPerfil == "Admin") == 1)
+                && _db.Usuarios.Count(u => u.UsuarioAtivo && u.UsuarioPerfil == "Admin") == 1)
             {
                 TempData["MensagemErro"] = "Não é possível desativar o único administrador ativo.";
                 return RedirectToAction("Index");
@@ -96,7 +104,7 @@ namespace pim3semestre.Controllers
             usuario.UsuarioAtivo = !usuario.UsuarioAtivo;
             _db.SaveChanges();
 
-            TempData["MensagemSucesso"] = $"Usuário '{usuario.UsuarioLogin}' " +
+            TempData["MensagemSucesso"] = $"Usuário '{usuario.UsuarioNome}' " +
                                           (usuario.UsuarioAtivo ? "ativado" : "desativado") + ".";
             return RedirectToAction("Index");
         }
