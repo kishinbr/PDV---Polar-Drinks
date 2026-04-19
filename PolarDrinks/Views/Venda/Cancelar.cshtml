@@ -1,0 +1,62 @@
+﻿@model PolarDrinks.Models.VendaModel
+@{
+    ViewData["Title"] = "Cancelar Venda";
+}
+
+<div class="container bg-dark p-4 rounded-4 mt-5">
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light m-0">Detalhes da Venda #@Model.VendaID</h2>
+
+ 
+    </div>
+
+    <div class="text-light mb-3">
+        <strong>Data:</strong> @Model.VendaData.ToString("dd/MM/yyyy") <br />
+        <strong>Hora:</strong> @Model.VendaData.ToString("HH:mm") <br />
+        <strong>Pagamento:</strong> @Model.VendaTipoPagamento <br />
+    </div>
+
+    <table class="table table-light">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Unitário</th>
+                <th class="text-end">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Itens)
+            {
+                <tr>
+                    <td>@item.Produto?.ProdutoNome</td>
+                    <td>@item.ItemVendaQtd</td>
+                    <td>@item.ItemVendaPreco.ToString("C")</td>
+                    <td class="text-end">@item.ItemVendaTotal.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end text-light mt-3">
+        <h4>Total: @Model.VendaValorTotal.ToString("C")</h4>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a asp-action="Index" class="btn btn-primary">
+            Voltar
+        </a>
+
+        @if (!Model.VendaCancelada)
+        {
+            <a asp-action="CancelarVenda"
+                   asp-route-id="@Model.VendaID"
+                   class="btn btn-danger">
+                    Cancelar Venda
+            </a>
+        }
+    </div>
+
+</div>
