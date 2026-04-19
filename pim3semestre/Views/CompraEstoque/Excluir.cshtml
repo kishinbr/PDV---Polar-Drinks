@@ -48,14 +48,14 @@
 
     <div class="d-flex gap-2 mt-3 justify-content-between">
 
-        <a asp-action="Index" class="btn btn-primary">
+        <a asp-action="Index" class="btn btn-primary" title="Cancelar Exclusão">
             Cancelar
         </a>
 
         <form asp-action="ConfirmarExclusao" method="post">
             <input type="hidden" name="id" value="@Model.Compra.CompraID" />
 
-            <button type="submit" class="btn btn-danger">
+            <button type="submit" class="btn btn-danger" title="Confirmar Exclusão">
                  Confirmar Exclusão
             </button>
         </form>

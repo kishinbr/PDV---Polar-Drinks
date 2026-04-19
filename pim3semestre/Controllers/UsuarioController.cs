@@ -119,15 +119,21 @@ namespace pim3semestre.Controllers
         }
 
         [HttpPost]
-        public IActionResult AlterarSenha(int id, string novaSenha, string confirmacaoSenha)
+        public IActionResult AlterarSenha(int id, string senhaAtual, string novaSenha, string confirmacaoSenha)
         {
             var usuario = _db.Usuarios.Find(id);
             if (usuario == null)
                 return NotFound();
 
+            if (!BCrypt.Net.BCrypt.Verify(senhaAtual, usuario.UsuarioSenhaHash))
+            {
+                ViewBag.Erro = "Senha atual incorreta.";
+                return View(usuario);
+            }
+
             if (string.IsNullOrWhiteSpace(novaSenha) || novaSenha.Length < 6)
             {
-                ViewBag.Erro = "A senha deve ter pelo menos 6 caracteres.";
+                ViewBag.Erro = "A nova senha deve ter pelo menos 6 caracteres.";
                 return View(usuario);
             }
 
@@ -140,7 +146,7 @@ namespace pim3semestre.Controllers
             usuario.UsuarioSenhaHash = BCrypt.Net.BCrypt.HashPassword(novaSenha);
             _db.SaveChanges();
 
-            TempData["MensagemSucesso"] = $"Senha de '{usuario.UsuarioLogin}' alterada com sucesso!";
+            TempData["MensagemSucesso"] = $"Senha de '{usuario.UsuarioNome}' alterada com sucesso!";
             return RedirectToAction("Index");
         }
     }

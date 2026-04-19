@@ -56,7 +56,7 @@
                 </div>
 
                 <!-- GRÁFICO VENDAS -->
-                <div class="card shadow border-5 rounded-4 p-3 flex-fil text-light" style="background:#13161d;">
+                <div class="card shadow border-5 rounded-4 p-3 flex-fill text-light" style="background:#13161d;">
 
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
                         <h6 class="mb-0">Vendas</h6>
@@ -77,6 +77,9 @@
                     <canvas id="graficoVendas" style="height:300px;"></canvas>
 
                 </div>
+                
+
+
 
             </div>
 
@@ -92,7 +95,7 @@
                              style="background:#13161d;">
 
                             <small class=" d-flex align-items-center gap-1" style="color:#00BDAE;">
-                                <img src="/img/pix.png" width="16">
+                                <i class="bi bi-x-diamond" style="color:#00BDAE;"></i>
                                 Pix
                             </small>
 
@@ -110,11 +113,11 @@
                         <div class="card border-5 p-3 shadow rounded-4 h-100"
                              style="background:#13161d;">
 
-                            <small style="color:#4f8ef7;"><i class="bi bi-credit-card" style="color:purple;"></i> Cartão</small>
+                            <small style="color:mediumpurple;"><i class="bi bi-credit-card" style="color:mediumpurple;"></i> Cartão</small>
 
                             <div class="text-light">@Model.QtdCartao vendas</div>
 
-                            <h5 style="color:#4f8ef7;">
+                            <h5 style="color:mediumpurple;">
                                 @("R" + Model.PrevisaoAmanha.ToString("C"))
                             </h5>
 
@@ -160,17 +163,17 @@
                         </div>
                     </div>
 
-                    <!-- ✅ LABELS (FORA DO HEADER) -->
-                    <div class="row g-2 mt-2">
+                    <!-- LABELS -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
 
                         <!-- PIX -->
-                        <div class="col-12 col-md-4">
-                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 flex-nowrap"
+                        <div class="flex-fill">
+                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2"
                                  style="background:#1a1e28;">
 
                                 <div class="d-flex align-items-center gap-2">
-                                    <span style="width:12px;height:12px;background:#00BDAE;flex-shrink:0;"></span>
-                                    <span class="text-light text-nowrap" style="font-size:.75rem;">Pix</span>
+                                    <span style="width:12px;height:12px;background:#00BDAE;"></span>
+                                    <span class="text-light">Pix</span>
                                 </div>
 
                                 <span class="text-light fw-semibold" id="lblPix">0</span>
@@ -178,13 +181,13 @@
                         </div>
 
                         <!-- CARTÃO -->
-                        <div class="col-12 col-md-4">
-                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 flex-nowrap"
+                        <div class="flex-fill">
+                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2"
                                  style="background:#1a1e28;">
 
                                 <div class="d-flex align-items-center gap-2">
-                                    <span style="width:12px;height:12px;background:#4f8ef7;flex-shrink:0;"></span>
-                                    <span class="text-light text-nowrap" style="font-size:.75rem;">Cartão</span>
+                                    <span style="width:12px;height:12px;background:mediumpurple;"></span>
+                                    <span class="text-light">Cartão</span>
                                 </div>
 
                                 <span class="text-light fw-semibold" id="lblCartao">0</span>
@@ -192,13 +195,13 @@
                         </div>
 
                         <!-- DINHEIRO -->
-                        <div class="col-12 col-md-4">
-                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 flex-nowrap"
+                        <div class="flex-fill">
+                            <div class="d-flex align-items-center justify-content-between rounded-3 px-3 py-2"
                                  style="background:#1a1e28;">
 
                                 <div class="d-flex align-items-center gap-2">
-                                    <span style="width:12px;height:12px;background:#f59e0b;flex-shrink:0;"></span>
-                                    <span class="text-light text-nowrap" style="font-size:.75rem;">Dinheiro</span>
+                                    <span style="width:12px;height:12px;background:#f59e0b;"></span>
+                                    <span class="text-light">Dinheiro</span>
                                 </div>
 
                                 <span class="text-light fw-semibold" id="lblDinheiro">0</span>
@@ -252,7 +255,7 @@
                 </div>
             </div>
 
-            <!-- Destaques -->
+            <!-- Produtos -->
             <div class="col-6 col-md-3">
                 <div class="card border-5 rounded-3 h-100 p-3"
                      style="background:#13161d;">
@@ -265,36 +268,42 @@
                     </div>
 
                     <!-- MAIS VENDIDO -->
-                    <div class="d-flex align-items-center gap-2 rounded-3 mb-2 p-2"
+                    <div class="d-flex align-items-center gap-2 flex-wrap rounded-3 mb-2 p-2"
                          style="background:#1a1e28;">
 
-                        <span class="text-light flex-fill text-truncate">
+                        <!-- Nome do produto -->
+                        <span class="text-light flex-grow-1">
                             @(Model.ProdutoMaisVendido ?? "—")
                         </span>
 
-                        <span style="color:#34d399">
-                            <i class="bi bi-plus-lg" style="color:#34d399; font-size:14px;"></i> Vendido
-                        </span>
-                    </div>
+                        <!-- Info (ícone + texto) -->
+                        <div class="d-flex align-items-center gap-1">
+                            <i class="bi bi-plus-lg" style="color:#34d399; font-size:14px;"></i>
+                            <span style="color:#34d399;">Vendido</span>
+                        </div>
 
+                    </div>
                     <!-- MAIS LUCRATIVO -->
-                    <div class="d-flex align-items-center gap-2 rounded-3 p-2"
+                    <div class="d-flex align-items-center gap-2 flex-wrap rounded-3 mb-2 p-2"
                          style="background:#1a1e28;">
 
 
-                        <span class="text-light flex-fill">
+                        <span class="text-light flex-grow-1">
                             @(Model.ProdutoMaisLucrativo ?? "—")
                         </span>
 
-                        <span style="color:#f87171">
-                            <i class="bi bi-plus-lg" style="color:#f87171; font-size:14px;"></i> Lucrativo
-                        </span>
+
+                        <div class="d-flex align-items-center gap-1">
+                            <i class="bi bi-plus-lg" style="color:#f87171; font-size:14px;"></i>
+                            <span style="color:#f87171;">Lucrativo</span>
+                        </div>
+
                     </div>
 
                 </div>
             </div>
 
-            <!-- Top 3 -->
+            <!-- Em Alta TOP3 -->
             <div class="col-6 col-md-3">
                 <div class="card border-5 rounded-3 h-100 p-3" style="background:#13161d;">
                     <div class="d-flex align-items-center gap-2 mb-3">
@@ -309,7 +318,22 @@
                         {
                             <div class="d-flex align-items-center gap-2 rounded-3 mb-2 p-2"
                                  style="background:#1a1e28;">
-                                <span style="font-size:.7rem; width:20px; color:@cores[i]; flex-shrink:0;">#@(i + 1)</span>
+                                <span style="width:20px; flex-shrink:0; color:@cores[i]; font-size:14px;">
+
+                                    @if (i == 0)
+                                    {
+                                        <i class="bi bi-1-square"></i>
+                                    }
+                                    else if (i == 1)
+                                    {
+                                        <i class="bi bi-2-square"></i>
+                                    }
+                                    else if (i == 2)
+                                    {
+                                        <i class="bi bi-3-square"></i>
+                                    }
+
+                                </span>
                                 <span class="text-light flex-fill text-truncate" style="font-size:.8rem;">@Model.Top3ProdutosAlta[i]</span>
                                 <i class="bi bi-arrow-up-short" style="color:#34d399; font-size:14px;"></i>
                             </div>

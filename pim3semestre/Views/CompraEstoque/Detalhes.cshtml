@@ -41,7 +41,7 @@
     <div class="text-end text-light mt-3"> <h4>Total: @Model.Compra.CompraValorTotal.ToString("C")</h4> </div>
 
     <div class="d-flex gap-2 mt-3 justify-content-lg-between">
-        <a asp-action="Index" class="btn btn-primary">
+        <a asp-action="Index" class="btn btn-primary" title="Voltar">
             Voltar
         </a>
 
@@ -49,7 +49,7 @@
         {
             <a asp-action="ConfirmarEntrega"
                    asp-route-id="@Model.Compra.CompraID"
-                   class="btn btn-success">
+                   class="btn btn-success" title="Confirmar Entrega">
                 Confirmar Entrega
             </a>
         }

@@ -4,6 +4,18 @@ body {
     margin: 0;
 }
 
+select.dt-input {
+    color: #fff !important;
+    background-color: #1a1e28 !important;
+    border: 1px solid #444 !important;
+}
+
+
+.dt-length label {
+    color: #fff !important;
+}
+
+
 /* SIDEBAR DESKTOP */
 .sidebar {
     width: 260px;

@@ -69,7 +69,8 @@
 
                     <button type="button" class="btn btn-info"
                             data-bs-toggle="modal"
-                            data-bs-target="#ajusteEstoqueModal">
+                            data-bs-target="#ajusteEstoqueModal"
+                            title="Ajustar Estoque">
                         Ajustar
                     </button>
                 </div>
@@ -92,8 +93,8 @@
         </div>
 
         <div class="d-flex gap-3 mt-4">
-            <a class="btn btn-primary w-50" asp-action="Index">Voltar</a>
-            <button type="submit" class="btn btn-warning w-50">Salvar Alterações</button>
+            <a class="btn btn-primary w-50" asp-action="Index" title="Voltar">Voltar</a>
+            <button type="submit" class="btn btn-warning w-50" title="Salvar Alterações">Salvar Alterações</button>
             
         </div>
 
@@ -133,8 +134,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Confirmar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" title="Cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-success" title="Confirmar">Confirmar</button>
                 </div>
             </form>
 

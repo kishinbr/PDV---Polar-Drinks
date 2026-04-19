@@ -9,7 +9,7 @@
         <h1 class="m-0">Fornecedores</h1>
       @if (Context.Session.GetString("Perfil") == "Admin")
         {
-        <a class="btn btn-success mx-2" asp-action="Cadastrar">
+            <a class="btn btn-success mx-2" asp-action="Cadastrar" title="Cadastrar">
             <i class="bi bi-file-earmark-plus-fill mx-2"></i>
             Cadastrar novo Fornecedor
         </a>

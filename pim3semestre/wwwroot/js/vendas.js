@@ -240,7 +240,7 @@
                 <td class="text-end">${formatarMoeda(preco)}</td>
                 <td class="text-end">${formatarMoeda(total)}</td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm btn-remover">
+                    <button type="button" class="btn btn-danger btn-sm btn-remover " title="Remover Produto">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>

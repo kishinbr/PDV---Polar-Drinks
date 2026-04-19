@@ -4,28 +4,28 @@
     ViewData["Title"] = "Movimentações do Estoque";
 }
 
-<div class="container bg-dark p-4 rounded-4 mt-5">
+<div class="container rounded-4 mt-5">
 
-    <h2 class="text-light text-center mb-4">Movimentações do Estoque</h2>
+    <div class="bg-dark p-4 rounded-4 mb-4">
 
-    <div class="mb-4 position-relative">
-        <input type="text" id="buscaProduto" class="form-control" placeholder="Digite o nome ou código do produto" autocomplete="off" maxlength="100">
-        <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
-    </div>
+        <h2 class="text-light text-center mb-4">Movimentações do Estoque</h2>
 
-    @if (ViewBag.ProdutoSelecionado != null)
-    {
-      
-        <div class="d-flex justify-content-between align-items-center mb-4 bg-success text-light p-4 rounded-4 mt-2">
+        <div class="mb-4 position-relative">
+            <input type="text" id="buscaProduto" class="form-control"
+                   placeholder="Digite o nome ou código do produto"
+                   autocomplete="off" maxlength="100">
+            <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
+        </div>
 
+        @if (ViewBag.ProdutoSelecionado != null)
+        {
+            <div class="d-flex justify-content-between align-items-center bg-success text-light p-4 rounded-4">
                 <div>
-                    <h5 class="mb-1 ">Produto</h5>
+                    <h5 class="mb-1">Produto</h5>
                     <strong class="badge bg-light text-dark">@ViewBag.ProdutoSelecionado.ProdutoNome</strong>
                 </div>
-
                 <div class="text-center">
                     <h6 class="mb-1">Estoque Atual</h6>
-
                     @if (ViewBag.ProdutoSelecionado.ProdutoQtdEstoque <= ViewBag.ProdutoSelecionado.ProdutoEstoqueMinimo)
                     {
                         <span class="badge bg-warning text-dark fs-6">
@@ -39,24 +39,19 @@
                         </span>
                     }
                 </div>
-
             </div>
-        
-    }
+        }
 
+    </div> 
 
-</div>
-
-<div class="container mt-4">
-
-    <table id="tabelaMovimentacoes" class="table table-success table-hover">
+    <table id="tabelaMovimentacoes" class="table table-success table-hover mb-auto">
         <thead>
             <tr>
                 <th style="width: 15%;">Data</th>
-                <th class="text-center" style="width: 10%;">Tipo</th>
-                <th class="text-center" style="width: 10%;">Quantidade</th>
-                <th class="text-center" style="width: 10%;">ID</th>
-                <th style="width: 20%;" >Descrição</th>
+                <th style="width: 15%;" class="text-center">Tipo</th>
+                <th style="width: 15%;" class="text-center">Quantidade</th>
+                <th style="width: 15%;" class="text-center">ID</th>
+                <th style="width: 15%;">Descrição</th>
             </tr>
         </thead>
 
@@ -112,11 +107,12 @@
                                 }
                             }
                         </td>
-                        <td>
+
+                        <td class="text-center">
                             @if (mov.ItemVenda != null)
                             {
                                 <span class="badge bg-primary">
-                                     #@mov.ItemVenda.VendaID
+                                    #@mov.ItemVenda.VendaID
                                 </span>
                             }
                             else if (mov.ItemCompra != null)
@@ -131,12 +127,11 @@
                             }
                         </td>
 
-                        
-                            <td title="@mov.MovimentacaoDescricao">
-                                @(mov.MovimentacaoDescricao != null && mov.MovimentacaoDescricao.Length > 20
-                                    ? mov.MovimentacaoDescricao.Substring(0, 20) + "..."
-                                    : mov.MovimentacaoDescricao)
-                            </td>
+                        <td title="@mov.MovimentacaoDescricao">
+                            @(mov.MovimentacaoDescricao != null && mov.MovimentacaoDescricao.Length > 20
+                                ? mov.MovimentacaoDescricao.Substring(0, 20) + "..."
+                                : mov.MovimentacaoDescricao)
+                        </td>
                     </tr>
                 }
             }
@@ -144,9 +139,9 @@
     </table>
 
 </div>
+
 @section Scripts {
     <script>
-        // Carrega a lista de produtos do ViewBag para o JavaScript
         const produtos = @Html.Raw(Json.Serialize(ViewBag.Produtos));
 
         const buscaInput = document.getElementById("buscaProduto");
@@ -193,45 +188,40 @@
         $(document).ready(function () {
 
             $('#tabelaMovimentacoes').DataTable({
-                pageLength: 10,
-                lengthMenu: [10, 20, 30],
-                scrollY: "50vh",
-                scrollCollapse: true,
-                paging: true,
-                responsive: true,
-                autoWidth: false,
+            pageLength: 10,
+            lengthMenu: [10, 20, 30],
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
 
-                columnDefs: [
-                    { orderable: false, targets: [] },
-                    // { className: "text-end", targets: [2] },
-                    { className: "text-center", targets: [1,2,3] }
-                ],
+            columnDefs: [
+                { orderable: false, targets: [4] }, // desabilita ordenação na coluna Ações
+                { className: "text-center", targets: [4] } // status e ações centralizados
+            ],
 
-                order: [],
-
-                language: {
-                    "decimal": "",
-                    "emptyTable": "Nenhuma movimentação encontrada",
-                    "info": "Mostrando de _START_ a _END_ de um total de _TOTAL_ movimentações",
-                    "infoEmpty": "Mostrando de 0 a 0 de 0 movimentações",
-                    "infoFiltered": "(filtrado de _MAX_ movimentações no total)",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ movimentações",
-                    "loadingRecords": "Carregando...",
-                    "search": "Procurar:",
-                    "zeroRecords": "Nenhuma movimentação encontrada",
-                    "paginate": {
-                        "first": "Primeiro",
-                        "last": "Último",
-                        "next": "Próximo",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "orderable": "Ordenar por esta coluna",
-                        "orderableReverse": "Ordem reversa desta coluna"
-                    }
+            language: {
+                "decimal": "",
+                "emptyTable": "Selecione um produto",
+                "info": "Mostrando de _START_ a _END_ de um total de _TOTAL_ movimentações",
+                "infoEmpty": "Mostrando de 0 a 0 de 0 movimentações",
+                "infoFiltered": "(filtrado de _MAX_ movimentações no total)",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ movimentações",
+                "loadingRecords": "Carregando...",
+                "search": "Procurar:",
+                "zeroRecords": "Movimentação não encontrada",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
+                "aria": {
+                    "orderable": "Ordenar por esta coluna",
+                    "orderableReverse": "Ordem reversa desta coluna"
                 }
-            });
+            }
+        });
 
             setTimeout(function () {
                 $(".alert").fadeOut("slow", function () {

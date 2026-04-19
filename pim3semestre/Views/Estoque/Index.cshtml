@@ -12,7 +12,7 @@
         <h1 class="m-0">Estoque de Produtos</h1>
         @if (Context.Session.GetString("Perfil") == "Admin")
         {
-            <a class="btn btn-success mx-2" asp-controller="Estoque" asp-action="Cadastrar">
+            <a class="btn btn-success mx-2" asp-controller="Estoque" asp-action="Cadastrar" data-bs-toggle="tooltip" title="Cadastrar">
                 <i class="bi bi-file-earmark-plus-fill mx-2"></i>Cadastrar novo Produto
             </a>
         }
@@ -31,7 +31,7 @@
         </div>
     }
 
-    <table id="Produtos" class="table table-success table-hover mb-auto">
+    <table id="Produtos" class="table table-success table-hover mb-auto" >
         <thead>
             <tr>
                 <th style="width: 15%;">Nome</th>

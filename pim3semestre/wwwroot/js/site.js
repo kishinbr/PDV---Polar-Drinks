@@ -37,6 +37,7 @@ $(document).ready(function () {
             }
         }
     });
+    
 
     setTimeout(function () {
         $(".alert").fadeOut("slow", function () {
@@ -202,12 +203,14 @@ $(document).ready(function () {
     // Inicializa o DataTable após a tabela estar totalmente renderizada
     var table = $('#tabelaVendas').DataTable({
         pageLength: 10,
-        lengthMenu: [10,15, 20],
+        lengthMenu: [10, 15, 20],
         paging: true,
+        scrollX: true,
+        scrollCollapse: true,
+
         columnDefs: [
-            { orderable: false, targets: [4] }, 
-            //{ className: "text-end", targets: [] }, 
-            { className: "text-center", targets: [0,1,3,4] } 
+            { orderable: false, targets: [5] },
+            { className: "text-center", targets: [0, 1, 3, 4, 5] }
         ],
         order: [], // ordena pela data da venda
         language: {

@@ -5,19 +5,19 @@
 
 <div class="container p-4 rounded-4">
 
-    <!-- HEADER (igual seu padrão Fornecedores) -->
+
     <div class="d-flex justify-content-between align-items-center mb-5 bg-dark text-light p-4 rounded-4 mt-2">
 
         <h1 class="m-0">Usuários</h1>
 
-        <a asp-action="Cadastrar" class="btn btn-success">
+        <a asp-action="Cadastrar" class="btn btn-success" title="Cadastrar">
             <i class="bi bi-person-plus-fill me-1"></i>
             Cadastrar novo Usuário
         </a>
 
     </div>
 
-    <!-- MENSAGENS -->
+
     @if (TempData["MensagemSucesso"] != null)
     {
         <div class="alert bg-success text-light">
@@ -32,7 +32,7 @@
     }
 
     <!-- TABELA -->
-    <table id="tabelaUsuarios" class="table table-secondary table-hover mb-auto display nowrap" style="width:100%">
+    <table id="tabelaUsuarios" class="table table-success table-hover mb-auto">
 
         <thead>
             <tr>
@@ -84,7 +84,7 @@
 
                             <a asp-action="AlterarSenha"
                                    asp-route-id="@u.UsuarioID"
-                                   class="btn btn-sm btn-warning">
+                                   class="btn btn-sm btn-warning" title="Alterar Senha">
                                 Alterar Senha
                             </a>
 
@@ -94,10 +94,11 @@
                                   class="d-inline">
 
                                 <button type="submit"
-                                        class="btn btn-sm @(u.UsuarioAtivo ? "btn-danger" : "btn-success")">
+                                        class="btn btn-sm @(u.UsuarioAtivo ? "btn-danger" : "btn-success")"
+                                        title="@(u.UsuarioAtivo ? "Desativar" : "Ativar")">
+
                                     @(u.UsuarioAtivo ? "Desativar" : "Ativar")
                                 </button>
-
                             </form>
 
                         </div>
@@ -113,17 +114,40 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#tabelaUsuarios').DataTable({
-                responsive: true,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                },
-                columnDefs: [
-                    { orderable: false, targets: [5] },
-                    { className: "text-start", targets: [0, 1, 2, 3, 4] },
-                    { className: "text-center", targets: [5] }
-                ]
-            });
+           $('#tabelaUsuarios').DataTable({
+            pageLength: 10,
+            lengthMenu: [10, 20, 30],
+            scrollY: "50vh",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+
+            columnDefs: [
+                { orderable: false, targets: [5] }, 
+                { className: "text-start", targets: [0, 1] }, 
+                { className: "text-center", targets: [2, 3, 4, 5] }, 
+
+
+            ],
+
+            language: {
+                "decimal": "",
+                "emptyTable": "Nenhum usuário cadastrado",
+                "info": "Mostrando de _START_ a _END_ de _TOTAL_ usuários",
+                "infoEmpty": "Mostrando 0 de 0 usuários",
+                "infoFiltered": "(filtrado de _MAX_ usuários)",
+                "lengthMenu": "Mostrar _MENU_ usuários",
+                "loadingRecords": "Carregando...",
+                "search": "Procurar:",
+                "zeroRecords": "Usuário não encontrado",
+                "paginate": {
+                    "first": "Primeiro",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
+            }
+        });
         });
     </script>
 }

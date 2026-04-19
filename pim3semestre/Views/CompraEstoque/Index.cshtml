@@ -22,7 +22,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4 bg-dark text-light p-4 rounded-4 mt-2">
         <h1 class="m-0">Reabastecimento</h1>
 
-        <a asp-action="Cadastrar" class="btn btn-success">
+        <a asp-action="Cadastrar" class="btn btn-success" title="Cadastrar">
             + Novo Reabastecimento
         </a>
     </div>
@@ -54,7 +54,7 @@
                             <a asp-action="Detalhes"
                                    asp-route-id="@item.CompraID"
                                    asp-route-confirmar="false"
-                                   class="btn btn-primary btn-sm">
+                                   class="btn btn-primary btn-sm" title="Detalhes">
                                 <i class="bi bi-file-earmark-text-fill"></i>
                             </a>
 
@@ -62,13 +62,13 @@
                             <a asp-action="Detalhes"
                                    asp-route-id="@item.CompraID"
                                    asp-route-confirmar="true"
-                                   class="btn btn-success btn-sm">
+                                   class="btn btn-success btn-sm" title="Confirmar Entrega">
                                 <i class="bi bi-truck"></i>
                             </a>
 
                             <a asp-action="Excluir"
                                    asp-route-id="@item.CompraID"
-                                   class="btn btn-danger btn-sm">
+                                   class="btn btn-danger btn-sm" title="Cancelar Entrega">
                                 <i class="bi bi-trash"></i>
                             </a>
                     </td>
@@ -102,7 +102,7 @@
                 <label class="form-label small mb-1">Fim</label>
                 <input type="date" id="dataFim" class="form-control form-control-sm">
             </div>
-            <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-2">
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-2" title="Limpar filtros">
                 <i class="bi bi-x-lg"></i>
             </a>
 
@@ -136,7 +136,7 @@
                     <td class="text-center">
                         <a class="btn btn-primary btn-sm"
                                asp-action="Detalhes"
-                               asp-route-id="@item.CompraID">
+                               asp-route-id="@item.CompraID" title="Detalhes">
                             <i class="bi bi-file-earmark-text-fill"></i>
                         </a>
                     </td>
