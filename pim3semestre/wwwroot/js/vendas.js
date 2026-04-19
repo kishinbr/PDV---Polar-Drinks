@@ -39,7 +39,6 @@
         return "R$ " + parseFloat(valor).toFixed(2);
     }
 
-    // Converte o texto de uma célula de moeda ("R$ 1500.00") para float
     function parseMoeda(texto) {
         return parseFloat(texto.replace("R$", "").trim()) || 0;
     }
@@ -143,7 +142,6 @@
         const qtd = parseFloat(qtdInput.value) || 0;
         const precoTexto = valorUnitario.value.replace("R$", "").trim();
         const preco = parseFloat(precoTexto) || 0;
-
         valorTotal.value = formatarMoeda(qtd * preco);
     }
 
@@ -189,10 +187,13 @@
             return;
         }
 
+        // Verifica quantidade já adicionada para validar estoque
         let qtdJaAdicionada = 0;
+        let linhaExistente = null;
         tabela.querySelectorAll("tr").forEach(linha => {
             if (parseInt(linha.getAttribute("data-id")) === produtoSelecionado.produtoID) {
                 qtdJaAdicionada += parseInt(linha.children[1].innerText);
+                linhaExistente = linha;
             }
         });
 
@@ -201,40 +202,64 @@
             return;
         }
 
-
         const precoTexto = valorUnitario.value.replace("R$", "").trim();
         const preco = parseFloat(precoTexto) || 0;
-
         const total = qtd * preco;
 
-        const linha = document.createElement("tr");
-        linha.setAttribute("data-id", produtoSelecionado.produtoID);
-        // Armazena o total como atributo para facilitar remoção sem depender de parse de texto
-        linha.setAttribute("data-total", total);
-        linha.innerHTML = `
-            <td>${produtoSelecionado.produtoNome}</td>
-            <td class="text-end">${qtd}</td>
-            <td class="text-end">${formatarMoeda(preco)}</td>
-            <td class="text-end">${formatarMoeda(total)}</td>
-            <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm btn-remover">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        tabela.appendChild(linha);
+        // ===== MERGE: produto já existe na tabela =====
+        if (linhaExistente) {
+            const novaQtd = qtdJaAdicionada + qtd;
+            const novoTotal = novaQtd * preco;
+            const totalAntigo = parseFloat(linhaExistente.getAttribute("data-total")) || 0;
 
-        const index = tabela.children.length - 1;
-        itensHidden.insertAdjacentHTML('beforeend', `
-            <input type="hidden" name="Itens[${index}].ProdutoID"       value="${produtoSelecionado.produtoID}" />
-            <input type="hidden" name="Itens[${index}].ItemVendaQtd"    value="${qtd}" />
-            <input type="hidden" name="Itens[${index}].ItemVendaPreco"  value="${preco}" />
-            <input type="hidden" name="Itens[${index}].ItemVendaTotal"  value="${total}" />
-        `);
+            // Atualiza células da linha existente
+            linhaExistente.children[1].innerText = novaQtd;
+            linhaExistente.children[3].innerText = formatarMoeda(novoTotal);
+            linhaExistente.setAttribute("data-total", novoTotal);
 
-        totalVenda += total;
-        totalVendaLabel.innerText = formatarMoeda(totalVenda);
+            // Atualiza inputs hidden correspondentes
+            const index = Array.from(tabela.children).indexOf(linhaExistente);
+            const hiddenQtd = itensHidden.querySelector(`[name="Itens[${index}].ItemVendaQtd"]`);
+            const hiddenTotal = itensHidden.querySelector(`[name="Itens[${index}].ItemVendaTotal"]`);
+            if (hiddenQtd) hiddenQtd.value = novaQtd;
+            if (hiddenTotal) hiddenTotal.value = novoTotal;
 
+            // Atualiza total da venda
+            totalVenda += total;
+            if (totalVenda < 0) totalVenda = 0;
+            totalVendaLabel.innerText = formatarMoeda(totalVenda);
+
+            // ===== NOVO: produto ainda não está na tabela =====
+        } else {
+            const linha = document.createElement("tr");
+            linha.setAttribute("data-id", produtoSelecionado.produtoID);
+            linha.setAttribute("data-total", total);
+            linha.innerHTML = `
+                <td>${produtoSelecionado.produtoNome}</td>
+                <td class="text-end">${qtd}</td>
+                <td class="text-end">${formatarMoeda(preco)}</td>
+                <td class="text-end">${formatarMoeda(total)}</td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm btn-remover">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            `;
+            tabela.appendChild(linha);
+
+            const index = tabela.children.length - 1;
+            itensHidden.insertAdjacentHTML('beforeend', `
+                <input type="hidden" name="Itens[${index}].ProdutoID"      value="${produtoSelecionado.produtoID}" />
+                <input type="hidden" name="Itens[${index}].ItemVendaQtd"   value="${qtd}" />
+                <input type="hidden" name="Itens[${index}].ItemVendaPreco" value="${preco}" />
+                <input type="hidden" name="Itens[${index}].ItemVendaTotal" value="${total}" />
+            `);
+
+            totalVenda += total;
+            totalVendaLabel.innerText = formatarMoeda(totalVenda);
+        }
+
+        // Limpa campos
         produtoSelecionado = null;
         buscaInput.value = "";
         qtdInput.value = 0;
@@ -252,11 +277,9 @@
         const row = btn.closest("tr");
         const index = Array.from(tabela.children).indexOf(row);
 
-        // Lê o total direto do atributo data-total para evitar erros de parse de texto
         const total = parseFloat(row.getAttribute("data-total")) || 0;
 
         totalVenda -= total;
-        // Garante que nunca fique negativo por imprecisão de float
         if (totalVenda < 0) totalVenda = 0;
         totalVendaLabel.innerText = formatarMoeda(totalVenda);
 

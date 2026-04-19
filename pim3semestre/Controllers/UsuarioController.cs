@@ -41,9 +41,9 @@ namespace pim3semestre.Controllers
                 return View();
             }
 
-            if (string.IsNullOrWhiteSpace(senha) || senha.Length < 4)
+            if (string.IsNullOrWhiteSpace(senha) || senha.Length < 6)
             {
-                ViewBag.Erro = "A senha deve ter pelo menos 4 caracteres.";
+                ViewBag.Erro = "A senha deve ter pelo menos 6 caracteres.";
                 return View();
             }
 
