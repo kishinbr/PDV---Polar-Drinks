@@ -38,7 +38,7 @@
                 <th style="width: 15%;">Descrição</th>
                 <th style="width: 10%;" class="text-end">Preço Custo</th>
                 <th style="width: 10%;" class="text-end">Preço Venda</th>
-                <th style="width: 10%;" class="text-end">Qtd</th>
+                <th style="width: 10%;" class="text-end">Qtd/Min</th>
                 <th style="width: 5%;" class="text-center">Promoção</th>
                 <th style="width: 10%;" class="text-center">Status</th>
                 @if (Context.Session.GetString("Perfil") == "Admin")
@@ -72,17 +72,18 @@
                             @("R" + produto.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("C"))
                         </td>
 
-                        <td class="text-end">
-                            @if (produto.ProdutoQtdEstoque.GetValueOrDefault(0) <= produto.ProdutoEstoqueMinimo)
-                            {
-                                <span class="badge bg-warning text-dark">
-                                    @($"{produto.ProdutoQtdEstoque.GetValueOrDefault(0)}/{produto.ProdutoEstoqueMinimo}")
-                                </span>
+                        <td data-order="@produto.ProdutoQtdEstoque.GetValueOrDefault(0)">
+
+                            @{
+                                var atual = produto.ProdutoQtdEstoque.GetValueOrDefault(0);
+                                var minimo = produto.ProdutoEstoqueMinimo;
+                                var classe = atual <= minimo ? "badge bg-warning text-dark" : "";
                             }
-                            else
-                            {
-                                @($"{produto.ProdutoQtdEstoque.GetValueOrDefault(0)}/{produto.ProdutoEstoqueMinimo}")
-                            }
+
+                            <span class="@classe">
+                                @($"{atual}/{minimo}")
+                            </span>
+
                         </td>
 
                         <td class="text-center">
@@ -128,7 +129,7 @@
                                        
                                        title="Edição rápida">
 
-                                    <i class="bi bi-feather"></i>
+                                    <i class="bi bi-percent"></i>
                                 </a>
                         </td>
                         }

@@ -25,17 +25,17 @@
                     <strong class="badge bg-light text-dark">@ViewBag.ProdutoSelecionado.ProdutoNome</strong>
                 </div>
                 <div class="text-center">
-                    <h6 class="mb-1">Estoque Atual</h6>
+                    <h6 class="mb-1">Estoque Atual / Min</h6>
                     @if (ViewBag.ProdutoSelecionado.ProdutoQtdEstoque <= ViewBag.ProdutoSelecionado.ProdutoEstoqueMinimo)
                     {
                         <span class="badge bg-warning text-dark fs-6">
-                            @ViewBag.ProdutoSelecionado.ProdutoQtdEstoque
+                            @ViewBag.ProdutoSelecionado.ProdutoQtdEstoque / @ViewBag.ProdutoSelecionado.ProdutoEstoqueMinimo
                         </span>
                     }
                     else
                     {
                         <span class="badge bg-success fs-6">
-                            @ViewBag.ProdutoSelecionado.ProdutoQtdEstoque
+                            @ViewBag.ProdutoSelecionado.ProdutoQtdEstoque / @ViewBag.ProdutoSelecionado.ProdutoEstoqueMinimo
                         </span>
                     }
                 </div>
@@ -108,17 +108,23 @@
                             }
                         </td>
 
-                        <td class="text-center">
+                        <td class="text-center"
+                            data-order="@(mov.ItemVenda != null
+                                        ? mov.ItemVenda.VendaID
+                                        : mov.ItemCompra != null
+                                            ? mov.ItemCompra.ItemCompraID
+                                            : 0)">
+
                             @if (mov.ItemVenda != null)
                             {
                                 <span class="badge bg-primary">
-                                    @mov.ItemVenda.VendaID
+                                    #@mov.ItemVenda.VendaID
                                 </span>
                             }
                             else if (mov.ItemCompra != null)
                             {
                                 <span class="badge bg-success">
-                                    @mov.ItemCompra.ItemCompraID
+                                    #@mov.ItemCompra.ItemCompraID
                                 </span>
                             }
                             else

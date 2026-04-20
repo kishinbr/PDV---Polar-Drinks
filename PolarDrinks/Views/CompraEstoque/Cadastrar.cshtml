@@ -92,6 +92,7 @@
                 <tr>
                     <th>Produto</th>
                     <th>Preço de Custo</th>
+                    <th>Preço de Venda</th>
                     <th>Estoque/Min</th>
                 </tr>
             </thead>
@@ -100,8 +101,9 @@
                 {
                     <tr>
                         <td>@p.ProdutoNome</td>
-                        <td class="text-end">R$ @p.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("N2")</td>
-                        <td class="text-center">
+                        <td >R$ @p.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("N2")</td>
+                        <td >R$ @p.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("N2")</td>
+                        <td >
                             @if (p.ProdutoQtdEstoque <= p.ProdutoEstoqueMinimo)
                             {
                                 <span class="badge bg-warning text-dark">@p.ProdutoQtdEstoque/@p.ProdutoEstoqueMinimo</span>
@@ -293,7 +295,7 @@
             paging: true,
 
             columnDefs: [
-                { className: "text-center", targets: [1,2] }
+                { className: "text-center", targets: [1,2,3] }
             ],
             language: {
                 "emptyTable":    "Nenhum produto encontrado",

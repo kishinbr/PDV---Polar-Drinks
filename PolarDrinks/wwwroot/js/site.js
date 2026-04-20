@@ -11,7 +11,8 @@ $(document).ready(function () {
         columnDefs: [
             { orderable: false, targets: [6] }, // desabilita ordenação na coluna Ações
             { className: "text-end", targets: [3, 4] }, // preço e quantidade alinhados à direita
-            { className: "text-center", targets: [5, 6] } // status e ações centralizados
+            { className: "text-center", targets: [5, 6] }, // status e ações centralizados
+            
         ],
 
         language: {
