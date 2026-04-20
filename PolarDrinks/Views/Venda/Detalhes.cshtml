@@ -13,9 +13,16 @@
 
     @if (Model.VendaCancelada)
     {
-        <div class="text-danger text-center bg-danger-subtle fw-bold mb-3">
+        <div class="text-danger text-center bg-danger-subtle fw-bold mb-3 p-2 rounded">
             VENDA CANCELADA
         </div>
+
+        @if (ViewBag.MotivoCancelamento != null)
+        {
+            <div class="text-danger text-center bg-danger-subtle fw-bold mb-3 p-2 rounded">
+                Motivo : @ViewBag.MotivoCancelamento
+            </div>
+        }
     }
 
     

@@ -44,6 +44,19 @@ namespace PolarDrinks.Controllers
             if (venda == null)
                 return NotFound();
 
+            // busca a descrição do cancelamento se existir
+            if (venda.VendaCancelada)
+            {
+                var motivoCancelamento = _db.MovimentacoesEstoque
+                    .Where(m => m.ItemVenda.VendaID == id
+                             && m.MovimentacaoTipo == MovimentacaoEstoqueModel.Tipos.Cancelamento
+                             && m.MovimentacaoDescricao != null)
+                    .Select(m => m.MovimentacaoDescricao)
+                    .FirstOrDefault();
+
+                ViewBag.MotivoCancelamento = motivoCancelamento;
+            }
+
             return View(venda);
         }
 
