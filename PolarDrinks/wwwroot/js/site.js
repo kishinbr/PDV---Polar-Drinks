@@ -212,7 +212,7 @@ $(document).ready(function () {
             { orderable: false, targets: [5] },
             { className: "text-center", targets: [0, 1, 3, 4, 5] }
         ],
-        order: [], // ordena pela data da venda
+        order: [[0, 'desc']], // 
         language: {
             "decimal": "",
             "emptyTable": "Nenhuma venda registrada",

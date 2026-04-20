@@ -112,13 +112,13 @@
                             @if (mov.ItemVenda != null)
                             {
                                 <span class="badge bg-primary">
-                                    #@mov.ItemVenda.VendaID
+                                    @mov.ItemVenda.VendaID
                                 </span>
                             }
                             else if (mov.ItemCompra != null)
                             {
                                 <span class="badge bg-success">
-                                    #@mov.ItemCompra.ItemCompraID
+                                    @mov.ItemCompra.ItemCompraID
                                 </span>
                             }
                             else
@@ -196,7 +196,7 @@
             order: [],
             columnDefs: [
                 { orderable: false, targets: [4] }, // desabilita ordenação na coluna Ações
-                { className: "text-center", targets: [4] } // status e ações centralizados
+                { className: "text-center", targets: [3] } // status e ações centralizados
             ],
 
             language: {

@@ -23,6 +23,7 @@ namespace PolarDrinks.Controllers
         private void RecarregarListas(CompraCreateViewModel vm)
         {
             vm.Fornecedores = _db.Fornecedores
+                .Where(f => f.FornecedorAtivo)  
                 .Select(f => new SelectListItem
                 {
                     Value = f.FornecedorID.ToString(),
@@ -35,6 +36,10 @@ namespace PolarDrinks.Controllers
                     Value = p.ProdutoID.ToString(),
                     Text = p.ProdutoNome
                 }).ToList();
+            vm.ProdutosEstoque = _db.Produtos
+                .Where(p => p.ProdutoAtivo)
+                .OrderBy(p => p.ProdutoNome)
+                .ToList();
         }
         //index para listar as compras, separando por status (pendentes e concluidas)
         public IActionResult Index()
@@ -62,6 +67,7 @@ namespace PolarDrinks.Controllers
             var vm = new CompraCreateViewModel
             {
                 Fornecedores = _db.Fornecedores
+                    .Where(f => f.FornecedorAtivo)
                     .Select(f => new SelectListItem
                     {
                         Value = f.FornecedorID.ToString(),
@@ -75,9 +81,14 @@ namespace PolarDrinks.Controllers
                         Text = p.ProdutoNome
                     }).ToList(),
 
-                Itens = new List<ItemCompraCreateVM>()
-            };
+                Itens = new List<ItemCompraCreateVM>(),
 
+                ProdutosEstoque = _db.Produtos
+                    .Where(p => p.ProdutoAtivo)
+                    .OrderBy(p => p.ProdutoNome)
+                    .ToList()
+            };
+            
             return View(vm);
         }
         // metodo para cadastrar a compra, validando os dados e adicionando os itens

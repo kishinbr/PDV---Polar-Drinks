@@ -69,30 +69,30 @@ namespace PolarDrinks.Controllers
                     (i.ItemVendaPreco - (i.Produto.ProdutoPrecoCusto ?? 0)) * i.ItemVendaQtd));
 
             // PAGAMENTOS (CARDS - HOJE)
-            model.QtdPix = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
-            model.QtdCartao = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
-            model.QtdDinheiro = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
+            model.QtdPix = vendasHoje.Count(v => v.VendaTipoPagamento == "Pix");
+            model.QtdCartao = vendasHoje.Count(v => v.VendaTipoPagamento == "Cartão");
+            model.QtdDinheiro = vendasHoje.Count(v => v.VendaTipoPagamento == "Dinheiro");
 
-            model.TotalPix = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix").Sum(v => v.VendaValorTotal);
-            model.TotalCartao = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão").Sum(v => v.VendaValorTotal);
-            model.TotalDinheiro = vendasHoje.Where(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro").Sum(v => v.VendaValorTotal);
+            model.TotalPix = vendasHoje.Where(v => v.VendaTipoPagamento == "Pix").Sum(v => v.VendaValorTotal);
+            model.TotalCartao = vendasHoje.Where(v => v.VendaTipoPagamento == "Cartão").Sum(v => v.VendaValorTotal);
+            model.TotalDinheiro = vendasHoje.Where(v => v.VendaTipoPagamento == "Dinheiro").Sum(v => v.VendaValorTotal);
 
             // PAGAMENTOS (GRÁFICOS)
-            model.PixHoje = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
-            model.CartaoHoje = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
-            model.DinheiroHoje = vendasHoje.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
+            model.PixHoje = vendasHoje.Count(v => v.VendaTipoPagamento == "Pix");
+            model.CartaoHoje = vendasHoje.Count(v => v.VendaTipoPagamento == "Cartão");
+            model.DinheiroHoje = vendasHoje.Count(v => v.VendaTipoPagamento == "Dinheiro");
 
-            model.PixSemana = vendas7Dias.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
-            model.CartaoSemana = vendas7Dias.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
-            model.DinheiroSemana = vendas7Dias.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
+            model.PixSemana = vendas7Dias.Count(v => v.VendaTipoPagamento == "Pix");
+            model.CartaoSemana = vendas7Dias.Count(v => v.VendaTipoPagamento == "Cartão");
+            model.DinheiroSemana = vendas7Dias.Count(v => v.VendaTipoPagamento == "Dinheiro");
 
-            model.PixMes = vendas30Dias.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
-            model.CartaoMes = vendas30Dias.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
-            model.DinheiroMes = vendas30Dias.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
+            model.PixMes = vendas30Dias.Count(v => v.VendaTipoPagamento == "Pix");
+            model.CartaoMes = vendas30Dias.Count(v => v.VendaTipoPagamento == "Cartão");
+            model.DinheiroMes = vendas30Dias.Count(v => v.VendaTipoPagamento == "Dinheiro");
 
-            model.PixTotal = todasVendas.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "pix");
-            model.CartaoTotal = todasVendas.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "cartão");
-            model.DinheiroTotal = todasVendas.Count(v => (v.VendaTipoPagamento ?? "").ToLower() == "dinheiro");
+            model.PixTotal = todasVendas.Count(v => v.VendaTipoPagamento == "Pix");
+            model.CartaoTotal = todasVendas.Count(v => v.VendaTipoPagamento == "Cartão");
+            model.DinheiroTotal = todasVendas.Count(v => v.VendaTipoPagamento == "Dinheiro");
 
             // ESTOQUE
             model.SemEstoque = produtos.Count(p => p.ProdutoAtivo && (p.ProdutoQtdEstoque ?? 0) == 0);

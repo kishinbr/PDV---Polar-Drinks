@@ -5,11 +5,8 @@
 
 <div class="container bg-dark p-4 rounded-4 mt-5">
 
-
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-light m-0">Detalhes da Venda #@Model.VendaID</h2>
-
- 
     </div>
 
     <div class="text-light mb-3">
@@ -44,19 +41,25 @@
         <h4>Total: @Model.VendaValorTotal.ToString("C")</h4>
     </div>
 
-    <div class="d-flex justify-content-between mt-4">
-        <a asp-action="Index" class="btn btn-primary">
-            Voltar
-        </a>
-
-        @if (!Model.VendaCancelada)
-        {
-            <a asp-action="CancelarVenda"
-                   asp-route-id="@Model.VendaID"
-                   class="btn btn-danger">
-                    Cancelar Venda
-            </a>
-        }
-    </div>
+    @if (!Model.VendaCancelada)
+    {
+        <form asp-action="CancelarVenda" asp-route-id="@Model.VendaID" method="post" class="mt-4" autocomplete="off">
+            <div class="mb-3">
+                <label class="form-label text-light">Motivo do cancelamento</label>
+                <input type="text" name="descricao" class="form-control"
+                       maxlength="50" placeholder="Ex: Devolução, erro na venda..." required/>
+            </div>
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-primary">Voltar</a>
+                <button type="submit" class="btn btn-danger">Cancelar Venda</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-action="Index" class="btn btn-primary">Voltar</a>
+        </div>
+    }
 
 </div>

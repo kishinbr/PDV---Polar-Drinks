@@ -80,6 +80,43 @@
         </div>
     </form>
 </div>
+@if (Model.ProdutosEstoque != null && Model.ProdutosEstoque.Any())
+{
+    <div class="d-flex justify-content-between container align-items-center  bg-dark text-light p-4 mt-4 rounded-4">
+        <h4 class="m-0">Produtos em Estoque</h4>
+    </div>
+
+    <div class="container rounded-4">
+        <table id="tabelaEstoqueConsulta" class="table table-success table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Preço de Custo</th>
+                    <th>Estoque/Min</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.ProdutosEstoque)
+                {
+                    <tr>
+                        <td>@p.ProdutoNome</td>
+                        <td class="text-end">R$ @p.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("N2")</td>
+                        <td class="text-center">
+                            @if (p.ProdutoQtdEstoque <= p.ProdutoEstoqueMinimo)
+                            {
+                                <span class="badge bg-warning text-dark">@p.ProdutoQtdEstoque/@p.ProdutoEstoqueMinimo</span>
+                            }
+                            else
+                            {
+                                <span>@p.ProdutoQtdEstoque/@p.ProdutoEstoqueMinimo</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
 
 @section Scripts {
     <script>
@@ -246,6 +283,33 @@
         $(document).ready(function () {
             atualizarTotal();
             atualizarBotaoSalvar();
+        });
+
+            $('#tabelaEstoqueConsulta').DataTable({
+            pageLength: 5,
+            lengthMenu: [5, 10, 15],
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+
+            columnDefs: [
+                { className: "text-center", targets: [1,2] }
+            ],
+            language: {
+                "emptyTable":    "Nenhum produto encontrado",
+                "info":          "Mostrando _START_ a _END_ de _TOTAL_ produtos",
+                "infoEmpty":     "Mostrando 0 produtos",
+                "infoFiltered":  "(filtrado de _MAX_)",
+                "lengthMenu":    "Mostrar _MENU_ produtos",
+                "search":        "Procurar:",
+                "zeroRecords":   "Produto não encontrado",
+                "paginate": {
+                    "first":    "Primeiro",
+                    "last":     "Último",
+                    "next":     "Próximo",
+                    "previous": "Anterior"
+                }
+            }
         });
     </script>
 }

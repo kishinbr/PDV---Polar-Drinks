@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PolarDrinks.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace PolarDrinks.ViewModels
@@ -16,6 +17,7 @@ namespace PolarDrinks.ViewModels
 
         public IEnumerable<SelectListItem>? Fornecedores { get; set; }
         public IEnumerable<SelectListItem>? Produtos { get; set; }
+        public List<ProdutoModel> ProdutosEstoque { get; set; } = new List<ProdutoModel>();
     }
 
     //essa classe representa cada item que o usuário vai adicionar na compra, ela tem as propriedades necessárias para preencher o formulário de cada item

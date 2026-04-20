@@ -170,7 +170,8 @@ namespace PolarDrinks.Controllers
             return View(venda);
         }
         [AdminFilter]
-        public IActionResult CancelarVenda(int id)
+        [HttpPost]
+        public IActionResult CancelarVenda(int id, string? descricao)
         {
             var venda = _db.Vendas
                 .Include(v => v.Itens)
@@ -200,22 +201,20 @@ namespace PolarDrinks.Controllers
             {
                 var produto = produtos.First(p => p.ProdutoID == item.ProdutoID);
 
-                // 
                 produto.ProdutoQtdEstoque += item.ItemVendaQtd;
 
-                // 
                 _db.MovimentacoesEstoque.Add(new MovimentacaoEstoqueModel
                 {
                     ProdutoID = produto.ProdutoID,
                     MovimentacaoQtd = item.ItemVendaQtd,
                     MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Cancelamento,
                     MovimentacaoData = DateTime.Now,
-                    ItemVendaID = item.ItemVendaID
+                    ItemVendaID = item.ItemVendaID,
+                    MovimentacaoDescricao = descricao  // <- salva a descrição
                 });
             }
 
             venda.VendaCancelada = true;
-
             _db.SaveChanges();
 
             TempData["MensagemSucesso"] = "Venda cancelada com sucesso!";
