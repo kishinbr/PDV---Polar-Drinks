@@ -4,8 +4,7 @@ $(document).ready(function () {
     $('#Produtos').DataTable({
         pageLength: 10,
         lengthMenu: [10, 20, 30],
-        scrollY: "50vh",
-        scrollCollapse: true,
+        scrollX: true,
         paging: true,
 
         columnDefs: [
@@ -50,6 +49,42 @@ $(document).ready(function () {
 
 $(document).ready(function () {
 
+    $('#tabelaEstoqueConsulta').DataTable({
+        pageLength: 5,
+        lengthMenu: [5, 10, 15],
+        scrollX: true,
+        scrollCollapse: true,
+        paging: true,
+
+        columnDefs: [
+            { className: "text-center", targets: [1, 2, 3] }
+        ],
+        language: {
+            "emptyTable": "Nenhum produto encontrado",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ produtos",
+            "infoEmpty": "Mostrando 0 produtos",
+            "infoFiltered": "(filtrado de _MAX_)",
+            "lengthMenu": "Mostrar _MENU_ produtos",
+            "search": "Procurar:",
+            "zeroRecords": "Produto não encontrado",
+            "paginate": {
+                "first": "Primeiro",
+                "last": "Último",
+                "next": "Próximo",
+                "previous": "Anterior"
+            }
+        }
+    });
+
+    setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+            $(this).alert('close');
+        });
+    }, 3000);
+
+});
+$(document).ready(function () {
+
     $('#Fornecedores').DataTable({
         pageLength: 10,
         lengthMenu: [10, 20, 30],
@@ -59,7 +94,7 @@ $(document).ready(function () {
 
         columnDefs: [
             //{ orderable: false, targets: [8] }, // desabilita ordenação na coluna Ações
-            { className: "text-start", targets: [1, 2, 3,4] },
+            { className: "text-start", targets: [1, 2, 3, 4] },
             //{ className: "text-center", targets: [8] } // centraliza os botões de Ações
         ],
 
@@ -94,6 +129,7 @@ $(document).ready(function () {
     }, 3000);
 
 });
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // ================= CEP =================

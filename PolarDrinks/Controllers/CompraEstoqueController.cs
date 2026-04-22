@@ -61,7 +61,19 @@ namespace PolarDrinks.Controllers
 
             return View(vm);
         }
-        
+        private void PreencherNomesProdutos(CompraCreateViewModel vm)
+        {
+            var ids = vm.Itens.Where(i => i.ProdutoID.HasValue).Select(i => i.ProdutoID.Value).ToList();
+            var produtos = _db.Produtos.Where(p => ids.Contains(p.ProdutoID)).ToList();
+
+            foreach (var item in vm.Itens)
+            {
+                if (item.ProdutoID.HasValue)
+                {
+                    item.ProdutoNome = produtos.FirstOrDefault(p => p.ProdutoID == item.ProdutoID)?.ProdutoNome;
+                }
+            }
+        }
         public IActionResult Cadastrar()
         {
             var vm = new CompraCreateViewModel
@@ -97,15 +109,18 @@ namespace PolarDrinks.Controllers
         {
             if (!ModelState.IsValid)
             {
+                PreencherNomesProdutos(vm);
                 RecarregarListas(vm);
                 return View(vm);
             }
 
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioID");
             var compra = new CompraEstoqueModel
             {
                 FornecedorID = vm.FornecedorID.Value,
                 CompraData = DateTime.Now,
                 CompraStatus = "Aguardando",
+                UsuarioID = usuarioId,
                 Itens = new List<ItemCompraModel>()
             };
 
@@ -124,6 +139,7 @@ namespace PolarDrinks.Controllers
 
             if (compra.Itens.Count == 0)
             {
+                PreencherNomesProdutos(vm);
                 ModelState.AddModelError("", "Adicione pelo menos um produto");
                 RecarregarListas(vm);
                 return View(vm);
@@ -141,7 +157,8 @@ namespace PolarDrinks.Controllers
             var compra = _db.ComprasEstoque
                 .Include(c => c.Fornecedor)
                 .Include(c => c.Itens)
-                    .ThenInclude(i => i.Produto)
+                .ThenInclude(i => i.Produto)
+                .Include(c => c.Usuario)
                 .FirstOrDefault(c => c.CompraID == id);
 
             if (compra == null)
@@ -153,12 +170,21 @@ namespace PolarDrinks.Controllers
                 Itens = compra.Itens.ToList(),
                 PodeConfirmar = confirmar
             };
+            var usuarioConfirmacao = _db.MovimentacoesEstoque
+                .Include(m => m.Usuario)
+                .Where(m => m.ItemCompra.CompraID == id
+                         && m.MovimentacaoTipo == MovimentacaoEstoqueModel.Tipos.Entrada)
+                .Select(m => m.Usuario.UsuarioNome)
+                .FirstOrDefault();
+
+            ViewBag.UsuarioConfirmacao = usuarioConfirmacao;
 
             return View(vm);
         }
 
         public IActionResult ConfirmarEntrega(int id)
         {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioID");
             var compra = _db.ComprasEstoque
                 .Include(c => c.Itens)
                 .FirstOrDefault(c => c.CompraID == id);
@@ -188,7 +214,8 @@ namespace PolarDrinks.Controllers
                     MovimentacaoQtd = item.ItemCompraQtd,
                     ProdutoID = produto.ProdutoID,
                     ItemCompraID = item.ItemCompraID,
-                    MovimentacaoData = DateTime.Now
+                    MovimentacaoData = DateTime.Now,
+                    UsuarioID = usuarioId
                 };
 
                 _db.MovimentacoesEstoque.Add(movimentacao);

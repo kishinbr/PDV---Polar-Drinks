@@ -162,7 +162,8 @@ namespace PolarDrinks.Controllers
         [AdminFilter]
         public IActionResult AjustarEstoque(int ProdutoID, int NovaQuantidade, string Descricao)
         {
-            
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioID");
+
             var produto = _db.Produtos.FirstOrDefault(p => p.ProdutoID == ProdutoID);
             if (produto == null) return NotFound();
 
@@ -181,7 +182,8 @@ namespace PolarDrinks.Controllers
 
                     MovimentacaoData = DateTime.Now,
                     MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Edicao,
-                    MovimentacaoDescricao = Descricao
+                    MovimentacaoDescricao = Descricao,
+                    UsuarioID = usuarioId,
                 };
 
                 _db.MovimentacoesEstoque.Add(movimentacao);
@@ -224,6 +226,7 @@ namespace PolarDrinks.Controllers
                 .Include(m => m.ItemVenda)
                     .ThenInclude(iv => iv.Venda)
                 .Include(m => m.ItemCompra)
+                .Include(m => m.Usuario)
                 .OrderByDescending(m => m.MovimentacaoData)
                 .ToList();
 

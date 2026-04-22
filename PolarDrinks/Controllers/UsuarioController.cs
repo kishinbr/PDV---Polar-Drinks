@@ -149,5 +149,59 @@ namespace PolarDrinks.Controllers
             TempData["MensagemSucesso"] = $"Senha de '{usuario.UsuarioNome}' alterada com sucesso!";
             return RedirectToAction("Index");
         }
+        public IActionResult Desativar(int id)
+        {
+            var usuario = _db.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            return View(usuario);
+        }
+        [HttpPost]
+        public IActionResult Desativar(int id, string senhaAtual)
+        {
+            var usuario = _db.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            var usuarioLogadoLogin = HttpContext.Session.GetString("Usuario");
+
+            var usuarioLogado = _db.Usuarios
+                .FirstOrDefault(u => u.UsuarioLogin == usuarioLogadoLogin);
+
+            if (usuarioLogado == null)
+                return NotFound();
+
+            // 🔒 valida senha
+            if (!BCrypt.Net.BCrypt.Verify(senhaAtual, usuarioLogado.UsuarioSenhaHash))
+            {
+                ViewBag.Erro = "Senha incorreta.";
+                return View(usuario);
+            }
+
+            // ❌ não pode desativar a si mesmo
+            if (usuario.UsuarioLogin == usuarioLogadoLogin && usuario.UsuarioAtivo)
+            {
+                TempData["MensagemErro"] = "Você não pode desativar sua própria conta.";
+                return RedirectToAction("Index");
+            }
+
+            // ❌ não pode desativar último admin
+            if (usuario.UsuarioAtivo && usuario.UsuarioPerfil == "Admin"
+                && _db.Usuarios.Count(u => u.UsuarioAtivo && u.UsuarioPerfil == "Admin") == 1)
+            {
+                TempData["MensagemErro"] = "Não é possível desativar o único administrador ativo.";
+                return RedirectToAction("Index");
+            }
+
+            // 🔁 alterna status
+            usuario.UsuarioAtivo = !usuario.UsuarioAtivo;
+            _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = $"Usuário '{usuario.UsuarioNome}' " +
+                                         (usuario.UsuarioAtivo ? "ativado" : "desativado") + ".";
+
+            return RedirectToAction("Index");
+        }
     }
 }

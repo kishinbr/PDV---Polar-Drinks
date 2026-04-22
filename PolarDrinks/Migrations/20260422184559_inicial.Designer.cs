@@ -12,8 +12,8 @@ using PolarDrinks.Data;
 namespace PolarDrinks.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260419232850_criandobd")]
-    partial class criandobd
+    [Migration("20260422184559_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,9 +47,14 @@ namespace PolarDrinks.Migrations
                     b.Property<int>("FornecedorID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsuarioID")
+                        .HasColumnType("int");
+
                     b.HasKey("CompraID");
 
                     b.HasIndex("FornecedorID");
+
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("ComprasEstoque");
                 });
@@ -222,6 +227,9 @@ namespace PolarDrinks.Migrations
                     b.Property<int>("ProdutoID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsuarioID")
+                        .HasColumnType("int");
+
                     b.HasKey("MovimentacaoID");
 
                     b.HasIndex("ItemCompraID");
@@ -229,6 +237,8 @@ namespace PolarDrinks.Migrations
                     b.HasIndex("ItemVendaID");
 
                     b.HasIndex("ProdutoID");
+
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("MovimentacoesEstoque");
                 });
@@ -302,8 +312,8 @@ namespace PolarDrinks.Migrations
 
                     b.Property<string>("UsuarioNome")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
                     b.Property<string>("UsuarioPerfil")
                         .IsRequired()
@@ -329,6 +339,9 @@ namespace PolarDrinks.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VendaID"));
 
+                    b.Property<int?>("UsuarioID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("VendaCancelada")
                         .HasColumnType("bit");
 
@@ -346,6 +359,8 @@ namespace PolarDrinks.Migrations
 
                     b.HasKey("VendaID");
 
+                    b.HasIndex("UsuarioID");
+
                     b.ToTable("Vendas");
                 });
 
@@ -357,7 +372,14 @@ namespace PolarDrinks.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PolarDrinks.Models.UsuarioModel", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Fornecedor");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("PolarDrinks.Models.ItemCompraModel", b =>
@@ -416,11 +438,28 @@ namespace PolarDrinks.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PolarDrinks.Models.UsuarioModel", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("ItemCompra");
 
                     b.Navigation("ItemVenda");
 
                     b.Navigation("Produto");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("PolarDrinks.Models.VendaModel", b =>
+                {
+                    b.HasOne("PolarDrinks.Models.UsuarioModel", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("PolarDrinks.Models.CompraEstoqueModel", b =>

@@ -121,6 +121,25 @@ namespace PolarDrinks.Data
             modelBuilder.Entity<UsuarioModel>()
                 .HasIndex(u => u.UsuarioLogin)
                 .IsUnique();
+
+            modelBuilder.Entity<VendaModel>()
+                .HasOne(v => v.Usuario)
+                .WithMany()
+                .HasForeignKey(v => v.UsuarioID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MovimentacaoEstoqueModel>()
+                .HasOne(m => m.Usuario)
+                .WithMany()
+                .HasForeignKey(m => m.UsuarioID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CompraEstoqueModel>()
+                .HasOne(c => c.Usuario)
+                .WithMany()
+                .HasForeignKey(c => c.UsuarioID)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

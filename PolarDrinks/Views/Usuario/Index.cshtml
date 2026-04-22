@@ -88,18 +88,11 @@
                                 Alterar Senha
                             </a>
 
-                            <form asp-action="AlternarAtivo"
-                                  asp-route-id="@u.UsuarioID"
-                                  method="post"
-                                  class="d-inline">
-
-                                <button type="submit"
-                                        class="btn btn-sm @(u.UsuarioAtivo ? "btn-danger" : "btn-success")"
-                                        title="@(u.UsuarioAtivo ? "Desativar" : "Ativar")">
-
-                                    @(u.UsuarioAtivo ? "Desativar" : "Ativar")
-                                </button>
-                            </form>
+                            <a asp-action="Desativar"
+                                   asp-route-id="@u.UsuarioID"
+                                   class="btn btn-sm @(u.UsuarioAtivo ? "btn-danger" : "btn-success")">
+                                @(u.UsuarioAtivo ? "Desativar" : "Ativar")
+                            </a>
 
                         </div>
                     </td>

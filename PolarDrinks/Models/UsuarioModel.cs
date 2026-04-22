@@ -8,7 +8,7 @@ namespace PolarDrinks.Models
         public int UsuarioID { get; set; }
 
         [Required(ErrorMessage = "Informe o nome do usuário")]
-        [StringLength(50)]
+        [StringLength(80)]
         public string UsuarioNome { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Informe o login do usuário")]
@@ -17,7 +17,6 @@ namespace PolarDrinks.Models
 
         public string UsuarioSenhaHash { get; set; } = string.Empty;
 
-        // "Admin" ou "Funcionario"
         public string UsuarioPerfil { get; set; } = "Funcionario";
 
         public bool UsuarioAtivo { get; set; } = true;

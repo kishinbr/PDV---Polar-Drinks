@@ -51,6 +51,7 @@
                 <th style="width: 15%;" class="text-center">Tipo</th>
                 <th style="width: 15%;" class="text-center">Quantidade</th>
                 <th style="width: 15%;" class="text-center">ID</th>
+                <th style="width: 15%;">Responsável</th>
                 <th style="width: 15%;">Descrição</th>
             </tr>
         </thead>
@@ -132,6 +133,7 @@
                                 <span class="text-muted">-</span>
                             }
                         </td>
+                        <td>@mov.Usuario?.UsuarioNome</td>
 
                         <td title="@mov.MovimentacaoDescricao">
                             @(mov.MovimentacaoDescricao != null && mov.MovimentacaoDescricao.Length > 20
@@ -207,7 +209,7 @@
 
             language: {
                 "decimal": "",
-                "emptyTable": "Selecione um produto",
+                "emptyTable": "Movimentações não encontradas",
                 "info": "Mostrando de _START_ a _END_ de um total de _TOTAL_ movimentações",
                 "infoEmpty": "Mostrando de 0 a 0 de 0 movimentações",
                 "infoFiltered": "(filtrado de _MAX_ movimentações no total)",

@@ -39,23 +39,27 @@ namespace PolarDrinks.Controllers
             var venda = _db.Vendas
                 .Include(v => v.Itens)
                 .ThenInclude(i => i.Produto)
+                .Include(v => v.Usuario)
                 .FirstOrDefault(v => v.VendaID == id);
 
             if (venda == null)
                 return NotFound();
 
             // busca a descrição do cancelamento se existir
-            if (venda.VendaCancelada)
-            {
-                var motivoCancelamento = _db.MovimentacoesEstoque
-                    .Where(m => m.ItemVenda.VendaID == id
-                             && m.MovimentacaoTipo == MovimentacaoEstoqueModel.Tipos.Cancelamento
-                             && m.MovimentacaoDescricao != null)
-                    .Select(m => m.MovimentacaoDescricao)
-                    .FirstOrDefault();
+            var motivoCancelamento = _db.MovimentacoesEstoque
+                .Include(m => m.Usuario) // 👈 IMPORTANTE
+                .Where(m => m.ItemVenda.VendaID == id
+                         && m.MovimentacaoTipo == MovimentacaoEstoqueModel.Tipos.Cancelamento
+                         && m.MovimentacaoDescricao != null)
+                .Select(m => new
+                {
+                    m.MovimentacaoDescricao,
+                    UsuarioNome = m.Usuario.UsuarioNome
+                })
+                .FirstOrDefault();
 
-                ViewBag.MotivoCancelamento = motivoCancelamento;
-            }
+            ViewBag.MotivoCancelamento = motivoCancelamento?.MovimentacaoDescricao;
+            ViewBag.UsuarioCancelamento = motivoCancelamento?.UsuarioNome;
 
             return View(venda);
         }
@@ -75,6 +79,8 @@ namespace PolarDrinks.Controllers
         [HttpPost]
         public IActionResult FinalizarVenda(VendaModel venda)
         {
+            
+
             if (venda == null || venda.Itens.Count == 0)
             {
                 TempData["MensagemErro"] = "Adicione pelo menos um item à venda.";
@@ -132,7 +138,10 @@ namespace PolarDrinks.Controllers
                     totalVenda += item.ItemVendaTotal;
                 }
 
+                var usuarioId = HttpContext.Session.GetInt32("UsuarioID");
+
                 venda.VendaValorTotal = totalVenda;
+                venda.UsuarioID = usuarioId;
 
                 _db.Vendas.Add(venda);
                 _db.SaveChanges();
@@ -149,7 +158,8 @@ namespace PolarDrinks.Controllers
                         MovimentacaoQtd = item.ItemVendaQtd,
                         MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Saida,
                         MovimentacaoData = DateTime.Now,
-                        ItemVendaID = item.ItemVendaID
+                        ItemVendaID = item.ItemVendaID,
+                        UsuarioID = usuarioId
                     };
 
                     _db.MovimentacoesEstoque.Add(movimentacao);
@@ -175,6 +185,7 @@ namespace PolarDrinks.Controllers
             var venda = _db.Vendas
                 .Include(v => v.Itens)
                 .ThenInclude(i => i.Produto)
+                .Include(v => v.Usuario)
                 .FirstOrDefault(v => v.VendaID == id);
 
             if (venda == null)
@@ -186,6 +197,7 @@ namespace PolarDrinks.Controllers
         [HttpPost]
         public IActionResult CancelarVenda(int id, string? descricao)
         {
+            var usuarioId = HttpContext.Session.GetInt32("UsuarioID");
             var venda = _db.Vendas
                 .Include(v => v.Itens)
                 .ThenInclude(i => i.Produto)
@@ -223,7 +235,8 @@ namespace PolarDrinks.Controllers
                     MovimentacaoTipo = MovimentacaoEstoqueModel.Tipos.Cancelamento,
                     MovimentacaoData = DateTime.Now,
                     ItemVendaID = item.ItemVendaID,
-                    MovimentacaoDescricao = descricao  // <- salva a descrição
+                    MovimentacaoDescricao = descricao,
+                    UsuarioID = usuarioId,
                 });
             }
 

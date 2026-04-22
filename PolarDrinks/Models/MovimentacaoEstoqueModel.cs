@@ -33,5 +33,8 @@ namespace PolarDrinks.Models
 
         public int? ItemVendaID { get; set; }
         public ItemVendaModel? ItemVenda { get; set; }
+
+        public int? UsuarioID { get; set; }
+        public UsuarioModel? Usuario { get; set; }
     }
 }

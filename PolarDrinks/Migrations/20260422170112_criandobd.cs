@@ -74,22 +74,6 @@ namespace PolarDrinks.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vendas",
-                columns: table => new
-                {
-                    VendaID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    VendaValorTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    VendaTipoPagamento = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    VendaData = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VendaCancelada = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vendas", x => x.VendaID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ComprasEstoque",
                 columns: table => new
                 {
@@ -108,6 +92,56 @@ namespace PolarDrinks.Migrations
                         column: x => x.FornecedorID,
                         principalTable: "Fornecedores",
                         principalColumn: "FornecedorID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vendas",
+                columns: table => new
+                {
+                    VendaID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VendaValorTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    VendaTipoPagamento = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    VendaData = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VendaCancelada = table.Column<bool>(type: "bit", nullable: false),
+                    UsuarioID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vendas", x => x.VendaID);
+                    table.ForeignKey(
+                        name: "FK_Vendas_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItensCompra",
+                columns: table => new
+                {
+                    ItemCompraID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemCompraQtd = table.Column<int>(type: "int", nullable: false),
+                    ItemCompraPreco = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ProdutoID = table.Column<int>(type: "int", nullable: false),
+                    CompraID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItensCompra", x => x.ItemCompraID);
+                    table.ForeignKey(
+                        name: "FK_ItensCompra_ComprasEstoque_CompraID",
+                        column: x => x.CompraID,
+                        principalTable: "ComprasEstoque",
+                        principalColumn: "CompraID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItensCompra_Produtos_ProdutoID",
+                        column: x => x.ProdutoID,
+                        principalTable: "Produtos",
+                        principalColumn: "ProdutoID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -142,34 +176,6 @@ namespace PolarDrinks.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ItensCompra",
-                columns: table => new
-                {
-                    ItemCompraID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemCompraQtd = table.Column<int>(type: "int", nullable: false),
-                    ItemCompraPreco = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    ProdutoID = table.Column<int>(type: "int", nullable: false),
-                    CompraID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ItensCompra", x => x.ItemCompraID);
-                    table.ForeignKey(
-                        name: "FK_ItensCompra_ComprasEstoque_CompraID",
-                        column: x => x.CompraID,
-                        principalTable: "ComprasEstoque",
-                        principalColumn: "CompraID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ItensCompra_Produtos_ProdutoID",
-                        column: x => x.ProdutoID,
-                        principalTable: "Produtos",
-                        principalColumn: "ProdutoID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MovimentacoesEstoque",
                 columns: table => new
                 {
@@ -181,7 +187,8 @@ namespace PolarDrinks.Migrations
                     MovimentacaoData = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProdutoID = table.Column<int>(type: "int", nullable: false),
                     ItemCompraID = table.Column<int>(type: "int", nullable: true),
-                    ItemVendaID = table.Column<int>(type: "int", nullable: true)
+                    ItemVendaID = table.Column<int>(type: "int", nullable: true),
+                    UsuarioID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -204,6 +211,11 @@ namespace PolarDrinks.Migrations
                         principalTable: "Produtos",
                         principalColumn: "ProdutoID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovimentacoesEstoque_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -253,10 +265,20 @@ namespace PolarDrinks.Migrations
                 column: "ProdutoID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovimentacoesEstoque_UsuarioID",
+                table: "MovimentacoesEstoque",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_UsuarioLogin",
                 table: "Usuarios",
                 column: "UsuarioLogin",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vendas_UsuarioID",
+                table: "Vendas",
+                column: "UsuarioID");
         }
 
         /// <inheritdoc />
@@ -264,9 +286,6 @@ namespace PolarDrinks.Migrations
         {
             migrationBuilder.DropTable(
                 name: "MovimentacoesEstoque");
-
-            migrationBuilder.DropTable(
-                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "ItensCompra");
@@ -285,6 +304,9 @@ namespace PolarDrinks.Migrations
 
             migrationBuilder.DropTable(
                 name: "Fornecedores");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
         }
     }
 }

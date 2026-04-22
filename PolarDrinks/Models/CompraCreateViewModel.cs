@@ -24,7 +24,8 @@ namespace PolarDrinks.ViewModels
     public class ItemCompraCreateVM
     {
         [Required(ErrorMessage = "Selecione um produto")]
-        public int? ProdutoID { get; set; } 
+        public int? ProdutoID { get; set; }
+        public string? ProdutoNome { get; set; }
 
         [Required(ErrorMessage = "Informe a quantidade")]
         [Range(1, int.MaxValue, ErrorMessage = "Quantidade inválida")]

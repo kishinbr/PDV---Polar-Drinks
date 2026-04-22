@@ -33,6 +33,9 @@ namespace PolarDrinks.Models
 
         public FornecedorModel? Fornecedor { get; set; }
 
+        public int? UsuarioID { get; set; }
+        public UsuarioModel? Usuario { get; set; }
+
         //relacionamento 1:N com itens de compra
 
         //isso signiica que a compra tem uma lista de itens, da itemCompraModel, e que essa lista é inicializada como vazia para evitar null reference

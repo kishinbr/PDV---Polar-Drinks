@@ -27,6 +27,7 @@ namespace PolarDrinks.Controllers
             if (user != null && BCrypt.Net.BCrypt.Verify(senha, user.UsuarioSenhaHash))
             {
                 HttpContext.Session.SetString("Logado", "true");
+                HttpContext.Session.SetInt32("UsuarioID", user.UsuarioID);
                 HttpContext.Session.SetString("Usuario", user.UsuarioLogin);
                 HttpContext.Session.SetString("Perfil", user.UsuarioPerfil);
                 HttpContext.Session.SetString("Nome", user.UsuarioNome);
