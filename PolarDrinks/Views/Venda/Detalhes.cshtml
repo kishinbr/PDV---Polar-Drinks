@@ -1,0 +1,68 @@
+﻿
+@model PolarDrinks.Models.VendaModel
+@{
+    ViewData["Title"] = "Histórico de Vendas";
+}
+
+
+<div class="container bg-dark p-4 rounded-4 mt-5">
+
+
+   
+    <h2 class="text-light mb-4">Detalhes da Venda #@Model.VendaID</h2>
+
+    @if (Model.VendaCancelada)
+    {
+        <div class="bg-danger-subtle text-danger rounded-3 p-3 mb-3 text-center">
+
+            <div class="fw-bold fs-5 mb-2">
+                VENDA CANCELADA
+            </div>
+            <div>
+                <strong>Cancelado por:</strong> @ViewBag.UsuarioCancelamento
+            </div>
+            <div class="small">
+                <div>
+                    <strong>Motivo:</strong> @ViewBag.MotivoCancelamento
+                </div>
+            </div>
+
+        </div>
+    }
+
+    <div class="text-light mb-3">
+
+        <strong>Responsável:</strong> @Model.Usuario?.UsuarioNome <br />
+        <strong>Data:</strong> @Model.VendaData.ToString("dd/MM/yyyy") <br />
+        <strong>Hora:</strong> @Model.VendaData.ToString("HH:mm") <br />
+        <strong>Pagamento:</strong> @Model.VendaTipoPagamento <br />
+    </div>
+    
+
+
+    <table class="table table-light">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Unitário</th>
+                <th class="text-end">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Itens)
+            {
+                <tr>
+                    <td>@item.Produto?.ProdutoNome</td>
+                    <td>@item.ItemVendaQtd</td>
+                    <td>@item.ItemVendaPreco.ToString("C")</td>
+                    <td class ="text-end">@item.ItemVendaTotal.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-end text-light mt-3"> <h4>Total:   @Model.VendaValorTotal.ToString("C")</h4> </div>
+    <a asp-action="Index" class="btn btn-primary">Voltar</a>
+
+
+</div>
