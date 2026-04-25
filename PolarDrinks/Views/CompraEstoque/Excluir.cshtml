@@ -35,15 +35,15 @@
                 <tr>
                     <td>@item.Produto?.ProdutoNome</td>
                     <td>@item.ItemCompraQtd</td>
-                    <td class="text-end">@item.ItemCompraPreco.ToString("C")</td>
-                    <td class="text-end">@((item.ItemCompraQtd * item.ItemCompraPreco).ToString("C"))</td>
+                    <td class="text-end">@("R" +@item.ItemCompraPreco.ToString("C"))</td>
+                    <td class="text-end">@("R" + (item.ItemCompraQtd * item.ItemCompraPreco).ToString("C"))</td>
                 </tr>
             }
         </tbody>
     </table>
 
     <div class="text-end text-light mt-3">
-        <h4>Total: @Model.Compra.CompraValorTotal.ToString("C")</h4>
+        <h4>Total: @("R" +@Model.Compra.CompraValorTotal.ToString("C"))</h4>
     </div>
 
     <div class="d-flex gap-2 mt-3 justify-content-between">

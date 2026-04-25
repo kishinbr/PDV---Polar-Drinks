@@ -76,11 +76,21 @@
 
                         <td data-order="@produto.ProdutoQtdEstoque.GetValueOrDefault(0)">
 
-                            @{
-                                var atual = produto.ProdutoQtdEstoque.GetValueOrDefault(0);
-                                var minimo = produto.ProdutoEstoqueMinimo;
-                                var classe = atual <= minimo ? "badge bg-warning text-dark" : "";
-                            }
+                                @{
+                                    var atual = produto.ProdutoQtdEstoque.GetValueOrDefault(0);
+                                    var minimo = produto.ProdutoEstoqueMinimo;
+
+                                    string classe = "";
+
+                                    if (atual == 0)
+                                    {
+                                        classe = "badge bg-danger";
+                                    }
+                                    else if (atual <= minimo)
+                                    {
+                                        classe = "badge bg-warning text-dark";
+                                    }
+                                }
 
                             <span class="@classe">
                                 @($"{atual}/{minimo}")
