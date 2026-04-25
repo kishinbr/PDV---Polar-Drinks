@@ -28,13 +28,14 @@ namespace PolarDrinks.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cadastrar(string usuarioNome, string usuarioLogin, string senha, string confirmacaoSenha, string usuarioPerfil)
+        public IActionResult Cadastrar(string usuarioNome, string usuarioLogin, string senha, string confirmacaoSenha, string usuarioPerfil, string senhaAtual)
         {
             if (string.IsNullOrWhiteSpace(usuarioNome))
             {
                 ViewBag.Erro = "Informe o nome do usuário.";
                 return View();
             }
+
             if (string.IsNullOrWhiteSpace(usuarioLogin))
             {
                 ViewBag.Erro = "Informe o login do usuário.";
@@ -59,7 +60,16 @@ namespace PolarDrinks.Controllers
                 return View();
             }
 
-            // Garante que só chegue um valor válido
+            // valida a senha do usuário logado
+            var loginLogado = HttpContext.Session.GetString("Usuario");
+            var usuarioLogado = _db.Usuarios.FirstOrDefault(u => u.UsuarioLogin == loginLogado);
+
+            if (usuarioLogado == null || !BCrypt.Net.BCrypt.Verify(senhaAtual, usuarioLogado.UsuarioSenhaHash))
+            {
+                ViewBag.Erro = "Senha atual incorreta.";
+                return View();
+            }
+
             var perfil = usuarioPerfil == "Admin" ? "Admin" : "Funcionario";
 
             var novo = new UsuarioModel
@@ -172,21 +182,18 @@ namespace PolarDrinks.Controllers
             if (usuarioLogado == null)
                 return NotFound();
 
-            // 🔒 valida senha
             if (!BCrypt.Net.BCrypt.Verify(senhaAtual, usuarioLogado.UsuarioSenhaHash))
             {
                 ViewBag.Erro = "Senha incorreta.";
                 return View(usuario);
             }
 
-            // ❌ não pode desativar a si mesmo
             if (usuario.UsuarioLogin == usuarioLogadoLogin && usuario.UsuarioAtivo)
             {
                 TempData["MensagemErro"] = "Você não pode desativar sua própria conta.";
                 return RedirectToAction("Index");
             }
 
-            // ❌ não pode desativar último admin
             if (usuario.UsuarioAtivo && usuario.UsuarioPerfil == "Admin"
                 && _db.Usuarios.Count(u => u.UsuarioAtivo && u.UsuarioPerfil == "Admin") == 1)
             {
@@ -194,7 +201,6 @@ namespace PolarDrinks.Controllers
                 return RedirectToAction("Index");
             }
 
-            // 🔁 alterna status
             usuario.UsuarioAtivo = !usuario.UsuarioAtivo;
             _db.SaveChanges();
 

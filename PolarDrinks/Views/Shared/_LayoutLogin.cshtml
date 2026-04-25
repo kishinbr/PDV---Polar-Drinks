@@ -15,48 +15,9 @@
     <link rel="stylesheet" href="~/css/layout.css" />
     <link rel="stylesheet" href="~/css/dash1.css" />
 </head>
-<body  class="text-light bg-shadow">
-    <div class="topbar">
-        <button class="btn btn-light btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral">
-            <i class="bi bi-list"></i>
-        </button>
-        <div> <img src="/img/polaria.png" width="32" height="32">Polar Drinks</div>
-    </div>
-
-    <div class="sidebar">
-        <div class="brand"><img src="/img/polaria.png" width="32" height="32"> Polar Drinks</div>
-
-
-        <a>
-            <i class="bi bi-box-arrow-right"></i> Deslogar
-        </a>
-    </div>
-
-    <!-- menu hamburguer -->
-    <div class="offcanvas offcanvas-start text-light"
-         tabindex="-1"
-         id="menuLateral"
-         style="background:#010409;">
-
-        <div class="offcanvas-header border-bottom border-secondary">
-            <h5 class="offcanvas-title"><img src="/img/polaria.png" width="32" height="32"> Polar Drinks</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-        </div>
-
-        <div class="offcanvas-body p-3">
-
-
-            <div class="menu-section">SAIR</div>
-
-            <a class="menu-item" href="#">
-                <i class="bi bi-box-arrow-right"></i> Deslogar
-            </a>
-
-        </div>
-    </div>
-
-    <!-- onde as views sao renderizadas -->
-    <div class="content">
+<body class="text-light " style="background:#0D1117;">
+    
+    <div class="">
         @RenderBody()
     </div>
 

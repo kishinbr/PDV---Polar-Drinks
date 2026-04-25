@@ -44,9 +44,15 @@
             <input type="password" name="confirmacaoSenha" class="form-control bg-shadow text-light" minlength="6" required />
         </div>
 
+
+        <div class="mb-4">
+            <label class="form-label text-light">Senha do @Context.Session.GetString("Nome")</label>
+            <input type="password" name="senhaAtual" class="form-control bg-shadow text-light" minlength="6" required />
+        </div>
+
         <div class="d-flex gap-3">
             <a asp-action="Index" class="btn btn-primary w-50">Voltar</a>
-            <button type="submit" class="btn btn-success w-50">Salvar</button>
+            <button type="submit" class="btn btn-success w-50">Cadastrar</button>
             
         </div>
     </form>
