@@ -3,22 +3,26 @@
     Layout = "_LayoutLogin";
 }
 
-<div class="container mt-5" style="max-width:400px;">
+<div class="container d-flex justify-content-center align-items-start min-vh-100 pt-5">
 
-    <h3 class="mb-4 text-center">Login</h3>
+    <div class="container rounded-4 bg-shadow p-4 mt-4" style="max-width:400px;">
 
-    <form method="post" autocomplete="off">
-        <input name="usuario" class="form-control mb-3" placeholder="Usuário" />
-        <input name="senha" type="password" class="form-control mb-3" placeholder="Senha" />
+        <h3 class="mb-4 text-center text-light">Login</h3>
 
-        <button class="btn btn-dark w-100">Entrar</button>
-    </form>
+        <form method="post" autocomplete="off">
+            <input name="usuario" class="form-control mb-3 bg-shadow text-light" placeholder="Usuário" />
+            <input name="senha" type="password" class="form-control mb-3 bg-shadow text-light" placeholder="Senha" />
 
-    @if (ViewBag.Erro != null)
-    {
-        <div class="alert bg-danger text-light mt-3">
-            @ViewBag.Erro
-        </div>
-    }
+            <button class="btn btn-dark w-100">Entrar</button>
+        </form>
+
+        @if (ViewBag.Erro != null)
+        {
+            <div class="alert bg-danger text-light mt-3">
+                @ViewBag.Erro
+            </div>
+        }
+
+    </div>
 
 </div>

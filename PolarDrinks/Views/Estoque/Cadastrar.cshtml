@@ -2,8 +2,7 @@
 @{
     ViewData["title"] = "Cadastrar Produto";
 }
-
-<div class="container bg-dark p-5 rounded-5 mt-5">
+<div class="container bg-shadow p-5 rounded-5 mt-5">
     <div class="mb-5 text-center">
         <h1 class="text-light">Cadastrar Produto</h1>
     </div>
@@ -24,32 +23,32 @@
 
         <div class="mb-4">
             <label class="form-label text-light">Nome</label>
-            <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoNome" placeholder="Nome do Produto" maxlength="100" >
+            <input type="text" class="form-control bg-shadow text-light" asp-for="ProdutoNome" placeholder="Nome do Produto" maxlength="100" >
             <span asp-validation-for="ProdutoNome" class="text-danger"></span>
         </div>
 
         <div class="mb-4">
             <label class="form-label text-light">Descrição</label>
-            <textarea class="form-control bg-white text-dark" asp-for="ProdutoDescricao" rows="3" placeholder="Descrição do Produto" maxlength="200"></textarea>
+            <textarea class="form-control bg-shadow text-light" asp-for="ProdutoDescricao" rows="3" placeholder="Descrição do Produto" maxlength="200"></textarea>
             <span asp-validation-for="ProdutoDescricao" class="text-danger"></span>
         </div>
 
         <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label text-light">Código de Barras</label>
-                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoCodBarra" placeholder="Ex: 789123456" maxlength="20">
+                <input type="text" class="form-control bg-shadow text-light" asp-for="ProdutoCodBarra" placeholder="Ex: 789123456" maxlength="20">
                 <span asp-validation-for="ProdutoCodBarra" class="text-danger"></span>
             </div>
 
             <div class="col-md-4">
                 <label class="form-label text-light">Preço de Custo</label>
-                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoPrecoCusto" placeholder="0.00">
+                <input type="text" class="form-control bg-shadow text-light" asp-for="ProdutoPrecoCusto" placeholder="0.00">
                 <span asp-validation-for="ProdutoPrecoCusto" class="text-danger"></span>
             </div>
 
             <div class="col-md-4">
                 <label class="form-label text-light">Preço de Venda</label>
-                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoPrecoVenda" placeholder="0.00">
+                <input type="text" class="form-control bg-shadow text-light" asp-for="ProdutoPrecoVenda" placeholder="0.00">
                 <span asp-validation-for="ProdutoPrecoVenda" class="text-danger"></span>
             </div>
         </div>
@@ -59,7 +58,7 @@
                 <label class="form-label text-light">Quantidade em Estoque</label>
 
                 <input type="number"
-                        class="form-control bg-secondary text-white"
+                        class="form-control bg-shadowi text-light"
                         asp-for="ProdutoQtdEstoque"
                         value="0"
                         readonly />
@@ -68,7 +67,7 @@
 
             <div class="col-md-6">
                 <label class="form-label text-light">Estoque Mínimo</label>
-                <input type="text" class="form-control bg-white text-dark" asp-for="ProdutoEstoqueMinimo" placeholder="0" maxlength="10">
+                <input type="text" class="form-control bg-shadow text-light" asp-for="ProdutoEstoqueMinimo" placeholder="0" maxlength="10">
                 <span asp-validation-for="ProdutoEstoqueMinimo" class="text-danger"></span>
             </div>
         </div>

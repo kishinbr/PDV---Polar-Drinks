@@ -3,7 +3,7 @@
     ViewData["Title"] = "Novo Reabastecimento";
 }
 
-<div class="container bg-dark p-5 mt-5 rounded-5">
+<div class="container bg-shadow p-5 mt-5 rounded-5">
 
     <div class="text-center mb-4">
         <h2 class="text-light">Novo Reabastecimento</h2>
@@ -25,14 +25,14 @@
     <form method="post" id="formCompra">
         <div class="mb-4">
             <label class="form-label text-light">Fornecedor</label>
-            <select class="form-select bg-light text-dark" asp-for="FornecedorID" asp-items="Model.Fornecedores">
+            <select class="form-select bg-shadow text-light" asp-for="FornecedorID" asp-items="Model.Fornecedores">
                 <option value="">Selecione um fornecedor</option>
             </select>
             <span asp-validation-for="FornecedorID" class="text-danger"></span>
         </div>
 
-        <table class="table table-light" id="tabelaItens">
-            <thead>
+        <table class="table table-light bg-shadowt" id="tabelaItens">
+            <thead class="bg-tpreto">
                 <tr>
                     <th>Produto</th>
                     <th style="width:150px;">Quantidade</th>
@@ -46,12 +46,12 @@
                     <tr>
                         <td>
                             <div class="position-relative">
-                                <!-- 👇 repopula o nome do produto vindo do backend -->
-                                <input type="text" class="form-control busca-produto"
+                                
+                                <input type="text" class="form-control busca-produto bg-shadow text-light"
                                        placeholder="Digite o nome do produto"
                                        autocomplete="off"
                                        value="@Model.Itens[i].ProdutoNome" />
-                                <!-- 👇 repopula o ID oculto vindo do backend -->
+
                                 <input type="hidden" name="Itens[@i].ProdutoID"
                                        class="produto-id-hidden"
                                        value="@Model.Itens[i].ProdutoID" />
@@ -60,11 +60,11 @@
                             <span asp-validation-for="Itens[@i].ProdutoID" class="text-danger"></span>
                         </td>
                         <td>
-                            <input class="form-control" asp-for="Itens[@i].Quantidade" type="text" />
+                            <input class="form-control bg-shadow text-light" asp-for="Itens[@i].Quantidade" type="text" />
                             <span asp-validation-for="Itens[@i].Quantidade" class="text-danger"></span>
                         </td>
                         <td>
-                            <input class="form-control preco-input" asp-for="Itens[@i].Preco" type="text" />
+                            <input class="form-control preco-input bg-shadow text-light" asp-for="Itens[@i].Preco" type="text" />
                             <span asp-validation-for="Itens[@i].Preco" class="text-danger"></span>
                         </td>
                         <td class="text-center">
@@ -91,13 +91,13 @@
 
 @if (Model.ProdutosEstoque != null && Model.ProdutosEstoque.Any())
 {
-    <div class="d-flex justify-content-between container align-items-center bg-dark text-light p-4 mt-4 rounded-4">
+    <div class="d-flex justify-content-between container align-items-center bg-shadow text-light p-4 mt-4 rounded-4">
         <h4 class="m-0">Produtos em Estoque</h4>
     </div>
 
-    <div class="container rounded-4">
-        <table id="tabelaEstoqueConsulta" class="table table-success table-hover mb-0">
-            <thead>
+    <div class="container rounded-4 bg-shadow p-4 mt-4">
+        <table id="tabelaEstoqueConsulta" class="table table-hover mb-0 bg-shadowt">
+            <thead class="bg-tpreto">
                 <tr>
                     <th>Produto</th>
                     <th>Preço de Custo</th>
@@ -223,7 +223,7 @@
                 <tr>
                     <td>
                         <div class="position-relative">
-                            <input type="text" class="form-control busca-produto"
+                            <input type="text" class="form-control busca-produto bg-shadow text-light"
                                    placeholder="Digite o nome do produto"
                                    autocomplete="off" />
                             <input type="hidden" name="Itens[${index}].ProdutoID" class="produto-id-hidden" />
@@ -231,10 +231,10 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" name="Itens[${index}].Quantidade" class="form-control" value="0" />
+                        <input type="text" name="Itens[${index}].Quantidade" class="form-control bg-shadow text-light" value="0" />
                     </td>
                     <td>
-                        <input type="text" name="Itens[${index}].Preco" class="form-control preco-input" value="0.00" />
+                        <input type="text" name="Itens[${index}].Preco" class="form-control preco-input bg-shadow text-light" value="0.00" />
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-remover">X</button>

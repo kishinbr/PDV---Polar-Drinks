@@ -19,63 +19,68 @@
     }
 
 
-    <div class="d-flex justify-content-between align-items-center mb-4 bg-dark text-light p-4 rounded-4 mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-4 bg-shadow text-light p-4 rounded-4 mt-2">
         <h1 class="m-0">Reabastecimento</h1>
 
         <a asp-action="Cadastrar" class="btn btn-success" title="Cadastrar">
             + Novo Reabastecimento
         </a>
     </div>
-    <div class="d-flex justify-content-between align-items-center  bg-warning-subtle text-dark p-4 rounded-4 mb-3">
-        <h4 class="m-0">Pedidos Pendentes</h4>
-    </div>
+    @* <div class="d-flex justify-content-between align-items-center bg-shadow text-dark p-4 rounded-4 mb-3 ">
+        
+    </div> *@
+    
     @if (Model.Pendentes != null && Model.Pendentes.Any())
 {
-    <table class="table table-warning table-hover mb-5">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data Compra</th>
-                <th>Fornecedor</th>
-                <th>Status</th>
-                <th class="text-center">Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Pendentes)
-            {
+        
+        <div class="bg-shadow text-light p-4 rounded-4 mb-4">
+            <h4 class="d-flex justify-content-between align-items-center text-warning mb-4 mt-2 ">Pedidos Pendentes</h4>
+            <table class="table table-hover  bg-shadowt">
+            <thead class="bg-tpreto">
                 <tr>
-                    <td>@item.CompraID</td>
-                    <td>@item.CompraData.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Fornecedor?.FornecedorNome</td>
-                    <td>@item.CompraStatus</td>
-                    <td class="text-center">
+                    <th>ID</th>
+                    <th>Data Compra</th>
+                    <th>Fornecedor</th>
+                    <th>Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Pendentes)
+                {
+                    <tr>
+                        <td>@item.CompraID</td>
+                        <td>@item.CompraData.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Fornecedor?.FornecedorNome</td>
+                        <td>@item.CompraStatus</td>
+                        <td class="text-center">
                             
-                            <a asp-action="Detalhes"
-                                   asp-route-id="@item.CompraID"
-                                   asp-route-confirmar="false"
-                                   class="btn btn-primary btn-sm" title="Detalhes">
-                                <i class="bi bi-file-earmark-text-fill"></i>
-                            </a>
+                                <a asp-action="Detalhes"
+                                       asp-route-id="@item.CompraID"
+                                       asp-route-confirmar="false"
+                                       class="btn btn-primary btn-sm" title="Detalhes">
+                                    <i class="bi bi-file-earmark-text-fill"></i>
+                                </a>
 
                            
-                            <a asp-action="Detalhes"
-                                   asp-route-id="@item.CompraID"
-                                   asp-route-confirmar="true"
-                                   class="btn btn-success btn-sm" title="Confirmar Entrega">
-                                <i class="bi bi-truck"></i>
-                            </a>
+                                <a asp-action="Detalhes"
+                                       asp-route-id="@item.CompraID"
+                                       asp-route-confirmar="true"
+                                       class="btn btn-success btn-sm" title="Confirmar Entrega">
+                                    <i class="bi bi-truck"></i>
+                                </a>
 
-                            <a asp-action="Excluir"
-                                   asp-route-id="@item.CompraID"
-                                   class="btn btn-danger btn-sm" title="Cancelar Entrega">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                                <a asp-action="Excluir"
+                                       asp-route-id="@item.CompraID"
+                                       class="btn btn-danger btn-sm" title="Cancelar Entrega">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
     }
     else
     {
@@ -86,63 +91,64 @@
     }
 
     
-    <div class="d-flex justify-content-between align-items-center  bg-success-subtle text-dark p-4 rounded-4 mb-4">
-        <h4 class="m-0">Pedidos Concluídos</h4>
-    </div>
+    @* <div class="d-flex justify-content-between align-items-center  bg-shadow  p-4 rounded-4 mb-4">
+        <h4 class="m-0 text-success">Pedidos Concluídos</h4>
+    </div> *@
+    <div class="bg-shadow text-light p-4 rounded-4 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center text-success mb-4 mt-2 ">Pedidos Concluido</h4>
+        <div class="mb-3 d-flex justify-content-center">
+            <div class="d-flex align-items-end gap-2 flex-wrap">
 
-    <div class="mb-3 d-flex justify-content-center">
-        <div class="d-flex align-items-end gap-2 flex-wrap">
+                <div>
+                    <label class="form-label small mb-1">Início</label>
+                    <input type="date" id="dataInicio" class="form-control form-control-sm">
+                </div>
 
-            <div>
-                <label class="form-label small mb-1">Início</label>
-                <input type="date" id="dataInicio" class="form-control form-control-sm">
-            </div>
-
-            <div>
-                <label class="form-label small mb-1">Fim</label>
-                <input type="date" id="dataFim" class="form-control form-control-sm">
-            </div>
-            <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-2" title="Limpar filtros">
-                <i class="bi bi-x-lg"></i>
-            </a>
+                <div>
+                    <label class="form-label small mb-1">Fim</label>
+                    <input type="date" id="dataFim" class="form-control form-control-sm">
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-2" title="Limpar filtros">
+                    <i class="bi bi-x-lg"></i>
+                </a>
 
            
 
+            </div>
         </div>
-    </div>
 
-    <table id="tabelaConcluidos" class="table table-success table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data Compra</th>
-                <th>Data Entrega</th>
-                <th>Fornecedor</th>
-                <th>Status</th>
-                <th class="text-center">Detalhes</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Concluidas)
-            {
+        <table id="tabelaConcluidos" class="table table-hover mb-0 bg-shadowt">
+            <thead class="bg-tpreto">
                 <tr>
-                    <td>@item.CompraID</td>
-                    <td data-order="@item.CompraData.ToString("yyyy-MM-dd")">
-                        @item.CompraData.ToString("dd/MM/yyyy")
-                    </td>
-                    <td>@item.CompraDataEntrega?.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Fornecedor?.FornecedorNome</td>
-                    <td>@item.CompraStatus</td>
-                    <td class="text-center">
-                        <a class="btn btn-primary btn-sm"
-                               asp-action="Detalhes"
-                               asp-route-id="@item.CompraID" title="Detalhes">
-                            <i class="bi bi-file-earmark-text-fill"></i>
-                        </a>
-                    </td>
+                    <th>ID</th>
+                    <th>Data Compra</th>
+                    <th>Data Entrega</th>
+                    <th>Fornecedor</th>
+                    <th>Status</th>
+                    <th class="text-center">Detalhes</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Concluidas)
+                {
+                    <tr>
+                        <td>@item.CompraID</td>
+                        <td data-order="@item.CompraData.ToString("yyyy-MM-dd")">
+                            @item.CompraData.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>@item.CompraDataEntrega?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Fornecedor?.FornecedorNome</td>
+                        <td>@item.CompraStatus</td>
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-sm"
+                                   asp-action="Detalhes"
+                                   asp-route-id="@item.CompraID" title="Detalhes">
+                                <i class="bi bi-file-earmark-text-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

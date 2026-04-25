@@ -6,12 +6,12 @@
 
 <div class="container rounded-4 mt-5">
 
-    <div class="bg-dark p-4 rounded-4 mb-4">
+    <div class="bg-shadow p-4 rounded-4 mb-4">
 
         <h2 class="text-light text-center mb-4">Movimentações do Estoque</h2>
 
         <div class="mb-4 position-relative">
-            <input type="text" id="buscaProduto" class="form-control"
+            <input type="text" id="buscaProduto" class="form-control "
                    placeholder="Digite o nome ou código do produto"
                    autocomplete="off" maxlength="100">
             <div id="listaSugestoes" class="list-group position-absolute w-100" style="z-index:1000;"></div>
@@ -19,7 +19,7 @@
 
         @if (ViewBag.ProdutoSelecionado != null)
         {
-            <div class="d-flex justify-content-between align-items-center bg-success text-light p-4 rounded-4">
+            <div class="d-flex justify-content-between align-items-center bg-tpreto text-light p-4 rounded-4">
                 <div>
                     <h5 class="mb-1">Produto</h5>
                     <strong class="badge bg-light text-dark">@ViewBag.ProdutoSelecionado.ProdutoNome</strong>
@@ -43,15 +43,16 @@
         }
 
     </div> 
-
-    <table id="tabelaMovimentacoes" class="table table-success table-hover mb-auto">
-        <thead>
+    <div class="bg-shadow text-light p-4 rounded-4">
+        <table id="tabelaMovimentacoes" class="table  table-hover mb-auto bg-shadowt">
+        <thead class="bg-tpreto">
             <tr>
+                <th style="width: 10%;">ID Movi</th>
                 <th style="width: 10%;">Data</th>
-                <th style="width: 15%;" class="text-center">Tipo</th>
-                <th style="width: 15%;" class="text-center">Quantidade</th>
-                <th style="width: 15%;" class="text-center">ID</th>
-                <th style="width: 15%;">Responsável</th>
+                <th style="width: 10%;" >Tipo</th>
+                <th style="width: 10%;" >Quantidade</th>
+                <th style="width: 15%;" >ID Venda/Compra</th>
+                <th style="width: 10%;">Responsável</th>
                 <th style="width: 15%;">Descrição</th>
             </tr>
         </thead>
@@ -62,6 +63,8 @@
                 foreach (var mov in Model)
                 {
                     <tr>
+                        <td><span class="badge bg-secondary">#@mov.MovimentacaoID</span> </td>
+
                         <td>@mov.MovimentacaoData.ToString("dd/MM/yyyy HH:mm")</td>
 
                         <td class="text-center">
@@ -75,6 +78,7 @@
                             }
                             else if (mov.MovimentacaoTipo == "Cancelamento")
                             {
+                                <span class="badge bg-primary">Venda</span>
                                 <span class="badge bg-danger text-light">Cancelamento</span>
                             }
                             else
@@ -119,13 +123,13 @@
                             @if (mov.ItemVenda != null)
                             {
                                 <span class="badge bg-primary">
-                                    #@mov.ItemVenda.VendaID
+                                    @mov.ItemVenda.VendaID
                                 </span>
                             }
                             else if (mov.ItemCompra != null)
                             {
                                 <span class="badge bg-success">
-                                    #@mov.ItemCompra.ItemCompraID
+                                    @mov.ItemCompra.ItemCompraID
                                 </span>
                             }
                             else
@@ -145,7 +149,7 @@
             }
         </tbody>
     </table>
-
+    </div>
 </div>
 
 @section Scripts {
@@ -203,8 +207,8 @@
             paging: true,
             order: [],
             columnDefs: [
-                { orderable: false, targets: [4] }, // desabilita ordenação na coluna Ações
-                { className: "text-center", targets: [3] } // status e ações centralizados
+                { orderable: false, targets: [5] }, // desabilita ordenação na coluna Ações
+                { className: "text-center", targets: [4] } // status e ações centralizados
             ],
 
             language: {

@@ -5,9 +5,9 @@
 @model IEnumerable<ProdutoModel>
 @using System.Globalization
 
-<div class="container p-4 rounded-4">
+<div class="container rounded-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-5 bg-dark text-light p-4 rounded-4 mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-3 bg-shadow text-light p-4 rounded-4 mt-2">
         
         <h1 class="m-0">Estoque de Produtos</h1>
         @if (Context.Session.GetString("Perfil") == "Admin")
@@ -30,17 +30,18 @@
             @TempData["MensagemErro"]
         </div>
     }
-
-    <table id="Produtos" class="table table-success table-hover mb-auto" >
-        <thead>
+    <div class="bg-shadow text-light p-4 rounded-4">
+    <table id="Produtos" class="table table-hover mb-auto bg-shadowt "  >
+        <thead class="bg-tpreto">
             <tr>
                 <th style="width: 15%;">Nome</th>
-                <th style="width: 15%;">Descrição</th>
-                <th style="width: 10%;" class="text-end">Preço Custo</th>
-                <th style="width: 10%;" class="text-end">Preço Venda</th>
+                <th style="width: 15%;" class="text-center">Cod Barra</th>
+                <th style="width: 15%;" class="text-center">Descrição</th>
+                <th style="width: 10%;" class="text-end">P.Custo</th>
+                <th style="width: 10%;" class="text-end">P.Venda</th>
                 <th style="width: 10%;" class="text-end">Qtd/Min</th>
                 <th style="width: 5%;" class="text-center">Promoção</th>
-                <th style="width: 10%;" class="text-center">Status</th>
+                <th style="width: 15%;" class="text-center">Status</th>
                 @if (Context.Session.GetString("Perfil") == "Admin")
                 {
                 <th style="width: 10%;" class="text-center">Edição</th>
@@ -56,13 +57,14 @@
                     <tr>
                         <td>@produto.ProdutoNome</td>
 
-                        <td title="@produto.ProdutoDescricao">
-                            @(produto.ProdutoDescricao != null && produto.ProdutoDescricao.Length > 40
-                                ? produto.ProdutoDescricao.Substring(0, 40) + "..."
+                        <td>@produto.ProdutoCodBarra</td>
+                            <td>
+                                @(produto.ProdutoDescricao != null && produto.ProdutoDescricao.Length > 20
+                                ? produto.ProdutoDescricao.Substring(0, 20) + "..."
                                 : produto.ProdutoDescricao)
-                        </td>
+                               
+                            </td>
 
-                        
 
                         <td class="text-end">
                             @("R" + produto.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("C"))
@@ -120,7 +122,7 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
 
-                                <a class="btn btn-info btn-sm mx-1 btn-edicao-rapida"
+                                    <a class="btn btn-sm mx-1 btn-edicao-rapida btn-dark" style="background:#a78bfa"
                                        data-bs-toggle="modal"
                                        data-bs-target="#edicaoRapidaModal"
                                        data-id="@produto.ProdutoID"
@@ -138,15 +140,15 @@
             }
         </tbody>
     </table>
-
+    </div>
 </div>
 
 <!-- Edição Rápida -->
 <div class="modal fade" id="edicaoRapidaModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content bg-dark text-light">
+        <div class="modal-content bg-shadow text-light">
             <div class="modal-header">
-                <h5 class="modal-title">Edição Rápida do Produto</h5>
+                <h5 class="modal-title">Edição Rápida do Produto </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -155,18 +157,18 @@
 
                     <div class="mb-3">
                         <label class="form-label">Preço de Venda</label>
-                        <input type="text" class="form-control" id="PrecoVenda" name="ProdutoPrecoVenda">
+                        <input type="text" class="form-control bg-shadow text-light" id="PrecoVenda" name="ProdutoPrecoVenda">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Promoção (%)</label>
-                        <input type="text" class="form-control" id="Promocao" name="ProdutoPromocao">
+                        <input type="text" class="form-control bg-shadow text-light" id="Promocao" name="ProdutoPromocao">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-success" id="btnConfirmarEdicao">Confirmar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" title="Voltar">Voltar</button>
+                <button type="button" class="btn btn-success" id="btnConfirmarEdicao" title="Confirmar">Confirmar</button>
             </div>
         </div>
     </div>

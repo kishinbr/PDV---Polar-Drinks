@@ -84,12 +84,12 @@
                     <div style="overflow:hidden; text-overflow:ellipsis;">
                         ${p.produtoNome} [${p.produtoCodBarra}]
                     </div>
-                    <div class="text-muted">
+                    <div class="text-secondary">
                         QTD ${p.produtoQtdEstoque}
                     </div>
                     <div class="text-end">
                         ${p.produtoPromocao > 0
-                    ? `<small class="text-muted" style="text-decoration:line-through;">
+                    ? `<small class="text-secondary" style="text-decoration:line-through;">
                                    R$ ${precoOriginal.toFixed(2)}
                                </small>
                                <strong class="text-success ms-1">
