@@ -113,7 +113,11 @@
                         <td>R$ @p.ProdutoPrecoCusto.GetValueOrDefault(0).ToString("N2")</td>
                         <td>R$ @p.ProdutoPrecoVenda.GetValueOrDefault(0).ToString("N2")</td>
                         <td>
-                            @if (p.ProdutoQtdEstoque <= p.ProdutoEstoqueMinimo)
+                            @if (p.ProdutoQtdEstoque == 0)
+                            {
+                                <span class="badge bg-danger ">@p.ProdutoQtdEstoque/@p.ProdutoEstoqueMinimo</span>
+                            }
+                            else if (p.ProdutoQtdEstoque <= p.ProdutoEstoqueMinimo)
                             {
                                 <span class="badge bg-warning text-dark">@p.ProdutoQtdEstoque/@p.ProdutoEstoqueMinimo</span>
                             }

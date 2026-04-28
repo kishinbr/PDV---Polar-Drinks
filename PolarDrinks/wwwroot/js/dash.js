@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
             //labels: ['Pix', 'Cartão', 'Dinheiro'],
             datasets: [{
                 data: pagamentos.hoje,
-                backgroundColor: ['#00BDAE', 'mediumpurple', '#f59e0b'],
+                backgroundColor: ['#00BDAE', 'mediumpurple', '#198754'],
                 borderWidth: 2,
                 borderColor: '#13161d' // separa as fatias no tema escuro
             }]

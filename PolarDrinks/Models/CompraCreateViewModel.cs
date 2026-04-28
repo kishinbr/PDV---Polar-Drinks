@@ -25,7 +25,6 @@ namespace PolarDrinks.ViewModels
     {
         [Required(ErrorMessage = "Selecione um produto")]
         public int? ProdutoID { get; set; }
-        [Required(ErrorMessage = "Selecione um produto")]
         public string? ProdutoNome { get; set; }
 
         [Required(ErrorMessage = "Informe a quantidade")]

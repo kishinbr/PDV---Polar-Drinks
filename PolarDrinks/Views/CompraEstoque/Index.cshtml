@@ -52,7 +52,11 @@
                         <td>@item.CompraID</td>
                         <td>@item.CompraData.ToString("dd/MM/yyyy")</td>
                         <td>@item.Fornecedor?.FornecedorNome</td>
-                        <td>@item.CompraStatus</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                @item.CompraStatus
+                            </span>
+                        </td>
                         <td class="text-center">
                             
                                 <a asp-action="Detalhes"
@@ -138,7 +142,11 @@
                         </td>
                         <td>@item.CompraDataEntrega?.ToString("dd/MM/yyyy")</td>
                         <td>@item.Fornecedor?.FornecedorNome</td>
-                        <td>@item.CompraStatus</td>
+                        <td>
+                            <span class="badge bg-success">
+                                @item.CompraStatus
+                            </span>
+                        </td>
                         <td class="text-center">
                             <a class="btn btn-primary btn-sm"
                                    asp-action="Detalhes"
