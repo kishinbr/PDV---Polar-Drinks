@@ -58,12 +58,13 @@
                         <td>@produto.ProdutoNome</td>
 
                         <td>@produto.ProdutoCodBarra</td>
-                            <td>
-                                @(produto.ProdutoDescricao != null && produto.ProdutoDescricao.Length > 20
-                                ? produto.ProdutoDescricao.Substring(0, 20) + "..."
-                                : produto.ProdutoDescricao)
+
+                        <td>
+                            @(produto.ProdutoDescricao != null && produto.ProdutoDescricao.Length > 20
+                            ? produto.ProdutoDescricao.Substring(0, 20) + "..."
+                            : produto.ProdutoDescricao)
                                
-                            </td>
+                        </td>
 
 
                         <td class="text-end">
@@ -90,6 +91,10 @@
                                     {
                                         classe = "badge bg-warning text-dark";
                                     }
+                                    else
+                                    {
+                                        classe = "badge bg-success";
+                                    }
                                 }
 
                             <span class="@classe">
@@ -112,7 +117,7 @@
                         <td class="text-center">
                             @if (produto.ProdutoAtivo)
                             {
-                                <span class="badge bg-success">Disponível</span>
+                                <span class="badge bg-primary">Disponível</span>
                             }
                             else
                             {
@@ -139,7 +144,7 @@
                                        data-preco="@produto.ProdutoPrecoVenda"
                                        data-promocao="@produto.ProdutoPromocao"
                                        
-                                       title="Edição rápida">
+                                       title="Promoção">
 
                                     <i class="bi bi-percent"></i>
                                 </a>

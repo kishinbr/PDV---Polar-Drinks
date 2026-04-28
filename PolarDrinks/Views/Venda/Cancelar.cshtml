@@ -32,15 +32,15 @@
                 <tr>
                     <td>@item.Produto?.ProdutoNome</td>
                     <td>@item.ItemVendaQtd</td>
-                    <td class="text-end">@item.ItemVendaPreco.ToString("C")</td>
-                    <td class="text-end">@item.ItemVendaTotal.ToString("C")</td>
+                    <td class="text-end">@("R" + item.ItemVendaPreco.ToString("C"))</td>
+                    <td class="text-end">@("R" + item.ItemVendaTotal.ToString("C"))</td>
                 </tr>
             }
         </tbody>
     </table>
 
     <div class="text-end text-light">
-        <h4>Total: @Model.VendaValorTotal.ToString("C")</h4>
+        <h4>Total: @("R" + @Model.VendaValorTotal.ToString("C"))</h4>
     </div>
 
     @if (!Model.VendaCancelada)

@@ -50,5 +50,14 @@
         public List<decimal> VendasSemana { get; set; } = new();
         public List<decimal> VendasMesGrafico { get; set; } = new();
         public List<decimal> VendasAno { get; set; } = new();
+
+        // MÉTRICAS NOVAS
+        public decimal TicketMedio { get; set; }
+
+        // CANCELAMENTOS
+        public int CanceladosHoje { get; set; }
+        public int CanceladosSemana { get; set; }
+        public int CanceladosMes { get; set; }
+        public string? ProdutoMaisCancelado { get; set; }
     }
 }

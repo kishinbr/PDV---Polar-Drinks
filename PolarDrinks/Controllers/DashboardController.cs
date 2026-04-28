@@ -68,6 +68,11 @@ namespace PolarDrinks.Controllers
                 v.Itens.Sum(i =>
                     (i.ItemVendaPreco - (i.Produto.ProdutoPrecoCusto ?? 0)) * i.ItemVendaQtd));
 
+            // TICKET MÉDIO
+            model.TicketMedio = todasVendas.Any()
+                ? todasVendas.Average(v => v.VendaValorTotal)
+                : 0;
+
             // PAGAMENTOS (CARDS - HOJE)
             model.QtdPix = vendasHoje.Count(v => v.VendaTipoPagamento == "Pix");
             model.QtdCartao = vendasHoje.Count(v => v.VendaTipoPagamento == "Cartão");
@@ -260,6 +265,29 @@ namespace PolarDrinks.Controllers
             model.VendasAno = mesesAno
                 .Select(mes => (decimal)(vendasAgrupadasAno.ContainsKey(mes) ? vendasAgrupadasAno[mes] : 0))
                 .ToList();
+
+            // CANCELAMENTOS
+            var vendasCanceladas = _db.Vendas
+                .Include(v => v.Itens).ThenInclude(i => i.Produto)
+                .Where(v => v.VendaCancelada)
+                .ToList();
+
+            model.CanceladosHoje = vendasCanceladas.Count(v => v.VendaData.Date == hoje);
+
+            model.CanceladosSemana = vendasCanceladas.Count(v =>
+                v.VendaData.Date >= hoje.AddDays(-6));
+
+            model.CanceladosMes = vendasCanceladas.Count(v =>
+                v.VendaData >= inicioMes);
+
+            // PRODUTO MAIS CANCELADO
+            model.ProdutoMaisCancelado = vendasCanceladas
+                .SelectMany(v => v.Itens)
+                .Where(i => i.Produto != null)
+                .GroupBy(i => i.Produto.ProdutoNome)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault();
 
             return View(model);
         }

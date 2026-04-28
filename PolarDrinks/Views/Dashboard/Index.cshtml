@@ -23,35 +23,53 @@
                 <!-- FINANCEIRO (2x2) -->
                 <div class="row g-3">
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card rounded-3 h-100 p-3 bg-shadow">
                             <div class="mb-2 bg-primary" style="height:2px;"></div>
                             <div class="text-light mb-1">Total Hoje</div>
                             <div class="fw-semibold text-primary" style="font-size:1.35rem;">R$ @Model.TotalHoje.ToString("N2")</div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card  rounded-3 h-100 p-3 bg-shadow ">
                             <div class="mb-2" style="height:2px; background:#a78bfa;"></div>
                             <div class="text-light mb-1">Total Mês</div>
                             <div class="fw-semibold " style="font-size:1.35rem; color:#a78bfa">R$ @Model.TotalMes.ToString("N2")</div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <div class="card rounded-3 h-100 p-3 bg-shadow">
+                            <div class="mb-2 bg-info" style="height:2px;"></div>
+                            <div class="text-light mb-1">Ticket Médio</div>
+                            <div class="fw-semibold text-info" style="font-size:1.35rem;">
+                                R$ @Model.TicketMedio.ToString("N2")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="card  rounded-3 h-100 p-3 bg-shadow">
                             <div class="mb-2 bg-success" style="height:2px;"></div>
                             <div class="text-light mb-1">Lucro Hoje</div>
                             <div class="fw-semibold text-success" style="font-size:1.35rem;">R$ @Model.LucroHoje.ToString("N2")</div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card  rounded-3 h-100 p-3 bg-shadow">
                             <div class="mb-2 bg-warning" style="height:2px;"></div>
                             <div class="text-light mb-1">Lucro Mês</div>
                             <div class="fw-semibold text-warning" style="font-size:1.35rem;">R$ @Model.LucroMes.ToString("N2")</div>
                         </div>
                     </div>
-
+                    <div class="col-md-4">
+                    <div class="card rounded-3 h-100 p-3 bg-shadow">
+                        <div class="mb-2" style="height:2px; background:#34d399;"></div>
+                        <div class="text-light mb-1">Previsão Amanhã</div>
+                        <div class="fw-semibold" style="font-size:1.35rem; color:#34d399;">
+                            R$ @Model.PrevisaoAmanha.ToString("N2")
+                        </div>
+                    </div>
+                </div>
+                    
                 
                 </div>
 
@@ -287,9 +305,9 @@
 
 
                         <div class="d-flex align-items-center gap-1">
-                            <i class="bi bi-plus-lg" style="color:#f87171; font-size:14px;"></i>
-                            <span style="color:#f87171;">Lucrativo</span>
-                            <i class="bi bi-currency-dollar" style="color:#f87171; font-size:14px;"></i>
+                            <i class="bi bi-plus-lg text-primary"  font-size:14px;"></i>
+                            <span class="text-primary">Lucrativo</span>
+                            <i class="bi bi-currency-dollar text-primary"  font-size:14px;"></i>
                         </div>
 
                     </div>
@@ -339,29 +357,62 @@
                 </div>
             </div>
 
-            <!-- Previsão -->
-            <div class="col-6 col-md-3"> 
-                <div class="card rounded-3 h-100 p-3 d-flex flex-column bg-shadow">
+            <!-- Cancelamentos -->
+            <div class="col-6 col-md-3">
+                <div class="card rounded-3 h-100 p-3 bg-shadow">
 
+                    <!-- HEADER -->
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-graph-up-arrow" style="color:#a78bfa;"></i>
-                        <span class="text-light">Previsão de Vendas de Amanhã</span>
+                        <i class="bi bi-x-circle" style="color:#f87171;"></i>
+                        <span class="text-light">Cancelamentos</span>
                     </div>
 
-                    <div class="rounded-3 flex-fill d-flex justify-content-center align-items-center p-3 bg-tpreto">
+                    <!-- LINHA 1: HOJE / SEMANA / MÊS -->
+                    <div class="row g-2 mb-3">
 
-                        <div class="fw-semibold text-center"
-                             style="font-size:2rem; color:#34d399; line-height:1;">
-                            R$ @Model.PrevisaoAmanha.ToString("N2")
-                            <div class="text-secondary mt-2" style="font-size:.7rem;">
-                                estimativa aproximada
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-tpreto text-center">
+                                <div class="text-light" style="font-size:.65rem;">Hoje</div>
+                                <div class="text-light fw-semibold">
+                                    @Model.CanceladosHoje
+                                </div>
                             </div>
                         </div>
-                        
+
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-tpreto text-center">
+                                <div class="text-light" style="font-size:.65rem;">Semana</div>
+                                <div class="text-light fw-semibold">
+                                    @Model.CanceladosSemana
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-tpreto text-center">
+                                <div class="text-light" style="font-size:.65rem;">Mês</div>
+                                <div class="text-light fw-semibold">
+                                    @Model.CanceladosMes
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- PRODUTO MAIS CANCELADO -->
+                    <div class="p-2 rounded-3 bg-tpreto">
+                        <div class="text-danger" style="font-size:.7rem;">
+                            Produto mais cancelado
+                        </div>
+
+                        <div class="text-light fw-semibold text-truncate">
+                            @(Model.ProdutoMaisCancelado ?? "—")
+                        </div>
                     </div>
 
                 </div>
             </div>
+           
 
         </div>
 
