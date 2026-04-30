@@ -19,22 +19,23 @@
     }
 
 
-    <div class="d-flex justify-content-between align-items-center mb-4 bg-shadow text-light p-4 rounded-4 mt-2">
-        <h1 class="m-0">Reabastecimento</h1>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 bg-shadow text-light p-4 rounded-4 mt-2">
+
+        <h1 class="m-0 mb-3 mb-md-0">Reabastecimento</h1>
 
         <a asp-action="Cadastrar" class="btn btn-success" title="Cadastrar">
             + Novo Reabastecimento
         </a>
+
     </div>
-    @* <div class="d-flex justify-content-between align-items-center bg-shadow text-dark p-4 rounded-4 mb-3 ">
-        
-    </div> *@
+  
     
     @if (Model.Pendentes != null && Model.Pendentes.Any())
 {
         
         <div class="bg-shadow text-light p-4 rounded-4 mb-4">
             <h4 class="d-flex justify-content-between align-items-center text-warning mb-4 mt-2 ">Pedidos Pendentes</h4>
+            <div style="overflow-x: auto;">
             <table class="table table-hover  bg-shadowt">
             <thead class="bg-tpreto">
                 <tr>
@@ -85,6 +86,7 @@
             </tbody>
         </table>
         </div>
+        </div>
     }
     else
     {
@@ -95,9 +97,6 @@
     }
 
     
-    @* <div class="d-flex justify-content-between align-items-center  bg-shadow  p-4 rounded-4 mb-4">
-        <h4 class="m-0 text-success">Pedidos Concluídos</h4>
-    </div> *@
     <div class="bg-shadow text-light p-4 rounded-4 mb-4">
         <h4 class="d-flex justify-content-between align-items-center text-success mb-4 mt-2 ">Pedidos Concluido</h4>
         <div class="mb-3 d-flex justify-content-center">

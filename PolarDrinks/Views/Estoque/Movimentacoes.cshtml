@@ -63,7 +63,9 @@
                 foreach (var mov in Model)
                 {
                     <tr>
-                        <td><span class="badge bg-secondary">#@mov.MovimentacaoID</span> </td>
+                            <td data-order="@mov.MovimentacaoID">
+                                <span class="badge bg-secondary">#@mov.MovimentacaoID</span>
+                            </td>
 
                         <td>@mov.MovimentacaoData.ToString("dd/MM/yyyy HH:mm")</td>
 
@@ -113,30 +115,30 @@
                             }
                         </td>
 
-                        <td class="text-center"
-                            data-order="@(mov.ItemVenda != null
-                                        ? mov.ItemVenda.VendaID
-                                        : mov.ItemCompra != null
-                                            ? mov.ItemCompra.ItemCompraID
-                                            : 0)">
+                            <td class="text-center"
+                                data-order="@(mov.ItemVenda != null
+                                                    ? mov.ItemVenda.VendaID
+                                                    : mov.ItemCompra != null
+                                                        ? mov.ItemCompra.CompraID
+                                                        : 0)">
 
-                            @if (mov.ItemVenda != null)
-                            {
-                                <span class="badge bg-primary">
-                                    @mov.ItemVenda.VendaID
-                                </span>
-                            }
-                            else if (mov.ItemCompra != null)
-                            {
-                                <span class="badge bg-success">
-                                    @mov.ItemCompra.ItemCompraID
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="text-muted">-</span>
-                            }
-                        </td>
+                                @if (mov.ItemVenda != null)
+                                {
+                                    <span class="badge bg-primary">
+                                        #@mov.ItemVenda.VendaID
+                                    </span>
+                                }
+                                else if (mov.ItemCompra != null)
+                                {
+                                    <span class="badge bg-success">
+                                        #@mov.ItemCompra.CompraID
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
                         <td>@mov.Usuario?.UsuarioNome</td>
 
                         <td title="@mov.MovimentacaoDescricao">
