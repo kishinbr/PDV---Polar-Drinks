@@ -10,7 +10,7 @@
 
 <div align="center">
 
-<img src="PrintsTelas/TELA-LOGIN.png" alt="Polar Drinks Logo" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-LOGIN.png" alt="Polar Drinks Logo" width="100%"/>
 
 # 🥤 Polar Drinks — Sistema de PDV (Ponto de Venda)
 
@@ -46,32 +46,32 @@ Registre vendas, controle produtos e estoque, acompanhe clientes e gere relatór
 
 
 ### 🔑 Login
-<img src="PrintsTelas/TELA-LOGIN.png" alt="Tela de Login" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-LOGIN.png" alt="Tela de Login" width="100%"/>
 
 ---
 
 ### 📊 Dashboard
-<img src="PrintsTelas/TELA-DASHBOARD.png" alt="Dashboard" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-DASHBOARD.png" alt="Dashboard" width="100%"/>
 
 ---
 
 ### 🛒 Ponto de Venda (PDV)
-<img src="PrintsTelas/TELA-PDV.png" alt="Tela de PDV" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-PDV.png" alt="Tela de PDV" width="100%"/>
 
 ---
 
 ### 🥤 Produtos
-<img src="PrintsTelas/TELA-PRODUTOS.png" alt="Produtos" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-PRODUTOS.png" alt="Produtos" width="100%"/>
 
 ---
 
 ### 👥 Usuários
-<img src="PrintsTelas/TELA-USUARIOS.png" alt="Clientes" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-USUARIOS.png" alt="Clientes" width="100%"/>
 
 ---
 
 ### 📄 Movimentações
-<img src="PrintsTelas/TELA-MOVIMENTACOES.png" alt="Relatórios" width="100%"/>
+<img src="PolarDrinks/wwwroot/img/TELA-MOVIMENTACOES.png" alt="Relatórios" width="100%"/>
 
 ---
 
