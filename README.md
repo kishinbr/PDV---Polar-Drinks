@@ -38,7 +38,6 @@ Registre vendas, controle produtos e estoque, acompanhe clientes e gere relatór
 | 👥 **Usuários** | Cadastro e edição de usuários |
 | 📄 **Movimentações** | Geração de relatórios de vendas e movimentações |
 
-> ⚠️ Ajuste esta tabela conforme os módulos que você realmente implementou no seu PDV.
 
 ---
 
@@ -91,7 +90,6 @@ PolarDrinks/
 └── wwwroot/                # Arquivos estáticos (CSS, JS, imagens)
 ```
 
-> ⚠️ Ajuste essa árvore para bater com a estrutura real de pastas do seu repositório.
 
 ---
 
@@ -155,7 +153,6 @@ Usuário: admin
 Senha:   admin123
 ```
 
-> ⚠️ Recomendamos alterar as credenciais antes de usar em produção.
 
 ---
 
@@ -167,7 +164,7 @@ Senha:   admin123
 | `Microsoft.EntityFrameworkCore.Tools` | - | Migrations e CLI |
 | `Bootstrap` | 5 | Interface responsiva |
 
-> ⚠️ Atualize essa tabela com os pacotes que você realmente usa (confira no `.csproj`).
+
 
 ---
 
@@ -193,8 +190,4 @@ Compacte a pasta `publish/` e faça o upload no seu servidor (ex: Somee.com, Azu
 
 ---
 
-<div align="center">
 
-⭐ Se este projeto te ajudou, deixe uma estrela no repositório!
-
-</div>
