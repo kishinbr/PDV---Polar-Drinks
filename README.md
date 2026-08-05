@@ -35,8 +35,8 @@ Registre vendas, controle produtos e estoque, acompanhe clientes e gere relatór
 | 🛒 **Vendas (PDV)** | Registro rápido de vendas no ponto de venda |
 | 🥤 **Produtos** | Catálogo de bebidas com código, preço e estoque |
 | 📦 **Estoque** | Controle de entrada e saída de produtos |
-| 👥 **Clientes** | Cadastro e edição de clientes |
-| 📄 **Relatórios** | Geração de relatórios de vendas e faturamento |
+| 👥 **Usuários** | Cadastro e edição de usuários |
+| 📄 **Movimentações** | Geração de relatórios de vendas e movimentações |
 
 > ⚠️ Ajuste esta tabela conforme os módulos que você realmente implementou no seu PDV.
 
@@ -44,7 +44,6 @@ Registre vendas, controle produtos e estoque, acompanhe clientes e gere relatór
 
 ## 🖥️ Telas do Sistema
 
-> Substitua as imagens abaixo pelas capturas de tela reais do seu projeto (coloque os prints em uma pasta, por exemplo `PrintsTelas/`).
 
 ### 🔑 Login
 <img src="PrintsTelas/TELA-LOGIN.png" alt="Tela de Login" width="100%"/>
@@ -66,18 +65,13 @@ Registre vendas, controle produtos e estoque, acompanhe clientes e gere relatór
 
 ---
 
-### 📦 Estoque
-<img src="PrintsTelas/TELA-ESTOQUE.png" alt="Estoque" width="100%"/>
+### 👥 Usuários
+<img src="PrintsTelas/TELA-USUARIOS.png" alt="Clientes" width="100%"/>
 
 ---
 
-### 👥 Clientes
-<img src="PrintsTelas/TELA-CLIENTES.png" alt="Clientes" width="100%"/>
-
----
-
-### 📄 Relatórios
-<img src="PrintsTelas/TELA-RELATORIOS.png" alt="Relatórios" width="100%"/>
+### 📄 Movimentações
+<img src="PrintsTelas/TELA-MOVIMENTACOES.png" alt="Relatórios" width="100%"/>
 
 ---
 
